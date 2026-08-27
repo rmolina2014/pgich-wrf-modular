@@ -1,0 +1,38 @@
+[
+    {
+        "estacion": "INTA_SANMARTIN",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "INTA_POCITO",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "VALLE_FERTIL",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "LOS_PIONEROS",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "CUESTA_Viento",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "ULLUM_EMBALSE",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "PUNTA_NEGRA",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "CARACOLES",
+        "error": "Sin datos (lista vacia)"
+    },
+    {
+        "estacion": "ECOHUMUS",
+        "error": "Sin datos (lista vacia)"
+    }
+]

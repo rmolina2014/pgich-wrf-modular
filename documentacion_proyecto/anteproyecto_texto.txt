@@ -1,0 +1,649 @@
+--- PAGINA 1 ---
+ 
+  
+ 
+DEPARTAMENTO DE POSGRADO  
+ 
+MAESTRÍA EN INFORMÁTICA  
+ 
+ANTEPROYECTO DE TESIS  
+ 
+TÍTULO DEL ANTEPROYECTO  
+ASIMILACIÓN DE OBSERVACIONES DE LA RED METEOROLÓGICA DEL PGICH EN 
+EL MODELO WRF PARA MEJORAR PRONÓSTICOS LOCALES EN EL VALLE DE 
+TULUM DE LA PROVINCIA DE SAN JUAN ARGENTINA.  
+ 
+Autor: Roberto Nicolas Molina  
+ 
+Dirección de Tesis: Dr. Oscar Raúl Dölling  
+Codirección de Tesis: Mg. Hector Ramon Lepez  
+ 
+Lugar y Fecha  
+San Juan, 18 de diciembre de 2025.  
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+--- PAGINA 2 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+2 
+ RESUMEN  
+ 
+ 
+El siguiente anteproyecto propone mejorar la precisión de los pronósticos atmosféricos locales 
+generados por el modelo meteorológico Weather Research and Forecasting, actualmente en 
+funcionamiento gracias al Programa de Gestión Integral de Cuencas Hidrográ ficas perteneciente a la 
+Facultad de Ingeniería de la Universidad Nacional de San Juan, esto se realizará mediante la 
+implementación de un método de asimilación, los datos serán tomados de la red de estaciones 
+meteorológicas que también son partes de dicho  programa, el cual se aplica en el valle de Tulum, 
+provincia de San Juan.  
+El objetivo general es desarrollar un prototipo de asimilación que incorpore estas observaciones 
+locales, utilizando técnicas informáticas  al modelo Weather Research and Forecasting.  
+El trabajo se organiza en cinco fases metodológicas : en la Fase 1 Preparación de datos, se adquieren 
+las observaciones meteorológicas de las estaciones de la red PGICH, se realiza el preprocesamiento, 
+control de calidad para la detección y tratamiento de valores atípicos; en la Fase 2 Configuración inicial 
+del modelo Weather Research and Forecasting, se analiza la configuración del modelo operativo y se 
+prepara para su inicialización; en la Fase 3 Asimilación de datos, se implementa el esquema de 
+asimilaci ón más adecuado para la integración de los datos de las estaciones meteorológicas; en la Fase 
+4 Evaluación, se evalúa el impacto de la asimilación mediante la comparación entre el pronóstico del 
+modelo operativo sin asimilación, el pronóstico con asimilaci ón y las observaciones reales, utilizando 
+métricas estadísticas como como la raíz del error cuadrático medio y el error absoluto medio, además 
+del análisis de eventos meteorológicos críticos relevantes para la región; finalmente, en la Fase 5 
+Integración y  entrega, se desarrolla un prototipo automatizado que integra la preparación de datos, la 
+ejecución de asimilación  y del modelo Weather Research and Forecasting, junto con un visualizador 
+interactivo que permite analizar y comunicar la mejora obtenida en los pronósticos.  
+Se espera que este trabajo aporte una validación empírica sobre la aplicación de la asimilación de datos 
+pertenecientes a las estaciones meteorológicas locales y genere una actualización tecnológica 
+transferible al sistema de pronóstico del Programa de Ges tión Integral de Cuencas Hidrográficas.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 3 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+3 
+ ÍNDICE DE CONTENIDO  
+ 
+ 
+INTRODUCCIÓN .................................................................................. 5  
+Contexto y situación ................................................................................ 5  
+Descripción del Problema ........................................................................ 5  
+Justificación............................................................................................... 5  
+Motivación……………………………………………………………………….……….…..……… 6  
+Alcance de la Tesis .................................................................................... 6  
+ 
+OBJETIVOS………………………………………………………………………………………. 7  
+Objetivo General .................................................................................... 7  
+Objetivos Específicos .............................................................................. 7  
+ 
+ANTECEDENTES………………………………………………………………………………. 8  
+ 
+MARCO TEÓRICO ............................................................................. 10  
+Introducción.......................................................................................... 10  
+Modelado Numérico y Herramientas Atmosféricas.............................. 10  
+Arquitectura Informática para Pronósticos Operativos……………………… 10  
+Orquestación y Flujos de Datos………………………………………………..………. 10  
+Ecosistema Tecnológico y Computación Científica……………………..…….. 11  
+Infraestructura y Reproducibilidad……………………………………………..……. 11  
+ 
+PROPUESTA METODOLOGICA…………………........................................ 12  
+ 
+CRONOGRAMA ............................................................................... 14  
+ 
+REFERENCIAS BIBLIOGRÁFICAS ........................................................ 15  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 4 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+4 
+  
+ 
+ 
+ABREVIATURAS Y ACRÓNIMOS  
+ 
+ 
+ 
+API: Interfaz de Programación de Aplicaciones (Application Programming Interface).  
+ET: Evapotranspiración de Referencia . 
+ETL: Extract, Transform, Load (Extracción, Transformación y Carga).  
+GFS: Global Forecast System (Sistema de Pronóstico Global).  
+HPC: High Performance Computing, infraestructura computacional de alto rendimiento para cálculos 
+masivos en paralelo.  
+IoT: Internet of Things (Internet de las Cosas).  
+MAE: Mean Absolute Error (Error Absoluto Medio).  
+PGICH: Programa de Gestión Integral de Cuencas Hidrográficas (Facultad de Ingeniería, UNSJ).  
+RMSE: Root Mean Square Error (Raíz del Error Cuadrático Medio).  
+WPS:  WRF Preprocessing System (Sistema de Preprocesamiento de WRF).  
+WRF: Weather Research and Forecasting (Modelo de Investigación y Pronóstico del Tiempo).  
+WRFDA: WRF Data Assimilation (Sistema de Asimilación de Datos de WRF).  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 5 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+5 
+  
+ 
+ 
+INTRODUCCIÓN  
+ 
+ 
+ 
+Contexto y situación  
+El Programa de Gestión Integral de Cuencas Hidrográficas (PGICH) de la Facultad de Ingeniería de la 
+Universidad Nacional de San Juan opera actualmente un sistema de pronósticos meteorológicos de 
+alta resolución mediante el modelo WRF, con un dominio de 4 k m que cubre el valle de Tulum [15].  
+Paralelamente dicho programa, gestiona una red de diez estaciones meteorológicas distribuidas 
+geográficamente en el territorio de la provincia, las cuales registran datos atmosféricos de 
+temperatura, humedad, viento, radiación solar y precipitación cada ci nco minutos, generando una 
+base de observaciones de alta resolución espacial y temporal, dichos datos son transmitidos por 
+medios inalámbricos a la plataforma online www.Ecowitt.net [14].   
+La asimilación de datos en modelos numéricos de pronóstico atmosférico, como el Weather Research 
+and Forecasting (WRF), es una estrategia fundamental para incrementar la exactitud de las 
+predicciones, especialmente en regiones con fuerte variabilidad micro climática como el valle de 
+Tulum, caracterizado por su clima semiárido, inversión térmica nocturna y eventos locales como el 
+viento Zonda.  
+ 
+Descripción del Problema  
+Sin embargo, a pesar de contar con ambos recursos institucionales, el problema central es que el 
+pronóstico meteorológico es realizado por el modelo WRF, si bien es de alta resolución, no incorpora 
+o asimila las observaciones locales en tiempo real de la r ed de estaciones meteorológicas del PGICH.  
+Esta carencia limita la precisión del estado inicial del modelo y, consecuentemente, la exactitud de sus 
+pronósticos para la toma de decisiones críticas en sectores sensibles al clima como el agrícola y el área 
+hídrica, la persistencia de condiciones de se quía prolongada en San Juan incrementa la urgencia de 
+cerrar esta brecha. 
+Este anteproyecto tiene como propósito principal verificar que la asimilación de observaciones de la 
+red de estaciones meteorológicas del PGICH al modelo WRF operativo, mejora significativamente la 
+precisión de sus pronósticos atmosféricos en el valle de T ulum, en comparación con el pronóstico 
+operativo sin asimilación.  
+ 
+Justificación  
+Este trabajo se enmarca en la línea de informática aplicada y arquitecturas de integración de sistemas 
+heterogéneos, propias de la Maestría en Informática. La contribución principal no es el modelo 
+meteorológico, sino el diseño de un flujo reproducible, mo dular y automatizado que integra los datos 
+de las estaciones meteorológicas, un sistema de pronósticos del modelo WRF y herramientas de 
+análisis, constituyendo un caso de estudio en ingeniería de flujos de datos científicos.  
+La justificación de este trabajo se basa en su valor científico, tecnológico e impacto práctico:  
+● Contribución Científica:  Proporcionará una validación empírica de la asimilación de datos de 
+
+--- PAGINA 6 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+6 
+ estaciones meteorológicas locales en regiones áridas con topografía compleja, comparando 
+directamente contra un modelo de pronósticos meteorológicos operativo.  
+● Contribución Tecnológica:  Generará una actualización directa al sistema de pronóstico del 
+modelo WRF actual, integrando un módulo de asimilación al flujo de trabajo operacional. Esto se 
+alinea perfectamente con el objetivo del PGICH de "desarrollar tecnología" y "transferir 
+conoci mientos" al sector agrícola productivo de la provincia de San Juan.  
+● Contribución Aplicada:  El impacto práctico radica en la mejora directa de los pronósticos que ya 
+se proveen para la agricultura sobre todo en la gestión hídrica optimizando este valioso recurso 
+en la provincia de San Juan.  
+● Contribución Informática : Este trabajo se enmarca en la línea de informática aplicada, 
+arquitecturas de integración de sistemas heterogéneos, automatización de procesos, 
+preprocesamiento y análisis de datos propios de la Maestría en Informática.  
+ 
+Motivación  
+El interés por este tema surge de la oportunidad única de integrar dos recursos institucionales ya 
+existentes, el modelo WRF operativo y la red de estaciones meteorológicas del PGICH, en un sistema 
+informático coherente que cierre el ciclo:  
+ 
+datos → modelo → pronóstico mejorado → tomas de decisiones  
+ 
+Esta propuesta no solo responde a una necesidad territorial concreta, sino que también representa un 
+caso de estudio ejemplar de transferencia tecnológica universitaria, alineado con mi formación en 
+informática y mi compromiso con la resolución de problema s ambientales y productivos locales. 
+ 
+Alcance de la Tesis  
+El alcance del proyecto está delimitado a los siguientes puntos:  
+● El estudio se centrará exclusivamente en el valle de Tulum, área de interés de varios proyectos 
+del PGICH.  
+● Se utilizarán datos de las 10 estaciones meteorológicas que comprenden la red del PGICH.  
+● El modelo base será la configuración operativa actual del modelo WRF  del PGICH.  
+● El prototipo será funcional y será integrado al flujo de trabajo existente.  
+● La evaluación se centrará en las variables atmosféricas de superficie.  
+● No se desarrollará un nuevo modelo numérico, sino una mejora incremental del modelo 
+existente.  
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 7 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+7 
+  
+ 
+ 
+OBJETIVOS  
+ 
+ 
+ 
+Objetivo General  
+Desarrollar un prototipo de asimilación de datos que incorpore observaciones de las estaciones 
+meteorológicas del PGICH, al modelo WRF operativo, con el fin de mejorar la precisión de sus 
+pronósticos atmosféricos locales en el valle de Tulum.  
+ 
+Objetivos Específicos  
+1. Analizar la calidad y la estructura de los datos de las 10 estaciones meteorológicas de la red 
+PGICH para establecer una metodología de preprocesamiento compatible con el sistema de 
+asimilación.  
+ 
+2. Determinar el esquema de asimilación (Observation Nudging o 3D -Var) más eficiente para la 
+red local.  
+ 
+3. Configurar la interfaz del modelo WRF para integrar el módulo de asimilación de datos en su 
+ciclo operativo.  
+ 
+4. Evaluar cuantitativamente la mejora en la precisión de los pronósticos mediante la 
+comparación estadística entre el modelo operativo actual y el modelo con asimilación.  
+ 
+5. Integrar el prototipo final de asimilación al flujo de trabajo operacional del PGICH y validar su 
+robustez para la transferencia tecnológica.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 8 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+8 
+  
+ 
+ 
+ANTECEDENTES  
+ 
+ 
+ 
+La asimilación de datos en modelos numéricos de pronóstico atmosférico se ha convertido en un 
+componente esencial para mejorar la representatividad del estado inicial y, en consecuencia, la 
+precisión de los pronósticos a corto plazo. En el ámbito regional,  varios desarrollos recientes han 
+puesto de manifiesto el impacto positivo que esta técnica puede tener en sistemas operativos de 
+mesoescala.  
+En Argentina, uno de los avances más relevantes es el prototipo de actualización rápida desarrollado 
+por Dillon et al. [1], quienes integran observaciones de superficie, estaciones automáticas y datos de 
+radar en un sistema de asimilación continua. Este tr abajo demuestra la factibilidad de implementar 
+esquemas variacionales y de ensamble en entornos operativos nacionales, así como la importancia de 
+flujos reproducibles de procesamiento de datos, elementos que resultan directamente aplicables a la 
+presente i nvestigación.  
+En regiones de topografía compleja, como los Andes centrales, Yáñez -Morroni et al. [2] evaluaron el 
+desempeño del modelo WRF mediante simulaciones atmosféricas regionales de alta resolución 
+forzadas por modelos de menor escala, con el objetivo de represent ar procesos de mesoescala 
+asociados al relieve. Sus resultados muestran que las variaciones abruptas de la topografía introducen 
+sesgos significativos en temperatura, viento y precipitación, destacando la necesidad de incorporar 
+observaciones locales para corregir las condiciones iniciales, particularmente en ambientes áridos 
+como el valle de Tulum.  
+Por su parte, Maldonado [3] analizó el impacto de técnicas de asimilación de datos de alta resolución, 
+es decir, la incorporación sistemática de observaciones reales al modelo, lo que mejora la capacidad 
+de los modelos atmosféricos para predecir tormentas generadas por movimientos verticales intensos 
+del aire. Al aplicar métodos como LETKF y 3D -Var, el autor encontró que el modelo representa mejor 
+fenómenos de mesoescala, es decir, sistemas atmosféricos intermedios entre lo local y lo regional, que 
+suelen e star influenciados por condiciones locales y microclimáticas. En consecuencia, el estudio 
+demuestra que la asimilación de datos es una herramienta eficaz para mejorar los pronósticos locales, 
+especialmente en regiones donde existen fuertes contrastes ambie ntales y variaciones rápidas del 
+estado atmosférico  
+En lo referente a la evaluación estadística del desempeño del modelo, Troncoso Villar [4] aplicó 
+métricas como RMSE, MAE, sesgo y correlación para comparar simulaciones del modelo WRF con 
+observaciones de superficie en la región subantártica. Este enfoque metodológico es directamente 
+transferible a este trabajo, que requiere medir cuantitativamente la mejora obtenida tras la 
+integración de observaciones locales.  
+Finalmente, el antecedente más directamente vinculado con el presente proyecto es el informe 
+técnico de Dölling [5], el cual documenta la configuración operativa del modelo WRF y el 
+funcionamiento de la red meteorológica IoT de San Juan. Esta infraestructu ra constituye la base 
+empírica y técnica sobre la cual se desarrollará e integrará el prototipo de asimilación propuesto en 
+esta tesis.  
+Estos antecedentes, en conjunto, demuestran que la asimilación de datos locales es una estrategia 
+efectiva en regiones áridas y con topografía compleja, además existen desarrollos recientes en 
+
+--- PAGINA 9 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+9 
+ Argentina y Sudamérica que respaldan esta metodología, y el PGICH dispone de los datos, la 
+infraestructura y los recursos técnicos necesarios para implementar un sistema de asimilación 
+funcional con impacto operativo real.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 10 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+10 
+ MARCO TEÓRICO  
+ 
+ 
+ 
+Introducción  
+El marco teórico sitúa esta investigación en el paradigma de la ciencia informática aplicada a sistemas 
+complejos de pronóstico atmosférico. La dinámica de estos sistemas es inherentemente caótica y 
+sensible a las condiciones iniciales [8]. La resolución d e problemas ambientales se aborda mediante 
+arquitecturas de software robustas, algoritmos de optimización y gestión de flujos de datos. La Teoría 
+de Estimación Óptima [9] proporciona el fundamento matemático para la asimilación.  
+A diferencia de enfoques puramente meteorológicos, esta tesis enfatiza el diseño de flujos de datos 
+científicos reproducibles, modulares y automatizados que integren datos de estaciones 
+meteorológicas, modelos numéricos de pronósticos meteorológicos y sist emas de análisis. La ciencia 
+de datos participa en la etapa de ingestión, transformación y validación de las observaciones, 
+garantizando su integridad y formato. El núcleo metodológico radica en la aplicación de métodos 
+numéricos y computacionales para cer rar el ciclo:  
+ 
+datos → modelo → pronóstico mejorado → tomas de decisiones  
+ 
+Modelado Numérico y Herramientas Atmosféricas  
+Modelo WRF (Weather Research and Forecasting): Es el sistema de pronóstico numérico de 
+mesoescala de última generación utilizado como base. Es un modelo no hidrostático que resuelve las 
+ecuaciones primitivas de la atmósfera y permite la integración con sis temas de asimilación de datos 
+como WRFDA [6]. La configuración operativa actual del modelo WRF constituye la línea base sobre la 
+cual se implementará el prototipo de asimilación [5].  
+Asimilación de Datos: Es el proceso que busca optimizar el estado inicial del modelo combinando 
+observaciones reales y pronósticos previos [1]. Para este proyecto, se consideran dos esquemas 
+principales disponibles en WRFDA:  
+● 3D-Var: Un método variacional que minimiza una función de costo en tres dimensiones 
+espaciales para encontrar el "mejor" estado inicial, probado con éxito en la asimilación de 
+datos de superficie en redes locales [3].  
+● Observation Nudging: Una técnica de asimilación continua que aplica una relajación suave 
+(empujones) hacia las observaciones durante la integración del modelo, demostrando ser 
+eficaz en redes de baja densidad y topografía compleja [2].  
+Arquitectura Informática para Pronósticos Operativos  
+La complejidad inherente a la gestión de datos meteorológicos masivos y heterogéneos requiere 
+trascender la ejecución manual de modelos hacia el diseño de aplicaciones intensivas en datos ( Data -
+Intensive Applications ). Según Kleppmann [12], el diseño de estos sistemas debe priorizar la fiabilidad 
+(tolerancia a fallos de hardware o software), la escalabilidad (capacidad de crecimiento en volumen de 
+datos) y la mantenibilidad (facilidad para adaptar el sistema a nuevos requisitos). Bajo este paradigma, 
+esta tesis propone una arquitectura basada en flujos de trabajo científicos que orquestan la interacción 
+entre la red de estaciones meteorológicas y el modelo numérico WRF.  
+Orquestación y Flujos de Datos  
+Los sistemas modernos de pronóstico numérico dependen de la automatización rigurosa de flujos de 
+
+--- PAGINA 11 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+11 
+ datos que integran observaciones y modelado en tiempo real [7]. La arquitectura propuesta 
+implementa un flujo lineal y modular compuesto por las siguientes etapas:  
+1. Ingesta de datos desde la interfaz de programación de la red de sensores de las estaciones 
+meteorológicas y los campos de forzamiento global.  
+2. Preprocesamiento y Control de Calidad, por ejemplo, la detección de valores atípicos o errores 
+de hardware [13].  
+3.  Asimilación de observaciones y ejecución del modelo WRF.  
+4.  Post Procesamiento y visualización de los resultados.  
+Este enfoque modular permite aislar fallos y garantiza que el sistema sea auditable en cada etapa del 
+proceso [12].  
+ 
+Ecosistema Tecnológico y Computación Científica   
+Para la implementación de estos flujos, Python se ha consolidado como el lenguaje estándar en la 
+ciencia atmosférica gracias a su robusto ecosistema de bibliotecas para computación numérica. De 
+acuerdo con Virtanen et al. [7], herramientas como SciPy, Pand as y Xarray permiten la manipulación 
+eficiente de estructuras de datos n -dimensionales y formatos estándar como netCDF y HDF5. En este 
+proyecto, se utilizarán estas librerías para desarrollar procedimientos automatizados que gestionen la 
+conversión de unid ades, la detección estadística de valores atípicos y la interpolación espacial de los 
+datos de las estaciones meteorológicas, asegurando un rendimiento computacional óptimo antes de 
+la asimilación en el modelo WRF.  
+Infraestructura y Reproducibilidad  
+Dado que la ejecución del modelo WRF demanda recursos intensivos, la arquitectura contempla el uso 
+de entornos de Computación de Alto Rendimiento (HPC) o infraestructuras en la nube, cuya elasticidad 
+es crítica para la operatividad de sistemas de predicció n numérica [7]. Finalmente, para garantizar la 
+reproducibilidad científica —un pilar fundamental de esta investigación — se implementará el control 
+de versiones de código (Git) y la virtualización de entornos mediante contenedores (Docker). Esto 
+asegura que  los experimentos de asimilación y los pronósticos operativos puedan replicarse 
+idénticamente independientemente del entorno de hardware subyacente y facilitando la transferencia 
+tecnológica al PGICH.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 12 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+12 
+ PROPUESTA METODOLÓGICA  
+ 
+ 
+ 
+La metodología se estructura en cinco fases principales:  
+Fase 1: Preparación de datos  
+● Adquisición: Descarga de datos de las 10 estaciones meteorológicas de la red PGICH desde sus 
+fuentes primarias (ej. ecowitt.net  o el portal unsjcuencas.com.ar ).  
+● Formateo: Conversión de todas las variables a unidades del Sistema Internacional (SI) (ej. °C, m/s, 
+hPa).  
+● Control de Calidad: Aplicación de algoritmos para la detección de valores atípicos en las 
+observaciones y su corrección o eliminación.  
+● Agregación: Promediado o muestreo de los datos a una resolución horaria, compatible con los 
+ciclos de asimilación de WRFDA . 
+Fase 2: Configuración del modelo WRF  
+● Análisis de Base: Se analizará la configuración del WRF operativo.  
+● Adaptación: Se adaptarán los scripts de ejecución (WPS y WRF) para permitir la ingesta de un 
+estado inicial modificado por WRFDA.  
+Fase 3: Asimilación de datos  
+● El esquema de asimilación se elegirá entre dos alternativas técnicamente válidas para la red del 
+PGICH: Observation Nudging: de bajo costo computacional y probada eficacia en redes de baja 
+densidad o 3D -Var: de mayor complejidad, pero mayor flexibilidad pa ra incorporar perfiles y 
+datos satelitales.  
+● La decisión final se adoptará al finalizar la Fase 1 (preparación de datos) y se justificará con la 
+disponibilidad de recursos HPC, resultados de pruebas de ingestión y sensibilidad, y criterios de 
+reproducibilidad y mantenimiento operativo del sistema.  
+Fase 4: Evaluación  
+● Se realizará una validación cuantitativa comparando tres conjuntos de datos:  
+Simulación de control: El pronóstico operativo actual del modelo WRF, sin asimilación de datos, 
+que establece la línea base de desempeño.  
+Simulación con asimilación: El pronóstico generado por el modelo WRF tras la integración del 
+módulo WRFDA, que incorpora las observaciones de la red local.  
+Datos de referencia observacionales: Las mediciones reales registradas por las estaciones 
+meteorológicas del PGICH, utilizadas como valor de verdad para la evaluación.  
+● Métricas de evaluación: Se calcularán el error cuadrático medio (RMSE), el error absoluto medio 
+(MAE), el sesgo y la correlación de Pearson para cada variable atmosférica (temperatura a 2 m, 
+humedad relativa, velocidad del viento) y para cada estación de l a red, permitiendo un análisis 
+de mejora espacialmente distribuido.  
+● Análisis de casos de estudio: Se examinará específicamente el desempeño del modelo en eventos 
+meteorológicos críticos para la región (viento Zonda, episodios de helada y ondas de calor), 
+evaluando la capacidad de la asimilación para capturar transiciones r ápidas y fenómenos de 
+mesoescala.  
+
+--- PAGINA 13 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+13 
+  
+Fase 5: Integración y entrega  
+● Prototipo: Se desarrollará un procedimiento automatizado en lenguaje Python, que se acople al 
+flujo de ejecución existente del modelo WRF operativo.  
+● Flujo: El procedimiento gestionará la descarga de datos (Fase 1), la generación de archivos de 
+observación, la ejecución de la asimilación (Fase 3) y la posterior ejecución de las rutinas de 
+pronóstico del modelo WRF configuradas en la (Fase 2) con el esta do inicial mejorado.  
+● Visualizador: Se desarrollará un visualizador interactivo usando librerías como Plotly o Dash, para 
+mostrar gráficamente la comparativa de mejora del pronóstico.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 14 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+14 
+ CRONOGRAMA  
+ 
+ 
+ 
+ 
+Actividad Principal (Etapa)  Mes 1  Mes 2  Mes 3  Mes 4  Mes 5  Mes 6  
+1. Revisión Bibliográfica y 
+Marco Teórico  X      
+2. Fase 1: Preproceso de 
+Datos  X X     
+3. Fase 2:  Configuración del 
+modelo WRF   X     
+4. Fase 3: Asimilación de 
+datos   X X    
+5. Fase 4:  Evaluación    X X   
+6. Fase 5: Integración y 
+entrega     X   
+7. Redacción de Tesis y 
+Documentación      X X 
+8. Presentación y Defensa       X 
+ 
+ 
+ 
+ 
+
+--- PAGINA 15 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+15 
+  
+ 
+ 
+ 
+ 
+REFERENCIAS BIBLIOGRÁFICAS  
+ 
+ 
+ 
+[1] M. E. Dillon, V. Galligani, J. Ruiz, Y. García -Skabar, S. Nesbitt, y M. Sacco, “Prototipo del 
+sistema de actualización rápida de asimilación de datos y pronóstico numérico del proyecto 
+PREVENIR,” en Proc. XV Congreso Argentino de Meteorología (CONGREMET), Buenos Aires, 
+Argentina, 2025.  
+[2] D. Yáñez -Morroni, J. Gironás, M. Cerna, y C. Vicuña, “WRF High -Resolution Dynamical 
+Downscaling of Precipitation for the Central Andes of Chile and Argentina,” Frontiers in Earth 
+Science, vol. 8, art. 328, 2020, doi: 10.3389/feart.2020.00328.  
+[3] P. S. Maldonado, Implementación y evaluación de un sistema de asimilación de datos de 
+radar meteorológico en escala convectiva para el desarrollo de un sistema de pronóstico por 
+ensambles a muy corto plazo, Tesis Doctoral, Facultad de Ciencias Exactas y Naturales, 
+Universidad de Buenos Aires, Argentina, 2023.  
+[4] M. Troncoso Villar, Evaluación del modelo atmosférico WRF para las condiciones 
+meteorológicas de la isla Navarino, Tesis de Grado, Universidad de Concepción, Chile, 2024.  
+[5] O. R. Dölling, “Pronóstico WRF -PGICH y Red Meteorológica Provincial,” Informe Técnico, 
+PGICH, Universidad Nacional de San Juan, San Juan, Argentina, 2024. Disponible en: 
+https://www.unsjcuencas.com.ar  
+[6] W. C. Skamarock et al., A Description of the Advanced Research WRF Model Version 4, NCAR 
+Technical Note NCAR/TN -556+STR, Boulder, CO, USA, 2019, doi: 10.5065/1dfh -6p97.  
+[7] P. Virtanen et al., “SciPy 1.0: fundamental algorithms for scientific computing in Python,” 
+Nature Methods, vol. 17, pp. 261 –272, 2020.  
+[8] E. N. Lorenz, “Deterministic Nonperiodic Flow,” Journal of the Atmospheric Sciences, vol. 20, 
+no. 2, pp. 130 –141, 1963.  
+[9] R. E. Kalman, “A New Approach to Linear Filtering and Prediction Problems,” Transactions of 
+the ASME – Journal of Basic Engineering, vol. 82, no. 1, pp. 35 –45, 1960.  
+[10] D. R. Stauffer y N. L. Seaman, “Use of Four -Dimensional Data Assimilation in a Limited -Area 
+Mesoscale Model. Part I: Experiments with Synoptic -Scale Data,” Monthly Weather Review, vol. 
+118, no. 6, pp. 1250 –1277, 1990.  
+[11] X. Li et al., “The impact of observation nudging on simulated meteorology and ozone 
+concentrations during DISCOVER -AQ 2013 Texas campaign,” Atmospheric Chemistry and 
+
+--- PAGINA 16 ---
+Asimilación de observaciones de la red meteorológica del PGICH en el modelo WRF – Roberto Nicolas Molina  
+16 
+ Physics, vol. 16, no. 5, pp. 3127 –3143, 2016.  
+[12] M. Kleppmann, Designing Data -Intensive Applications: The Big Ideas Behind Reliable, 
+Scalable, and Maintainable Systems, Sebastopol, CA: O’Reilly Media, 2017.  
+[13] J. A. Jones, “Quality control of meteorological data from low -cost IoT sensors,” Journal of 
+Atmospheric and Oceanic Technology, vol. 39, no. 3, pp. 587 –601, 2022, doi: 10.1175/JTECH -D-
+21-0171.1.  
+[14] Ecowitt, “Ecowitt Weather Monitoring Platform”, 2024. Disponible en: 
+https://www.ecowitt.net  
+[15] Programa de Gestión Integral de Cuencas Hidrográficas (PGICH), Universidad Nacional de 
+San Juan, Modelo Climático WRF - Pronóstico Automático de San Juan. 2024. Disponible en: 
+http://www.unsjcuencas.com.ar/wrf.php  
+ 
+ 
+ 

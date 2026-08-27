@@ -1,0 +1,88 @@
+# Datos pesados (regenerables desde pipeline)
+gfs/
+gfs_data/
+results/
+data/raw/
+data/processed/
+plots/
+experiments/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+.venv313/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.ipynb_checkpoints
+
+# Entornos virtuales
+venv/
+ENV/
+env.bat
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Variables de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs y temporales
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.pid
+*.seed
+*.pid.lock
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos compilados y binarios
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Archivos de WPS específicos del sistema (referenciados en wps_sanjuan/.gitignore)
+geogrid
+geogrid.exe
+metgrid
+metgrid.exe
+ungrib
+ungrib.exe
+link_grib.csh
+Vtable
+GRIBFILE.*
+FILE:*
+geo_em.d01.nc
+met_em.*.nc
+
+# Archivos de WRF
+*.nc
+wrfout_*
+wrfinput_*
+wrfbdy_*
+met_em_*
+
+# Archivos de Streamlit (si aplica)
+.streamlit/

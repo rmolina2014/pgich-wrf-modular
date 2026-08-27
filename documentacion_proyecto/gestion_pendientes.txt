@@ -1,0 +1,79 @@
+=========================================================================
+  GESTIONES PENDIENTES - TESIS WRF OBS NUDGING (San Juan)
+=========================================================================
+  Fecha: 2026-06-24
+=========================================================================
+
+1. DATOS HISTORICOS DE ESTACIONES METEOROLOGICAS (EcoWitt)
+-----------------------------------------------------------------------
+  Contacto: Encargados de las estaciones / servidor unsjcuencas.com.ar
+
+  [ ] 1.1  Existe un archivo historico continuo de
+           datos_meteorologicos.txt (o similar) en el servidor?
+           - Si es asi, desde que fecha hay registros?
+           - Hay interrupciones o datos faltantes?
+
+  [ ] 1.2  El scraper PHP (pites_eta.php) se ejecuta periodicamente?
+           - Cada cuanto? (cada 15 min?)
+           - Los archivos se sobrescriben o se guardan con timestamp?
+           - Se pueden recuperar archivos de dias anteriores?
+
+  [ ] 1.3  Hay alguna otra fuente de datos historicos?
+           - API history de EcoWitt (ej: /device/history)?
+           - Base de datos MySQL/PostgreSQL con datos acumulados?
+           - Archivos CSV/Excel exportados manualmente?
+
+  [ ] 1.4  Coordenadas exactas de CADA estacion:
+           - Las de estaciones.json son aproximadas?
+           - Se puede obtener lat/lon GPS real de cada una?
+
+  [ ] 1.5  Datos faltantes o erroneos:
+           - Hay control de calidad aplicado?
+           - Como se senalan datos erroneos (bateria baja, sensor
+             congelado, etc.)?
+
+2. WRF DE PRODUCCION (Cluster UNSJ - wrf.unsjcuencas.com.ar)
+-----------------------------------------------------------------------
+  Contacto: Encargados del WRF operativo
+
+  [ ] 2.1  Hay wrfout archivados de corridas anteriores?
+           - Podemos acceder a ellos para comparacion?
+           - Que fechas estan disponibles?
+
+  [ ] 2.2  Configuracion exacta del WRF operativo vs el nuestro:
+           WRF v4.0 (prod) vs WRF v4.6.1 (nuestro)
+           - Diferencias en physics schemes?
+           - Misma resolucion (15 km)?
+           - Mismos dominios?
+
+  [ ] 2.3  Scripts de post-procesamiento existentes:
+           - Validacion contra estaciones?
+           - Generacion de mapas (wrf.php)?
+           - Se pueden reutilizar?
+
+  [ ] 2.4  Acceso al cluster:
+           - Posibilidad de correr en el cluster UNSJ?
+           - Recursos disponibles (CPUs, tiempo de ejecucion)?
+           - Como es el flujo para pedir corridas?
+
+3. FECHAS DE INTERES PARA VALIDACION
+-----------------------------------------------------------------------
+  Priorizar si hay datos disponibles:
+
+  [ ] 3.1  Eventos de viento Zonda (fechas conocidas)
+  [ ] 3.2  Dias con precipitacion significativa
+  [ ] 3.3  Dias estables (control/linea base)
+  [ ] 3.4  Frentes frios
+  - Stok: minimo 6-10 dias en total, con condiciones variadas.
+
+4. RECURSOS Y LOGISTICA
+-----------------------------------------------------------------------
+  [ ] 4.1  Donde vamos a correr las simulaciones?
+           - Local (Docker Desktop, limitado)
+           - Cluster UNSJ (si hay acceso)
+  [ ] 4.2  Plazo de la tesis (fecha de entrega aproximada)
+
+=========================================================================
+  NOTA: Cada item marcado [ ] es algo que necesitamos resolver
+  antes de avanzar a la Fase 2 (validacion con multiples casos).
+=========================================================================

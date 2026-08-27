@@ -1,0 +1,17 @@
+# Symlinks a la instalacion local de WPS (no portables)
+geogrid
+geogrid.exe
+metgrid
+metgrid.exe
+ungrib
+ungrib.exe
+link_grib.csh
+Vtable
+
+# Datos pesados regenerables
+gfs_data/
+GRIBFILE.*
+FILE:*
+geo_em.d01.nc
+met_em.*.nc
+*.log
