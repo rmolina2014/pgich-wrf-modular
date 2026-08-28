@@ -43,9 +43,11 @@ logger = logging.getLogger("pipeline_wrf")
 
 # Rutas fijas del proyecto
 PROJECT_DIR = Path(__file__).parent / "tesis_wrf_pgich"
-DATA_RAW = PROJECT_DIR / "data" / "raw"
-DATA_PROCESSED = PROJECT_DIR / "data" / "processed"
+DATA_RAW = Path(__file__).parent / "data" / "raw"
+DATA_PROCESSED = Path(__file__).parent / "data" / "processed"
 RESULTS_DIR = Path(__file__).parent / "results"
+# Metadatos de estaciones (archivo compartido por los modulares)
+ESTACIONES_JSON = Path(__file__).parent / "config" / "estaciones.json"
 
 # === Configuracion nativa (WRF local) ===
 # Directorio de corrida de WRF (debe contener wrf.exe, wrfinput, wrfbdy)
@@ -71,11 +73,10 @@ VALIDATION_PYTHON = os.environ.get(
     "/home/pgich/anaconda3/envs/wrf-operativo-p3/bin/python",
 )
 
-# Importar modulos del proyecto
-sys.path.insert(0, str(PROJECT_DIR))
-from src.calidad.limpiador_pgich import procesar_json_ecowitt
-from src.calidad.generador_littler import generar_littler
-from src.calidad.littler_a_obsnud import parse_littler_custom, convertir_a_obsnud
+# Importar modulos modulares del proyecto
+from src.calidad.cleaner import ObservacionesCleaner
+from src.asimilacion.littler_writer import LittleRWriter
+from src.asimilacion.obsnud_writer import ObsNudWriter
 
 
 def check_run_dir(run_dir=None):
@@ -215,40 +216,36 @@ def preparar_namelist(namelist_src, obs_nudge_opt, output_path, start_dt=None, *
 
 
 def generar_littler_desde_json(json_path, output_dir):
-    """Ejecuta el pipeline de limpieza + generacion Little_R."""
+    """Ejecuta el pipeline de limpieza + generacion Little_R (modulos modulares)."""
     logger.info(f"Paso 1: Procesando JSON: {json_path}")
 
-    import pandas as pd
-
-    df = procesar_json_ecowitt(str(json_path))
+    cleaner = ObservacionesCleaner(str(output_dir))
+    df = cleaner.procesar_json(str(json_path))
     fecha = df["fecha"].iloc[0].replace("-", "")
     hora = df["hora"].iloc[0].replace(":", "")
     timestamp = f"{fecha}_{hora}"
 
-    # Guardar CSV (sin XLSX para evitar dependencia openpyxl)
+    # Guardar CSV
     csv_path = str(output_dir / f"datos_validados_{timestamp}.csv")
     df.to_csv(csv_path, index=False, encoding="utf-8")
     logger.info(f"  CSV generado: {csv_path}")
 
     logger.info("Paso 2: Generando Little_R...")
     output_littler = str(output_dir / f"littler_{timestamp}.txt")
-    littler_path, num_obs = generar_littler(df, output_path=output_littler)
+    writer = LittleRWriter(config_estaciones_path=str(ESTACIONES_JSON))
+    littler_path, num_obs = writer.generar_littler(df, output_path=output_littler)
     logger.info(f"  Little_R generado: {littler_path} ({num_obs} observaciones)")
 
-    return littler_path, timestamp
+    return littler_path, timestamp, df
 
 
-def generar_obsdomain(littler_path, output_dir, run_dir, no_copiar=False):
-    """Convierte Little_R a OBS_DOMAIN101 y lo copia al directorio de corrida."""
+def generar_obsdomain(df, output_dir, run_dir, no_copiar=False):
+    """Convierte el DataFrame validado a OBS_DOMAIN101 y lo copia al directorio de corrida."""
     logger.info("Paso 3: Generando OBS_DOMAIN101...")
     obsdomain_path = str(output_dir / "OBS_DOMAIN101")
 
-    estaciones = parse_littler_custom(str(littler_path))
-    if not estaciones:
-        logger.error("No se pudieron parsear estaciones del Little_R")
-        return None
-
-    convertir_a_obsnud(estaciones, obsdomain_path)
+    writer = ObsNudWriter(config_estaciones_path=str(ESTACIONES_JSON))
+    writer.generar_desde_dataframe(df, output_path=obsdomain_path)
     logger.info(f"  OBS_DOMAIN101 generado: {obsdomain_path}")
 
     if not no_copiar:
@@ -297,40 +294,54 @@ def ejecutar_real(run_dir, timeout=7200, mpirun=None, np=None):
     return False
 
 
-def ejecutar_wrf(run_dir, run_label, timeout=7200, mpirun=None, np=None):
+def ejecutar_wrf(run_dir, run_label, timeout=7200, mpirun=None, np=None, reintentos=5):
     """Ejecuta wrf.exe en el directorio de corrida local.
-    np=1 (default) ejecuta el binario directo (un solo proceso, como el setup operativo)."""
+    np=1 (default) ejecuta el binario directo (un solo proceso, como el setup operativo).
+
+    Nota: en este binario, wrf.exe con obs nudging puede abortar de forma INTERMITENTE
+    con SIGSEGV (codigo 139) en mediation_integrate. Para dar robustez a la corrida,
+    si el intento falla sin lograr 'SUCCESS COMPLETE WRF', se limpia el run dir y se
+    reintenta (hasta 'reintentos' veces), aprovechando que una corrida limpia suele
+    completar. Si 'reintentos' es 0, se comporta como antes (un solo intento)."""
     run_dir = Path(run_dir or LOCAL_WRF_DIR)
     mpirun = mpirun or MPIRUN
     np = np or WRF_NP
-    # Limpiar wrfout/rsl previos para que WRF no intente sobrescribir archivos
-    # existentes (puede corromper las salidas).
-    subprocess.run(
-        ["bash", "-lc", f"cd {run_dir} && rm -f wrfout_d01_* rsl.*"],
-        capture_output=True, text=True, timeout=30,
-    )
     if str(np) == "1":
         comando = "./wrf.exe"
         detalle = "1 proceso"
     else:
         comando = f"{mpirun} -np {np} ./wrf.exe"
         detalle = f"mpirun -np {np}"
-    logger.info(f"Paso: Corriendo wrf.exe ({run_label}, {detalle})...")
-    start = time.time()
-    ok, salida = ejecutar_comando(
-        comando,
-        cwd=str(run_dir),
-        timeout=timeout,
-    )
-    elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start))
-    if ok:
-        ok = ("SUCCESS COMPLETE WRF" in salida
-              or verificar_success(run_dir, "SUCCESS COMPLETE WRF"))
-    if ok:
-        logger.info(f"  wrf.exe ({run_label}) completado en {elapsed}")
-    else:
-        logger.error(f"  wrf.exe ({run_label}) FALLIDO despues de {elapsed}")
-    return ok
+    intento_actual = 1
+    while True:
+        # Limpiar wrfout/rsl previos para que WRF no intente sobrescribir archivos
+        # existentes (puede corromper las salidas ni contaminar el reintento).
+        subprocess.run(
+            ["bash", "-lc", f"cd {run_dir} && rm -f wrfout_d01_* rsl.*"],
+            capture_output=True, text=True, timeout=30,
+        )
+        if reintentos > 0:
+            logger.info(f"Paso: Corriendo wrf.exe ({run_label}, {detalle}) [intento {intento_actual}/{reintentos + 1}]...")
+        else:
+            logger.info(f"Paso: Corriendo wrf.exe ({run_label}, {detalle})...")
+        start = time.time()
+        ok, salida = ejecutar_comando(
+            comando,
+            cwd=str(run_dir),
+            timeout=timeout,
+        )
+        elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start))
+        if ok:
+            ok = ("SUCCESS COMPLETE WRF" in salida
+                  or verificar_success(run_dir, "SUCCESS COMPLETE WRF"))
+        if ok:
+            logger.info(f"  wrf.exe ({run_label}) completado en {elapsed} (intento {intento_actual})")
+            return ok
+        logger.error(f"  wrf.exe ({run_label}) FALLIDO en el intento {intento_actual} despues de {elapsed}")
+        if intento_actual > reintentos:
+            return False
+        logger.warning(f"  Reintentando wrf.exe ({run_label}) ({intento_actual + 1}/{reintentos + 1})...")
+        intento_actual += 1
 
 
 def copiar_wrfout(run_dir, dest_dir, valid_time):
@@ -357,7 +368,7 @@ def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, la
     logger.info("Paso: Ejecutando validacion (local)...")
 
     valida_script_local = str(PROJECT_DIR / "src" / "calidad" / "valida_wrf.py")
-    estaciones_json_local = str(PROJECT_DIR / "config" / "estaciones.json")
+    estaciones_json_local = str(ESTACIONES_JSON)
 
     cmd = [
         VALIDATION_PYTHON, valida_script_local,
@@ -413,8 +424,8 @@ def pipeline(args):
 
     # === PASOS 1-3: Generar OBS_DOMAIN101 ===
     if not args.validate_only:
-        littler_path, timestamp = generar_littler_desde_json(args.json, obsdomain_dir)
-        obsdomain = generar_obsdomain(littler_path, obsdomain_dir, run_dir, args.prepare_only)
+        littler_path, timestamp, df = generar_littler_desde_json(args.json, obsdomain_dir)
+        obsdomain = generar_obsdomain(df, obsdomain_dir, run_dir, args.prepare_only)
 
         if obsdomain is None and not args.prepare_only:
             logger.error("Fallo la generacion de OBS_DOMAIN101")
