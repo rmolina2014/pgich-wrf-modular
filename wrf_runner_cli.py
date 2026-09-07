@@ -19,8 +19,9 @@ import argparse
 import logging
 import sys
 from datetime import datetime
+from pathlib import Path
 
-sys.path.insert(0, "/home/pgich/arq_modular")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pipeline_wrf as pw
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")

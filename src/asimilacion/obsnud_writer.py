@@ -26,7 +26,7 @@ class ObsNudWriter:
         return u, v, 129.0, 129.0
 
     def escribir_obsnud(self, observaciones: List[Dict[str, Any]], output_path: str = "data/processed/OBS_DOMAIN101") -> Path:
-        """Escribe la lista de observaciones en el archivo destino con formato estricto FORMAT 105."""
+        """Escribe la lista de observaciones en el archivo destino con formato estricto FORMAT 105 de WRF."""
         dst_path = Path(output_path)
         dst_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -80,30 +80,38 @@ class ObsNudWriter:
                 wdir = obs.get("direcc")
                 u, v, u_qc, v_qc = self._u_v(wspd, wdir)
 
-                # 1. Timestamp
+                # 1. Timestamp (YYYYMMDDHHMMSS)
                 f.write(f" {dt_str}\n")
-                # 2. Coordenadas
-                f.write(f"  {lat:7.4f}  {lon:7.4f} \n")
-                # 3. Identificador
-                f.write(f"  {nombre:40s}  {'SURFACE':40s}\n")
-                # 4. Plataforma y elevación (SYNOP platform, plfo=4)
-                f.write(f"        {'SYNOP':>5s}       {nombre:15s}  {int(elev):10d}  F     F       1\n")
-                # 5. Formato 105 (9 pares: slp, ref_p, height, t_k, u, v, rh, psfc, precip)
+                # 2. Coordenadas: FORMAT(2x,2(f9.4,1x))
+                f.write(f"  {lat:9.4f} {lon:9.4f} \n")
+                # 3. Identificador: FORMAT(2x,2(a40,3x))
+                f.write(f"  {nombre:<40s}   {'SURFACE':<40s}   \n")
+                # 4. Plataforma y elevación: FORMAT(2x,2(a16,2x),f8.0,2x,2(l4,2x),i5)
+                #   2x, platform(a16), 2x, source(a16), 2x, elev(f8.0), 2x, is_sound(l4), 2x, bogus(l4), 2x, meas_count(i5)
+                # "FM-12 SYNOP" en cols 7-11 del campo platform: asi es como
+                # WRF (wrf_fddaobs_in.F) reconoce el tipo de plataforma (plfo=4);
+                # escribir solo "SYNOP" al inicio del campo lo deja en "unknown".
+                f.write(f"  {'FM-12 SYNOP':<16s}  {nombre:<16s}  {elev:>8.0f}  {'F':<4s}  {'F':<4s}  {1:>5d}\n")
+                # 5. Datos FORMAT 105: 9 pares (valor, qc) = 18 valores
+                # slp, slp_qc, ref_p, ref_p_qc, height, height_qc, temp, temp_qc, u, u_qc, v, v_qc, rh, rh_qc, psfc, psfc_qc, precip, precip_qc
                 linea_datos = (
                     f" -888888.000 -888888.000 -888888.000 -888888.000"
-                    f"     {elev:7.3f}       0.000"
-                    f"     {t_k:7.3f}     {t_qc:7.3f}"
-                    f"     {u:7.3f}     {u_qc:7.3f}"
-                    f"     {v:7.3f}     {v_qc:7.3f}"
-                    f"     {rh:7.3f}     {rh_qc:7.3f}"
-                    f"   {psfc_pa:9.3f}     {psfc_qc:7.3f}"
+                    f" {elev:>11.3f}       0.000"
+                    f" {t_k:>11.3f} {t_qc:>11.3f}"
+                    f" {u:>11.3f} {u_qc:>11.3f}"
+                    f" {v:>11.3f} {v_qc:>11.3f}"
+                    f" {rh:>11.3f} {rh_qc:>11.3f}"
+                    f" {psfc_pa:>11.3f} {psfc_qc:>11.3f}"
                     f" -888888.000 -888888.000\n"
                 )
                 f.write(linea_datos)
                 escritas += 1
 
-            # Marcador de fin de archivo
-            f.write(" -777777.000 -777777.000 -777777.000 -777777.000       0.000       0.000 -777777.000 -777777.000       0.000       0.000       0.000       0.000       0.000       0.000       0.000       0.000 -888888.000 -888888.000\n")
+            # Sin marcador de fin de archivo: el lector de WRF (wrf_fddaobs_in.F)
+            # detecta el fin de las observaciones por EOF real (read ... end=111),
+            # no por un registro -777777. Escribirlo se interpreta como una
+            # observacion adicional invalida y provoca un error de formato
+            # Fortran no controlado (wrf.exe termina con exit code 2).
 
         logger.info(f"OBS_DOMAIN101 generado en {dst_path} con {escritas} observaciones.")
         return dst_path

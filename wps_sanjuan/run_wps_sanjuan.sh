@@ -24,11 +24,18 @@ fi
 START_DATE="${FECHA}_${HORA}:00:00"
 END_DATE=$(date -d "${FECHA} ${HORA}:00:00 12 hours" +%Y-%m-%d_%H:00:00)
 
-export WRF_BASE=/home/pgich/Build_WRF
-export WRF_EJECUTABLES=/home/pgich/wrf-operativo/ejecutables
-source ${WRF_EJECUTABLES}/env.bash 2>/dev/null || true
+export WRF_BASE=/home/roberto/opencode/wrf
+export WPS_DIR=/home/roberto/opencode/wrf/WPS-4.0
+export WRF_EJECUTABLES=/home/roberto/opencode/wrf/WRF-4.0
+source ${WRF_EJECUTABLES}/run/env.bash 2>/dev/null || true
 
 cd "$(dirname "$0")"
+
+# Vincular ejecutables y tablas de la instalacion WPS local si no estan presentes
+for bin in geogrid.exe metgrid.exe ungrib.exe link_grib.csh; do
+    [ -e "$bin" ] || ln -sf "$WPS_DIR/$bin" "$bin"
+done
+[ -e Vtable ] || ln -sf "$WPS_DIR/ungrib/Variable_Tables/Vtable.GFS" Vtable
 
 # Preparar namelist.wps con las fechas del caso
 sed -e "s/START_DATE/${START_DATE}/g" \

@@ -49,28 +49,30 @@ RESULTS_DIR = Path(__file__).parent / "results"
 # Metadatos de estaciones (archivo compartido por los modulares)
 ESTACIONES_JSON = Path(__file__).parent / "config" / "estaciones.json"
 
-# === Configuracion nativa (WRF local) ===
+# === Configuracion nativa (WRF local en esta PC) ===
 # Directorio de corrida de WRF (debe contener wrf.exe, wrfinput, wrfbdy)
 LOCAL_WRF_DIR = Path(os.environ.get(
     "LOCAL_WRF_DIR",
-    "/home/pgich/wrf-operativo/ejecutables/WRF",
+    "/home/roberto/opencode/wrf/WRF-4.0/run",
 ))
-# Script que carga el entorno operativo (LD_LIBRARY_PATH, MPICH, etc.)
+# Script que carga el entorno operativo (LD_LIBRARY_PATH, MPICH, etc.).
+# En esta PC WRF enlaza las librerias del sistema, por lo que este archivo
+# puede no existir; ejecutar_comando lo carga solo si esta presente.
 WRF_ENV_BASH = os.environ.get(
     "WRF_ENV_BASH",
-    "/home/pgich/wrf-operativo/ejecutables/env.bash",
+    "/home/roberto/opencode/wrf/WRF-4.0/run/env.bash",
 )
-# mpirun de la instalacion MPICH local
+# mpirun de la instalacion MPI local
 MPIRUN = os.environ.get(
     "MPIRUN",
-    "/home/pgich/Build_WRF/libraries/MPICH/bin/mpirun",
+    "/usr/bin/mpirun",
 )
 # Numero de procesos MPI para wrf.exe (1 = ejecucion directa, como el setup operativo)
 WRF_NP = os.environ.get("WRF_NP", "1")
 # Python con xarray/netCDF4 para la validacion
 VALIDATION_PYTHON = os.environ.get(
     "VALIDATION_PYTHON",
-    "/home/pgich/anaconda3/envs/wrf-operativo-p3/bin/python",
+    "/usr/bin/python3",
 )
 
 # Importar modulos modulares del proyecto
@@ -115,7 +117,10 @@ def ejecutar_comando(cmd, cwd=None, timeout=7200):
     import tempfile
     log_fd, log_path = tempfile.mkstemp(prefix="wrf_run_", suffix=".log")
     os.close(log_fd)
-    full_cmd = (f"source {WRF_ENV_BASH} && export OMP_NUM_THREADS=1 "
+    # Si existe un script de entorno, cargarlo; en esta PC es opcional
+    # (WRF enlaza las librerias del sistema).
+    env_load = f"source {WRF_ENV_BASH} && " if Path(WRF_ENV_BASH).exists() else ""
+    full_cmd = (f"{env_load}export OMP_NUM_THREADS=1 "
                 f"&& {{ {cmd} ; }} > {log_path} 2>&1")
     logger.info(f"  Ejecutando: {cmd}")
     result = subprocess.run(

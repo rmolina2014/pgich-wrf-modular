@@ -22,16 +22,18 @@ LOG_FILE="${4:?log_file required}"
 STATUS_FILE="${5:?status_file required}"
 MAX_RETRIES="${6:-5}"
 
-WRF_ENV="/home/pgich/wrf-operativo/ejecutables/env.bash"
+WRF_ENV="${WRF_ENV:-/home/roberto/opencode/wrf/WRF-4.0/run/env.bash}"
 
 log() { echo "[$(date '+%H:%M:%S')] $*" >> "$LOG_FILE"; }
 
 log "=== wrf_shell.sh mode=$MODE run_dir=$RUN_DIR ==="
 log "namelist=$NAMELIST max_retries=$MAX_RETRIES"
 
-# Load WRF environment
-# shellcheck disable=SC1090
-source "$WRF_ENV" >> "$LOG_FILE" 2>&1
+# Load WRF environment (opcional: solo si existe; WRF enlaza libs del sistema)
+if [ -f "$WRF_ENV" ]; then
+    # shellcheck disable=SC1090
+    source "$WRF_ENV" >> "$LOG_FILE" 2>&1
+fi
 export OMP_NUM_THREADS=1
 
 # Copy namelist
