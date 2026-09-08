@@ -23,7 +23,7 @@
  truelat1  = -31.5,
  truelat2  = 0.0,
  stand_lon = -68.5,
- geog_data_path = '/home/roberto/opencode/wrf/geog/WPS_GEOG_LOW_RES',
+ geog_data_path = '/home/pgich/wrf-operativo/datos/WPS_GEOG',
 /
 
 &ungrib

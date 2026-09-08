@@ -22,7 +22,7 @@ LOG_FILE="${4:?log_file required}"
 STATUS_FILE="${5:?status_file required}"
 MAX_RETRIES="${6:-5}"
 
-WRF_ENV="${WRF_ENV:-/home/roberto/opencode/wrf/WRF-4.0/run/env.bash}"
+WRF_ENV="${WRF_ENV:-/home/pgich/wrf-operativo/ejecutables/env.bash}"
 
 log() { echo "[$(date '+%H:%M:%S')] $*" >> "$LOG_FILE"; }
 

@@ -1,0 +1,40 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-06_06:00:00
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+---------------------------------------------------------------------------------------------------------
+T2 (K)            26      -0.35       5.01       5.03   -0.997      +1.73       7.19       7.40   -0.997
+PSFC (hPa)        26     -18.22      18.22      24.82    0.999     -19.34      19.34      25.18    0.999
+RH (%)            26     -34.18      34.18      45.64    0.999     -42.50      42.50      57.42   -0.999
+Wind (m/s)        26      +5.49      11.15      12.65   -0.835      +9.15       9.51      12.47   -0.835
+---------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m

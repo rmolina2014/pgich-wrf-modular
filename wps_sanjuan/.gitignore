@@ -12,6 +12,7 @@ Vtable
 gfs_data/
 GRIBFILE.*
 FILE:*
+PFILE:*
 geo_em.d01.nc
 met_em.*.nc
 *.log

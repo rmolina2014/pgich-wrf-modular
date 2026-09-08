@@ -90,10 +90,13 @@ class TestFormatosAsimilacion(unittest.TestCase):
         content = out_file.read_text(encoding="utf-8")
         lines = content.strip().split("\n")
         self.assertGreaterEqual(len(lines), 5)
-        # Verificar plataforma SYNOP
+        # Verificar plataforma SYNOP (formato FORMAT 105 de WRF)
         self.assertTrue(any("SYNOP" in l for l in lines))
-        # Verificar fin de archivo con marcador -777777.000
-        self.assertIn("-777777.000", lines[-1])
+        # Nueva version: sin marcador de fin de archivo -777777.000 (el lector de
+        # WRF detecta el fin por EOF; escribirlo provoca error de formato en wrf.exe).
+        # La ultima linea debe contener los datos de una observacion, no el marcador.
+        self.assertNotIn("-777777.000", content)
+        self.assertIn("FM-12 SYNOP", content)
 
 
 class TestNamelistManager(unittest.TestCase):
