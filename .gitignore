@@ -1,11 +1,17 @@
 # Datos pesados (regenerables desde pipeline)
 gfs/
 gfs_data/
-results/
 data/raw/
 data/processed/
 plots/
 experiments/
+
+# results/: solo se versionan wrfout/wrfinput/wrfbdy (análisis y re-simulación)
+results/**
+!results/**/
+!results/**/wrfout_*
+!results/**/wrfinput_*
+!results/**/wrfbdy_*
 
 # Python
 __pycache__/
@@ -77,11 +83,8 @@ FILE:*
 geo_em.d01.nc
 met_em.*.nc
 
-# Archivos de WRF
+# Archivos de WRF (los wrfout/wrfinput/wrfbdy se versionan, los .nc intermedios no)
 *.nc
-wrfout_*
-wrfinput_*
-wrfbdy_*
 met_em_*
 
 # Archivos de Streamlit (si aplica)
