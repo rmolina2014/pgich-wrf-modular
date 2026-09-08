@@ -47,7 +47,6 @@ logging.basicConfig(
 logger = logging.getLogger("pipeline_wrf")
 
 # Rutas fijas del proyecto
-PROJECT_DIR = Path(__file__).parent / "tesis_wrf_pgich"
 DATA_RAW = Path(__file__).parent / "data" / "raw"
 DATA_PROCESSED = Path(__file__).parent / "data" / "processed"
 RESULTS_DIR = Path(__file__).parent / "results"
@@ -379,7 +378,7 @@ def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, la
     """Ejecuta valida_wrf.py localmente con el python del entorno de validacion."""
     logger.info("Paso: Ejecutando validacion (local)...")
 
-    valida_script_local = str(PROJECT_DIR / "src" / "calidad" / "valida_wrf.py")
+    valida_script_local = str(Path(__file__).parent / "src" / "validacion" / "valida_wrf_cli.py")
     estaciones_json_local = str(ESTACIONES_JSON)
 
     cmd = [
