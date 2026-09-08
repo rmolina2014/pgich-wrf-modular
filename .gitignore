@@ -1,8 +1,6 @@
 # Datos pesados (regenerables desde pipeline)
 gfs/
 gfs_data/
-data/raw/
-data/processed/
 plots/
 experiments/
 
