@@ -6,6 +6,20 @@ carpeta legada `tesis_wrf_pgich/` del repositorio modular `pgich-wrf-modular`.
 > Estado: **ya ejecutado** en el commit `6a98dcc` (62 archivos: 51 eliminados del
 > legado, 11 modificados/nuevos en la arquitectura modular). Este documento queda
 > como instructivo y registro del procedimiento.
+>
+> **Nota (2026-09-08):** ese commit `6a98dcc` se hizo en otra máquina (Windows) y
+> nunca llegó a este repo remoto. En esta PC (Linux) la migración se rehizo en el
+> commit `c640b52`: la única dependencia real que quedaba era
+> `tesis_wrf_pgich/src/calidad/valida_wrf.py` (usado por `pipeline_wrf.py` en el
+> paso de validación), migrado a `src/validacion/valida_wrf_cli.py`. El resto de lo
+> que describe este documento (`obsnud_writer.py`, `littler_writer.py`,
+> `cleaner.py`/`qc_rules.py`, `ecowitt_client.py`, `config/estaciones.json`) ya
+> estaba migrado en este repo desde antes. También se eliminó `probar_circuito.py`
+> (prototipo Streamlit standalone del flujo viejo por contenedor Docker, sin
+> referencias activas, superado por `app_streamlit.py`). Los históricos de
+> `tesis_wrf_pgich/historico/` (§5.1/5.2 de este documento) no se migraron a
+> `data/historico/` porque nada en este repo los lee actualmente; quedan
+> recuperables del backup externo o del historial de git si hicieran falta.
 
 ---
 
