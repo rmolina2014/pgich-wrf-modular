@@ -24,9 +24,14 @@ fi
 START_DATE="${FECHA}_${HORA}:00:00"
 END_DATE=$(date -d "${FECHA} ${HORA}:00:00 12 hours" +%Y-%m-%d_%H:00:00)
 
-export WRF_BASE=/home/pgich/Build_WRF
-export WPS_DIR=/home/pgich/Build_WRF/WPS
-export WRF_EJECUTABLES=/home/pgich/wrf-operativo/ejecutables
+# PC pgich:
+# export WRF_BASE=/home/pgich/Build_WRF
+# export WPS_DIR=/home/pgich/Build_WRF/WPS
+# export WRF_EJECUTABLES=/home/pgich/wrf-operativo/ejecutables
+# PC roberto:
+export WRF_BASE=/home/roberto/opencode/wrf
+export WPS_DIR=/home/roberto/opencode/wrf/WPS-4.0
+export WRF_EJECUTABLES=/home/roberto/opencode/wrf/WRF-4.0
 source ${WRF_EJECUTABLES}/env.bash 2>/dev/null || true
 
 cd "$(dirname "$0")"

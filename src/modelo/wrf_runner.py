@@ -13,7 +13,8 @@ class WRFRunner:
     """Orquestador de simulaciones WRF (local o vía contenedor Docker)."""
 
     def __init__(self, run_dir: Optional[str] = None):
-        self.run_dir = Path(run_dir or os.environ.get("LOCAL_WRF_DIR", "/home/pgich/wrf-operativo/ejecutables/WRF"))
+        # PC pgich: "/home/pgich/wrf-operativo/ejecutables/WRF"
+        self.run_dir = Path(run_dir or os.environ.get("LOCAL_WRF_DIR", "/home/roberto/opencode/wrf/WRF-4.0/run"))  # PC roberto
 
     def verificar_entorno(self) -> Dict[str, bool]:
         """Verifica la presencia de ejecutables y archivos base de WRF."""

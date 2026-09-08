@@ -53,30 +53,39 @@ RESULTS_DIR = Path(__file__).parent / "results"
 # Metadatos de estaciones (archivo compartido por los modulares)
 ESTACIONES_JSON = Path(__file__).parent / "config" / "estaciones.json"
 
-# === Configuracion nativa (WRF local en esta PC) ===
+# === Configuracion nativa (WRF local) ===
+# Este proyecto se usa en dos PCs Linux con rutas distintas. El default de cada
+# variable es el de la PC activa; el de la otra PC queda comentado al lado para
+# no perderlo. Si hace falta, tambien se puede overridear con la env var
+# correspondiente (LOCAL_WRF_DIR, WRF_ENV_BASH, MPIRUN, VALIDATION_PYTHON) sin
+# tocar el codigo.
 # Directorio de corrida de WRF (debe contener wrf.exe, wrfinput, wrfbdy)
 LOCAL_WRF_DIR = Path(os.environ.get(
     "LOCAL_WRF_DIR",
-    "/home/pgich/wrf-operativo/ejecutables/WRF",
+    # "/home/pgich/wrf-operativo/ejecutables/WRF",  # PC pgich
+    "/home/roberto/opencode/wrf/WRF-4.0/run",  # PC roberto
 ))
 # Script que carga el entorno operativo (LD_LIBRARY_PATH, MPICH, etc.).
-# En esta PC WRF enlaza las librerias del sistema, por lo que este archivo
-# puede no existir; ejecutar_comando lo carga solo si esta presente.
+# En la PC roberto WRF enlaza las librerias del sistema, por lo que este
+# archivo puede no existir; ejecutar_comando lo carga solo si esta presente.
 WRF_ENV_BASH = os.environ.get(
     "WRF_ENV_BASH",
-    "/home/pgich/wrf-operativo/ejecutables/env.bash",
+    # "/home/pgich/wrf-operativo/ejecutables/env.bash",  # PC pgich
+    "/home/roberto/opencode/wrf/WRF-4.0/run/env.bash",  # PC roberto
 )
 # mpirun de la instalacion MPI local
 MPIRUN = os.environ.get(
     "MPIRUN",
-    "/home/pgich/Build_WRF/libraries/MPICH/bin/mpirun",
+    # "/home/pgich/Build_WRF/libraries/MPICH/bin/mpirun",  # PC pgich
+    "/usr/bin/mpirun",  # PC roberto
 )
 # Numero de procesos MPI para wrf.exe (1 = ejecucion directa, como el setup operativo)
 WRF_NP = os.environ.get("WRF_NP", "1")
 # Python con xarray/netCDF4 para la validacion
 VALIDATION_PYTHON = os.environ.get(
     "VALIDATION_PYTHON",
-    "/home/pgich/anaconda3/envs/wrf-operativo-p3/bin/python",
+    # "/home/pgich/anaconda3/envs/wrf-operativo-p3/bin/python",  # PC pgich
+    "/usr/bin/python3",  # PC roberto
 )
 
 # Importar modulos modulares del proyecto
