@@ -85,5 +85,7 @@ met_em.*.nc
 *.nc
 met_em_*
 
-# Archivos de Streamlit (si aplica)
-.streamlit/
+# Archivos de Streamlit (si aplica): ignorar todo salvo el tema (config.toml
+# no tiene secretos; secrets.toml si existiera, se sigue ignorando)
+.streamlit/*
+!.streamlit/config.toml

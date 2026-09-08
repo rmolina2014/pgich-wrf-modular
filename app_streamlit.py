@@ -86,17 +86,77 @@ def fecha_wrfinput_disponible():
         return None
 
 
+def inyectar_estilos():
+    st.markdown(
+        """
+        <style>
+        .block-container { padding-top: 2rem; padding-bottom: 3rem; }
+
+        .pgich-hero {
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 55%, #3B82F6 100%);
+            padding: 1.75rem 2rem;
+            border-radius: 14px;
+            color: white;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 18px rgba(37, 99, 235, 0.25);
+        }
+        .pgich-hero h1 {
+            color: white; font-size: 1.9rem; margin: 0 0 0.4rem 0; line-height: 1.2;
+        }
+        .pgich-hero p { color: #DBEAFE; margin: 0; font-size: 0.95rem; }
+        .pgich-hero code {
+            background: rgba(255,255,255,0.15); color: #EFF6FF;
+            padding: 0.1rem 0.4rem; border-radius: 4px;
+        }
+
+        .pgich-section {
+            font-size: 1.15rem; font-weight: 600; color: #1E3A8A;
+            border-bottom: 2px solid #DBEAFE;
+            padding-bottom: 0.4rem; margin: 1.8rem 0 1rem 0;
+        }
+
+        [data-testid="stMetric"] {
+            background: #F8FAFC; border: 1px solid #E2E8F0;
+            border-radius: 10px; padding: 0.9rem 1rem 0.6rem 1rem;
+        }
+        [data-testid="stMetricLabel"] { color: #475569; }
+
+        .stButton > button { border-radius: 8px; font-weight: 600; }
+
+        [data-testid="stSidebar"] { background: #F8FAFC; }
+        [data-testid="stSidebar"] h2 { color: #1E3A8A; }
+
+        .pgich-footer {
+            text-align: center; color: #64748B; font-size: 0.85rem;
+            padding-top: 1rem; margin-top: 2rem; border-top: 1px solid #E2E8F0;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def seccion(titulo: str):
+    st.markdown(f'<div class="pgich-section">{titulo}</div>', unsafe_allow_html=True)
+
+
 def main():
     st.set_page_config(
         page_title="Pipeline WRF PGICH",
         page_icon="🌦️",
         layout="wide",
     )
+    inyectar_estilos()
 
-    st.title("🌦️ Pipeline WRF PGICH — Asimilación de Observaciones")
-    st.caption(
-        "Versión nativa (sin Docker). Usa el WRF instalado en esta máquina: "
-        f"`{pw.LOCAL_WRF_DIR}`"
+    st.markdown(
+        f"""
+        <div class="pgich-hero">
+          <h1>🌦️ Pipeline WRF PGICH</h1>
+          <p>Asimilación de observaciones · WRF nativo (sin Docker) ·
+             corriendo sobre <code>{pw.LOCAL_WRF_DIR}</code></p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     # Fecha del wrfinput disponible (para alinear la corrida)
@@ -154,21 +214,22 @@ def main():
             usar_real = False
 
     # --- VERIFICACIONES ---
-    st.markdown("### 🔍 Estado del entorno")
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        ok = pw.check_run_dir()
-        st.metric("WRF run dir", "✅ OK" if ok else "❌", str(pw.LOCAL_WRF_DIR))
-    with c2:
-        ok_env = Path(pw.WRF_ENV_BASH).exists()
-        st.metric("Env bash", "✅ OK" if ok_env else "❌", pw.WRF_ENV_BASH)
-    with c3:
-        ok_est = pw.ESTACIONES_JSON.exists()
-        st.metric("Estaciones", "✅ OK" if ok_est else "❌", str(pw.ESTACIONES_JSON))
-    with c4:
-        ok_meta = list(pw.ESTACIONES_JSON.exists() and
-                       __import__("json").load(open(pw.ESTACIONES_JSON)) if pw.ESTACIONES_JSON.exists() else [])
-        st.metric("Metadatos estaciones", f"✅ {len(ok_meta)}" if ok_meta else "❌", "config/estaciones.json")
+    seccion("🔍 Estado del entorno")
+    with st.container(border=True):
+        c1, c2, c3, c4 = st.columns(4)
+        with c1:
+            ok = pw.check_run_dir()
+            st.metric("WRF run dir", "✅ OK" if ok else "❌", str(pw.LOCAL_WRF_DIR), delta_color="off")
+        with c2:
+            ok_env = Path(pw.WRF_ENV_BASH).exists()
+            st.metric("Env bash", "✅ OK" if ok_env else "❌", pw.WRF_ENV_BASH, delta_color="off")
+        with c3:
+            ok_est = pw.ESTACIONES_JSON.exists()
+            st.metric("Estaciones", "✅ OK" if ok_est else "❌", str(pw.ESTACIONES_JSON), delta_color="off")
+        with c4:
+            ok_meta = list(pw.ESTACIONES_JSON.exists() and
+                           __import__("json").load(open(pw.ESTACIONES_JSON)) if pw.ESTACIONES_JSON.exists() else [])
+            st.metric("Metadatos estaciones", f"✅ {len(ok_meta)}" if ok_meta else "❌", "config/estaciones.json", delta_color="off")
 
     _json_abs = Path(json_path)
     if not _json_abs.is_absolute():
@@ -185,19 +246,20 @@ def main():
     p_json = Path(_json_abs)
     if p_json.exists():
         raw = pd.read_json(p_json)
-        st.markdown("### 📄 Datos crudos")
+        seccion("📄 Datos crudos")
         st.dataframe(raw)
 
     # --- ACCIONES ---
-    st.markdown("### 🚀 Acciones")
+    seccion("🚀 Acciones")
 
-    b1, b2, b3 = st.columns(3)
-    with b1:
-        ejecutar_prepare = st.button("1️⃣ Preparar OBS_DOMAIN101", type="secondary", use_container_width=True)
-    with b2:
-        ejecutar_completo = st.button("2️⃣ Ejecutar pipeline completo", type="primary", use_container_width=True)
-    with b3:
-        ver_ultimo = st.button("3️⃣ Ver archivos del último caso", use_container_width=True)
+    with st.container(border=True):
+        b1, b2, b3 = st.columns(3)
+        with b1:
+            ejecutar_prepare = st.button("1️⃣ Preparar OBS_DOMAIN101", type="secondary", use_container_width=True)
+        with b2:
+            ejecutar_completo = st.button("2️⃣ Ejecutar pipeline completo", type="primary", use_container_width=True)
+        with b3:
+            ver_ultimo = st.button("3️⃣ Ver archivos del último caso", use_container_width=True)
 
     results_dir = pw.RESULTS_DIR / f"{fecha.strftime('%Y-%m-%d')}_{hora.replace(':', '')}z" / caso
     input_dir = results_dir / "input"
@@ -228,7 +290,7 @@ def main():
                 st.warning("OBS_DOMAIN101 generado pero no se copió al run dir.")
 
             with st.container():
-                st.markdown("### 📊 Observaciones procesadas")
+                seccion("📊 Observaciones procesadas")
                 st.dataframe(df)
                 fig = graficar_observaciones(df)
                 st.pyplot(fig)
@@ -242,7 +304,7 @@ def main():
             mostrar_archivo(littler_path, "📄 Little_R")
 
             if ejecutar_completo:
-                st.markdown("### 🌀 Ejecutando WRF (shell script via setsid)")
+                seccion("🌀 Ejecutando WRF (shell script via setsid)")
                 st.info(
                     "La corrida WRF corre en un shell script lanzado con setsid para "
                     "evitar el crash de wrf.exe con obs nudging dentro del servidor "
@@ -386,8 +448,10 @@ def main():
         else:
             st.info(f"No existe el directorio: `{results_dir}`")
 
-    st.markdown("---")
-    st.markdown("**PGICH v0.2.0** — Pipeline WRF modular (nativo, sin Docker)")
+    st.markdown(
+        '<div class="pgich-footer">🌦️ <b>PGICH v0.2.0</b> — Pipeline WRF modular (nativo, sin Docker)</div>',
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
