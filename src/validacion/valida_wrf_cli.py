@@ -428,6 +428,12 @@ def main():
     print(f"Salida: {output_dir}")
     print(f"Estaciones: {len(stations)}")
 
+    if not stations:
+        print(f"ERROR: Ninguna estacion tiene observaciones dentro de la ventana "
+              f"(+/-{args.ventana_min} min) alrededor de {valid_time}. "
+              "Nada que validar (revisar --valid-time u --obs-json).")
+        return 1
+
     nudged_data = load_run(nudged_dir, valid_time, stations)
     control_data = load_run(control_dir, valid_time, stations)
 
