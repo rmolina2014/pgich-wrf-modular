@@ -31,8 +31,7 @@ import re
 import shutil
 import subprocess
 import sys
-import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -100,6 +99,8 @@ VALIDATION_PYTHON = os.environ.get(
 from src.calidad.cleaner import ObservacionesCleaner
 from src.asimilacion.littler_writer import LittleRWriter
 from src.asimilacion.obsnud_writer import ObsNudWriter
+from src.modelo.namelist_manager import NamelistManager
+from src.modelo.wrf_runner import WRFRunner
 
 
 def check_run_dir(run_dir=None):
@@ -130,117 +131,31 @@ def copiar_archivo(src, dst, timeout=60):
         return False
 
 
-def ejecutar_comando(cmd, cwd=None, timeout=7200):
-    """Ejecuta un comando dentro del shell con el entorno WRF operativo cargado.
-    La salida se vuelca a un archivo temporal (evita el pipe de subprocess, que
-    dispara un SIGSEGV reproducible en wrf.exe con obs nudging).
-    Devuelve (ok, salida_combinada)."""
-    import tempfile
-    log_fd, log_path = tempfile.mkstemp(prefix="wrf_run_", suffix=".log")
-    os.close(log_fd)
-    # Si existe un script de entorno, cargarlo; en esta PC es opcional
-    # (WRF enlaza las librerias del sistema).
-    env_load = f"source {WRF_ENV_BASH} && " if Path(WRF_ENV_BASH).exists() else ""
-    full_cmd = ("export LD_LIBRARY_PATH='' "
-                "&& unset OMP_NUM_THREADS OMP_STACKSIZE KMP_STACKSIZE 2>/dev/null || true "
-                f"&& {env_load}export OMP_NUM_THREADS=1 "
-                f"&& {{ {cmd} ; }} > {log_path} 2>&1")
-    logger.info(f"  Ejecutando: {cmd}")
-    result = subprocess.run(
-        ["bash", "-lc", full_cmd],
-        timeout=timeout, cwd=cwd,
-    )
-    try:
-        with open(log_path) as f:
-            salida = f.read()
-    finally:
-        os.remove(log_path)
-    if result.returncode != 0:
-        logger.error(f"  Error (codigo {result.returncode}): {salida.strip()[-500:]}")
-    else:
-        for line in salida.splitlines()[-10:]:
-            logger.info(f"  {line}")
-    return result.returncode == 0, salida
-
-
-def verificar_success(run_dir, mensaje="SUCCESS COMPLETE WRF"):
-    """Verifica el mensaje de exito en rsl.out.0000 si existe."""
-    rsl = Path(run_dir) / "rsl.out.0000"
-    if not rsl.exists():
-        return False
-    content = rsl.read_text(errors="ignore")
-    if mensaje in content:
-        return True
-    tail = "\n".join(content.splitlines()[-15:])
-    logger.error(f"  Sin '{mensaje}' en rsl.out.0000:\n{tail}")
-    return False
-
-
-def _parchear_fechas(content, start_dt, run_hours):
-    """Actualiza start_*/end_* del namelist a partir de la fecha de inicio."""
-    from datetime import timedelta
-    end_dt = start_dt + timedelta(hours=run_hours)
-
-    campos = [
-        ("start_year", start_dt.year), ("start_month", start_dt.month),
-        ("start_day", start_dt.day), ("start_hour", start_dt.hour),
-        ("start_minute", start_dt.minute), ("start_second", start_dt.second),
-        ("end_year", end_dt.year), ("end_month", end_dt.month),
-        ("end_day", end_dt.day), ("end_hour", end_dt.hour),
-        ("end_minute", end_dt.minute), ("end_second", end_dt.second),
-    ]
-    for key, val in campos:
-        # Reemplaza el primer entero de la linea (namelist de dominio unico)
-        content = re.sub(
-            rf'({key}\s*=\s*)[\d,\s]+',
-            lambda m: f"{m.group(1)}{val},",
-            content,
-            count=1,
-        )
-    return content
-
-
 def preparar_namelist(namelist_src, obs_nudge_opt, output_path, start_dt=None, **kwargs):
     """
-    Lee un namelist template, modifica parametros y escribe la version final.
-    kwargs puede contener: obs_coef_wind, obs_coef_temp, obs_coef_mois, obs_twindo
-    start_dt (datetime): si se provee, actualiza las fechas del namelist.
+    Prepara un namelist final delegando en src/modelo/namelist_manager.py.
+    - Parchea las fechas de inicio/fin si se pasa start_dt (run_hours se lee del namelist).
+    - Fija obs_nudge_opt y parametros de sensibilidad (obs_coef_*, obs_twindo).
+    - Fuerza fdda_end=720 (12h) para que el obs nudging funcione.
     """
-    with open(namelist_src) as f:
-        content = f.read()
-
-    # Fechas desde --date/--hour (run_hours se lee del namelist)
+    mgr = NamelistManager(template_path=str(namelist_src))
     if start_dt is not None:
-        m = re.search(r'run_hours\s*=\s*(\d+)', content)
+        m = re.search(r'run_hours\s*=\s*(\d+)', mgr.contenido)
         run_hours = int(m.group(1)) if m else 12
-        content = _parchear_fechas(content, start_dt, run_hours)
-
-    # fdda_end siempre 720 (12h) para que funcione obs nudging
-    content = re.sub(
-        r'fdda_end\s*=\s*\d+',
-        f'fdda_end = 720',
-        content
-    )
-
-    # obs_nudge_opt
-    content = re.sub(
-        r'obs_nudge_opt\s*=\s*\d+',
-        f'obs_nudge_opt = {obs_nudge_opt}',
-        content
-    )
-
-    # Parametros de sensibilidad
-    for key, val in kwargs.items():
-        content = re.sub(
-            rf'{key}\s*=\s*[\d.]+',
-            f'{key} = {val}',
-            content
+        end_dt = start_dt + timedelta(hours=run_hours)
+        mgr.actualizar_fechas(
+            start_year=start_dt.year, start_month=start_dt.month,
+            start_day=start_dt.day, start_hour=start_dt.hour,
+            end_year=end_dt.year, end_month=end_dt.month,
+            end_day=end_dt.day, end_hour=end_dt.hour,
+            run_hours=run_hours,
         )
-
-    with open(output_path, 'w') as f:
-        f.write(content)
+    # fdda_end siempre 720 (12h) para que funcione obs nudging
+    mgr.contenido = re.sub(r'fdda_end\s*=\s*\d+', 'fdda_end = 720', mgr.contenido)
+    mgr.configurar_fdda(obs_nudge_opt=obs_nudge_opt, **kwargs)
+    mgr.guardar(output_path)
     logger.info(f"Namelist preparado: {output_path} (obs_nudge_opt={obs_nudge_opt})")
-    return output_path
+    return Path(output_path)
 
 
 def generar_littler_desde_json(json_path, output_dir):
@@ -297,79 +212,26 @@ def copiar_namelist(namelist_path, run_dir):
     return copiar_archivo(namelist_path, run_dir / "namelist.input")
 
 
-def ejecutar_real(run_dir, timeout=7200, mpirun=None, np=None):
-    """Ejecuta real.exe en el directorio de corrida local.
+def ejecutar_real(run_dir=None, timeout=7200, mpirun=None, np=None):
+    """Ejecuta real.exe delegando en WRFRunner (src/modelo/wrf_runner.py).
+
     np=1 (default) ejecuta el binario directo (un solo proceso, como el setup operativo)."""
-    run_dir = Path(run_dir or LOCAL_WRF_DIR)
-    mpirun = mpirun or MPIRUN
-    np = np or WRF_NP
-    if str(np) == "1":
-        comando = "./real.exe"
-        detalle = "1 proceso"
-    else:
-        comando = f"{mpirun} -np {np} ./real.exe"
-        detalle = f"mpirun -np {np}"
-    logger.info(f"Paso: Corriendo real.exe ({detalle})...")
-    ok, salida = ejecutar_comando(
-        comando,
-        cwd=str(run_dir),
-        timeout=timeout,
-    )
-    if ok and ("SUCCESS COMPLETE REAL_EM INIT" in salida
-               or verificar_success(run_dir, "SUCCESS COMPLETE REAL_EM INIT")):
-        return True
-    logger.error("real.exe fallido o sin SUCCESS")
-    return False
+    runner = WRFRunner(run_dir=run_dir or LOCAL_WRF_DIR,
+                       env_bash=WRF_ENV_BASH, mpirun=mpirun or MPIRUN,
+                       np=np or WRF_NP, timeout=timeout)
+    return runner.ejecutar_real()
 
 
-def ejecutar_wrf(run_dir, run_label, timeout=7200, mpirun=None, np=None, reintentos=5):
-    """Ejecuta wrf.exe en el directorio de corrida local.
-    np=1 (default) ejecuta el binario directo (un solo proceso, como el setup operativo).
+def ejecutar_wrf(run_dir=None, run_label="nudged", timeout=7200, mpirun=None, np=None, reintentos=5):
+    """Ejecuta wrf.exe delegando en WRFRunner (src/modelo/wrf_runner.py).
 
-    Nota: en este binario, wrf.exe con obs nudging puede abortar de forma INTERMITENTE
-    con SIGSEGV (codigo 139) en mediation_integrate. Para dar robustez a la corrida,
-    si el intento falla sin lograr 'SUCCESS COMPLETE WRF', se limpia el run dir y se
-    reintenta (hasta 'reintentos' veces), aprovechando que una corrida limpia suele
-    completar. Si 'reintentos' es 0, se comporta como antes (un solo intento)."""
-    run_dir = Path(run_dir or LOCAL_WRF_DIR)
-    mpirun = mpirun or MPIRUN
-    np = np or WRF_NP
-    if str(np) == "1":
-        comando = "./wrf.exe"
-        detalle = "1 proceso"
-    else:
-        comando = f"{mpirun} -np {np} ./wrf.exe"
-        detalle = f"mpirun -np {np}"
-    intento_actual = 1
-    while True:
-        # Limpiar wrfout/rsl previos para que WRF no intente sobrescribir archivos
-        # existentes (puede corromper las salidas ni contaminar el reintento).
-        subprocess.run(
-            ["bash", "-lc", f"cd {run_dir} && rm -f wrfout_d01_* rsl.*"],
-            capture_output=True, text=True, timeout=30,
-        )
-        if reintentos > 0:
-            logger.info(f"Paso: Corriendo wrf.exe ({run_label}, {detalle}) [intento {intento_actual}/{reintentos + 1}]...")
-        else:
-            logger.info(f"Paso: Corriendo wrf.exe ({run_label}, {detalle})...")
-        start = time.time()
-        ok, salida = ejecutar_comando(
-            comando,
-            cwd=str(run_dir),
-            timeout=timeout,
-        )
-        elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start))
-        if ok:
-            ok = ("SUCCESS COMPLETE WRF" in salida
-                  or verificar_success(run_dir, "SUCCESS COMPLETE WRF"))
-        if ok:
-            logger.info(f"  wrf.exe ({run_label}) completado en {elapsed} (intento {intento_actual})")
-            return ok
-        logger.error(f"  wrf.exe ({run_label}) FALLIDO en el intento {intento_actual} despues de {elapsed}")
-        if intento_actual > reintentos:
-            return False
-        logger.warning(f"  Reintentando wrf.exe ({run_label}) ({intento_actual + 1}/{reintentos + 1})...")
-        intento_actual += 1
+    run_label: etiqueta 'nudged'/'control' (solo informativa).
+    reintentos: si wrf.exe aborta (SIGSEGV intermitente con obs nudging), se limpia
+    el run dir y se reintenta; 0 = un solo intento."""
+    runner = WRFRunner(run_dir=run_dir or LOCAL_WRF_DIR,
+                       env_bash=WRF_ENV_BASH, mpirun=mpirun or MPIRUN,
+                       np=np or WRF_NP, timeout=timeout, reintentos=reintentos)
+    return runner.ejecutar_wrf(nudged=(run_label != "control"), run_label=run_label)
 
 
 def copiar_wrfout(run_dir, dest_dir, valid_time):

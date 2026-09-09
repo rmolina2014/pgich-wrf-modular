@@ -37,9 +37,10 @@ Este documento detalla la arquitectura modular implementada y los pasos técnico
 │  └── obsnud_writer.py   ──> data/processed/OBS_DOMAIN101 (FORMAT 105 SYNOP)   │
 │                                                                               │
 │  [src.modelo]                                                                 │
-│  ├── namelist_manager.py──> namelist.input (parcheo dinámico de fechas/FDDA) │
+│  ├── namelist_manager.py ──> namelist.input (parcheo dinámico de fechas/FDDA)│
 │  ├── wps_runner.py      ──> geogrid / ungrib / metgrid (met_em.d01.*.nc)      │
-│  └── wrf_runner.py      ──> real.exe / wrf.exe (OMP_NUM_THREADS=1, logs)     │
+│  └── wrf_runner.py      ──> real.exe / wrf.exe (OMP_NUM_THREADS=1, logs,      │
+│                              reintentos anti-SIGSEGV, verificación SUCCESS)   │
 │                                                                               │
 │  [src.validacion]                                                             │
 │  ├── spatial_interp.py  ──> Interpolación 4 nodos, Tetens (HR), viento u/v    │
@@ -49,12 +50,12 @@ Este documento detalla la arquitectura modular implementada y los pasos técnico
 │  ├── plot_generator.py  ──> plots/scatter_4panels.png, plots/mapa_errores.png │
 │  ├── report_builder.py  ──> experiments/manifest.json, INFORME.md            │
 │  └── experiment_registry.py ──> experiments/experiment_registry.jsonl         │
-└───────────────────────────────────────┬───────────────────────────────────────┘
-                                        │
-                         ┌──────────────┴──────────────┐
-                         ▼                             ▼
-                 [Panel Streamlit]             [CLI / Cron Batch]
-                 tesis_wrf_pgich/app.py        pipeline_wrf.py
+│                           ┌───────────────────────┬──────────────────────────│
+│                           ▼                       ▼                            │
+│                [Panel Streamlit]         [CLI / Cron Batch]                    │
+│                app_streamlit.py          pipeline_wrf.py /                     │
+│                                          wrf_runner_cli.py                     │
+└───────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -82,13 +83,19 @@ Este documento detalla la arquitectura modular implementada y los pasos técnico
 
 ### 2.2 Archivos de Configuración y Templates (`config/`)
 
-- `config/estaciones.json`: **Fuente única de verdad** de la red de estaciones:
+- `config/estaciones.json`: **Fuente única de verdad** de la red de estaciones (9 estaciones,
+  con `lat`, `lon`, `elev` y `mac`):
   ```json
   {
-      "INTA_POCITO": {"lat": -31.6500, "lon": -68.5833, "elev": 615},
-      "ULLUM_EMBALSE": {"lat": -31.4667, "lon": -68.6667, "elev": 768},
-      "ECOHUMUS": {"lat": -31.6500, "lon": -68.3000, "elev": 600},
-      "PUNTA_NEGRA": {"lat": -31.5192, "lon": -68.8178, "elev": 800}
+      "INTA_POCITO": {"lat": -31.6500, "lon": -68.5833, "elev": 615, "mac": "30:83:98:A7:43:1B"},
+      "ULLUM_EMBALSE": {"lat": -31.4667, "lon": -68.6667, "elev": 768, "mac": "30:83:98:A5:CB:17"},
+      "ECOHUMUS": {"lat": -31.6500, "lon": -68.3000, "elev": 600, "mac": "BC:FF:4D:F7:DF:DA"},
+      "PUNTA_NEGRA": {"lat": -31.5192, "lon": -68.8178, "elev": 800, "mac": "30:83:98:A6:BB:72"},
+      "INTA_SANMARTIN": {"lat": -31.5000, "lon": -68.2500, "elev": 600, "mac": "30:83:98:A6:B3:AA"},
+      "VALLE_FERTIL": {"lat": -30.6335, "lon": -67.4682, "elev": 900, "mac": "30:83:98:A7:1E:10"},
+      "LOS_PIONEROS": {"lat": -32.1234, "lon": -67.1234, "elev": 890, "mac": "30:83:98:A7:09:CD"},
+      "CUESTA_Viento": {"lat": -30.1833, "lon": -69.0667, "elev": 1530, "mac": "30:83:98:A5:52:40"},
+      "CARACOLES": {"lat": -31.5194, "lon": -68.9851, "elev": 942, "mac": "30:83:98:A7:47:39"}
   }
   ```
 - `config/namelist.input.template`: Plantilla base configurada para el dominio de 15 km de San Juan (80×60 puntos, 35 niveles) y bloque `&fdda`.
@@ -96,10 +103,11 @@ Este documento detalla la arquitectura modular implementada y los pasos técnico
 
 ### 2.3 Interfaces y Pruebas
 
-- `tesis_wrf_pgich/app.py`: Panel de control interactivo Streamlit con 6 módulos.
+- `app_streamlit.py`: Panel de control interactivo Streamlit (frontend; orquesta vía `pipeline_wrf.py`).
+- `wrf_runner_cli.py`: Runner aislado de corrida WRF usada por la app Streamlit (proceso Python limpio).
+- `pipeline_wrf.py`: Orquestador CLI del ciclo completo (Little_R → OBS_DOMAIN101 → real → wrf → validación).
 - `tests/test_circuito_modular.py`: Suite de 10 pruebas unitarias y de integración end-to-end.
 - `pyproject.toml`: Declaración de dependencias del proyecto optimizado para `uv`.
-- `tesis_wrf_pgich/Dockerfile`: Receta para despliegue en contenedores.
 
 ---
 
@@ -198,7 +206,7 @@ Para operar el sistema de forma visual, ideal para demostraciones, auditoría y 
 
 ```bash
 # Iniciar el servidor Streamlit en segundo plano
-uv run streamlit run tesis_wrf_pgich/app.py --server.port 8501 --server.address 0.0.0.0
+uv run streamlit run app_streamlit.py --server.port 8501 --server.address 0.0.0.0
 ```
 
 Acceso: `http://<IP-DEL-SERVIDOR>:8501`
@@ -244,9 +252,14 @@ uv run python pipeline_wrf.py \
 
 ### 5.3 Despliegue con Docker (Alternativa Contenedorizada)
 
+> **Nota (2026-09-09):** el flujo operativo actual es **ejecución nativa** de `real.exe`/`wrf.exe`
+> mediante `pipeline_wrf.py`/`wrf_runner_cli.py` (la carpeta `tesis_wrf_pgich/` con el `Dockerfile`
+> fue eliminada al migrar a la arquitectura modular). La documentación Docker se mantiene como
+> referencia histórica para corpus previos.
+
 ```bash
 # 1. Construir la imagen
-docker build -t pgich-wrf:latest -f tesis_wrf_pgich/Dockerfile .
+docker build -t pgich-wrf:latest .
 
 # 2. Ejecutar contenedor montando volúmenes de datos y configuración
 docker run -d \

@@ -13,6 +13,21 @@ class ReportBuilder:
     """Construye artefactos estandarizados de experimentación y gobernanza científica."""
 
     @staticmethod
+    def _estaciones_desde_catalogo() -> list:
+        """Lee la red de estaciones desde config/estaciones.json (fuente única)."""
+        catalogo = Path(__file__).parent.parent.parent / "config" / "estaciones.json"
+        try:
+            with open(catalogo, encoding="utf-8") as f:
+                metadatos = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            logger.warning("No se pudo leer %s; stations_assimilated vacío", catalogo)
+            return []
+        return [
+            {"name": nombre, "lat": meta.get("lat"), "lon": meta.get("lon")}
+            for nombre, meta in metadatos.items()
+        ]
+
+    @staticmethod
     def crear_manifiesto(
         experiment_id: str,
         name: str,
@@ -25,6 +40,8 @@ class ReportBuilder:
         output_path: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Genera y guarda el archivo manifest.json para un experimento."""
+        if stations_assimilated is None:
+            stations_assimilated = ReportBuilder._estaciones_desde_catalogo()
         manifest = {
             "experiment_id": experiment_id,
             "name": name,
@@ -52,12 +69,7 @@ class ReportBuilder:
                 "obs_npfi": 30,
                 "obs_ionf": 1,
             },
-            "stations_assimilated": stations_assimilated or [
-                {"name": "INTA_POCITO", "lat": -31.6500, "lon": -68.5833},
-                {"name": "ULLUM_EMBALSE", "lat": -31.4667, "lon": -68.6667},
-                {"name": "ECOHUMUS", "lat": -31.6500, "lon": -68.3000},
-                {"name": "PUNTA_NEGRA", "lat": -31.5192, "lon": -68.8178},
-            ],
+            "stations_assimilated": stations_assimilated,
             "execution_status": execution_status or {
                 "wps": "SUCCESS",
                 "real_exe": "SUCCESS",

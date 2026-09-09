@@ -10,16 +10,24 @@ from datetime import datetime
 import json
 import argparse
 
-stations_fallback = [
-    {"name": "INTA_POCITO",    "lat": -31.6500, "lon": -68.5833, "elev": 615,
-     "temp": None, "rh": None, "psfc": None, "speed": None, "dir": None},
-    {"name": "ULLUM_EMBALSE",  "lat": -31.4667, "lon": -68.6667, "elev": 768,
-     "temp": None, "rh": None, "psfc": None, "speed": None, "dir": None},
-    {"name": "ECOHUMUS",       "lat": -31.6500, "lon": -68.3000, "elev": 600,
-     "temp": None, "rh": None, "psfc": None, "speed": None, "dir": None},
-    {"name": "PUNTA_NEGRA",    "lat": -31.5192, "lon": -68.8178, "elev": 800,
-     "temp": None, "rh": None, "psfc": None, "speed": None, "dir": None},
-]
+def ruta_estaciones_json(estaciones_json=None):
+    """Devuelve la ruta al catálogo unificado de estaciones (config/estaciones.json)."""
+    if estaciones_json:
+        return Path(estaciones_json)
+    return Path(__file__).parent.parent.parent / "config" / "estaciones.json"
+
+
+def cargar_metadatos_estaciones(estaciones_json=None):
+    """Carga la red completa de estaciones desde el catálogo (sin valores de obs)."""
+    with open(ruta_estaciones_json(estaciones_json), encoding="utf-8") as f:
+        metadatos = json.load(f)
+    return [
+        {"name": nombre, "lat": meta.get("lat"), "lon": meta.get("lon"),
+         "elev": meta.get("elev"), "temp": None, "rh": None, "psfc": None,
+         "speed": None, "dir": None}
+        for nombre, meta in metadatos.items()
+    ]
+
 
 def _parse_obs_dt(obs):
     fecha = str(obs.get("fecha", ""))
@@ -50,7 +58,7 @@ def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=Non
     if estaciones_json:
         ruta_meta = Path(estaciones_json)
     else:
-        ruta_meta = Path(__file__).parent.parent.parent / "config" / "estaciones.json"
+        ruta_meta = ruta_estaciones_json()
     with open(ruta_meta) as f:
         metadatos = json.load(f)
 
@@ -418,7 +426,7 @@ def main():
             args.obs_json, args.estaciones_json,
             valid_time=valid_time, ventana_min=args.ventana_min)
     else:
-        stations = stations_fallback
+        stations = cargar_metadatos_estaciones(args.estaciones_json)
     if not valid_time.startswith("wrfout_d01_"):
         valid_time = f"wrfout_d01_{valid_time}"
 
