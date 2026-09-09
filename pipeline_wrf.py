@@ -58,7 +58,15 @@ ESTACIONES_JSON = Path(__file__).parent / "config" / "estaciones.json"
 # variable es el de la PC activa; el de la otra PC queda comentado al lado para
 # no perderlo. Si hace falta, tambien se puede overridear con la env var
 # correspondiente (LOCAL_WRF_DIR, WRF_ENV_BASH, MPIRUN, VALIDATION_PYTHON) sin
-# tocar el codigo.
+# tocar el codigo (ver documentacion_proyecto/info_pc_linux.md para el detalle
+# completo de la PC pgich, y un .env local ahi es la forma recomendada de
+# fijar estas rutas sin volver a tocar estas lineas).
+#
+# OJO version de WRF distinta entre PCs: PC pgich corre WRF-Chem 4.5
+# (/home/pgich/Build_WRF/WRF), esta PC corre WRF 4.0 (WRF-4.0/run). El fix de
+# formato de OBS_DOMAIN101 (linea terminadora, codigo de plataforma) valida
+# contra el lector de WRF 4.0; no esta confirmado que 4.5 tenga el mismo
+# comportamiento en wrf_fddaobs_in.F, conviene revalidar ahi antes de asumir.
 # Directorio de corrida de WRF (debe contener wrf.exe, wrfinput, wrfbdy)
 LOCAL_WRF_DIR = Path(os.environ.get(
     "LOCAL_WRF_DIR",
