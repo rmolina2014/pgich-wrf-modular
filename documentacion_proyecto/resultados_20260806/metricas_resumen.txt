@@ -1,13 +1,13 @@
 ================================================================================
-VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-06_06:00:00
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-06_06:00:00 06/08 06Z (7 estaciones)
 ================================================================================
 
 Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
 ---------------------------------------------------------------------------------------------------------
-T2 (K)            26      -0.35       5.01       5.03   -0.997      +1.73       7.19       7.40   -0.997
-PSFC (hPa)        26     -18.22      18.22      24.82    0.999     -19.34      19.34      25.18    0.999
-RH (%)            26     -34.18      34.18      45.64    0.999     -42.50      42.50      57.42   -0.999
-Wind (m/s)        26      +5.49      11.15      12.65   -0.835      +9.15       9.51      12.47   -0.835
+T2 (K)            65      -4.79       6.65       7.09   -0.398      -4.00       7.57       7.93   -0.705
+PSFC (hPa)        65     -34.71      34.71      44.91    0.857     -35.23      35.23      45.11    0.855
+RH (%)            65     -10.75      17.46      29.57    0.367     -13.60      21.29      37.06   -0.407
+Wind (m/s)        65      +0.13      11.24      12.99    0.131      +1.51      10.61      12.93    0.116
 ---------------------------------------------------------------------------------------------------------
 
 N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
@@ -38,3 +38,42 @@ N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
   PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
   PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
   PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m

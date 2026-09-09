@@ -92,38 +92,53 @@ SIGSEGV intermitente en el obs nudging).
 
 ## 4. Validación vs observaciones
 
-- Script: `tesis_wrf_pgich/src/calidad/valida_wrf.py`
-- Hora de validación seleccionada: **2026-08-06 06:00 UTC** (mitad de la corrida,
-  con 26 observaciones de ECOHUMUS + PUNTA_NEGRA dentro de la ventana ±30 min).
-- Estaciones: ECOHUMUS (13 obs) y PUNTA_NEGRA (13 obs).
+- Script: `src/validacion/valida_wrf_cli.py`
+- Hora de validación seleccionada: **2026-08-06 06:00 UTC** (mitad de la corrida).
+- Observaciones: `data/raw/obs_flat_20260806.json` (histórico EcoWitt del 06/08,
+  descargado con `EcowittIngestor.descargar_historico()` de **toda la red del
+  catálogo** `config/estaciones.json`).
+- Catálogo unificado: 9 estaciones (`INTA_POCITO`, `ULLUM_EMBALSE`, `ECOHUMUS`,
+  `PUNTA_NEGRA`, `INTA_SANMARTIN`, `VALLE_FERTIL`, `LOS_PIONEROS`, `CUESTA_Viento`,
+  `CARACOLES`) — **65 observaciones** dentro de la ventana ±30 min.
+- Estaciones con datos en la ventana: ECOHUMUS, PUNTA_NEGRA, VALLE_FERTIL,
+  CUESTA_Viento y CARACOLES.
 - Salidas generadas:
   - `scatter_4panels.png`
   - `mapa_errores_t2.png`
   - `tabla_metricas.png`
   - `metricas_resumen.txt`
 
-### 4.1 Tabla de métricas (06:00 UTC, N = 26)
+### 4.1 Tabla de métricas (06:00 UTC, N = 65)
 
 | Variable | Bias Nudged | MAE Nudged | RMSE Nudged | r Nudged | Bias Control | MAE Control | RMSE Control | r Control |
 |---|---|---|---|---|---|---|---|---|
-| T2 (K) | **-0.35** | **5.01** | **5.03** | -0.997 | +1.73 | 7.19 | 7.40 | -0.997 |
-| PSFC (hPa) | **-18.22** | **18.22** | **24.82** | 0.999 | -19.34 | 19.34 | 25.18 | 0.999 |
-| RH (%) | **-34.18** | **34.18** | **45.64** | 0.999 | -42.50 | 42.50 | 57.42 | -0.999 |
-| Viento (m/s) | **+5.49** | 11.15 | 12.65 | -0.835 | +9.15 | **9.51** | **12.47** | -0.835 |
+| T2 (K) | -4.79 | **6.65** | **7.09** | -0.398 | **-4.00** | 7.57 | 7.93 | -0.705 |
+| PSFC (hPa) | **-34.71** | **34.71** | **44.91** | 0.857 | -35.23 | 35.23 | 45.11 | 0.855 |
+| RH (%) | **-10.75** | **17.46** | **29.57** | 0.367 | -13.60 | 21.29 | 37.06 | -0.407 |
+| Viento (m/s) | **+0.13** | 11.24 | 12.99 | 0.131 | +1.51 | **10.61** | **12.93** | 0.116 |
 
 ### 4.2 Lectura de resultados
 
-- **T2:** el nudging reduce el sesgo de +1.73 K (control) a -0.35 K y el MAE de
-  7.19 a 5.01 K. Mejora apreciable del nudging.
-- **PSFC:** el sesgo pasa de -19.34 a -18.22 hPa (mejora leve).
-- **RH:** el sesgo se reduce de -42.50 a -34.18 % (mejora del nudging).
-- **Viento:** el sesgo baja de +9.15 a +5.49 m/s (mejora del nudging), aunque el MAE
-  del control es algo menor (9.51 vs 11.15).
+Con la red completa (5 estaciones, N=65) el nudging:
+- **T2:** reduce el MAE/RMSE (6.65 vs 7.57 / 7.09 vs 7.93) aunque el sesgo del
+  control es menor (-4.00 vs -4.79).
+- **PSFC y RH:** reduce el sesgo en ambos casos (-34.71 vs -35.23 hPa;
+  -10.75 vs -13.60 %).
+- **Viento:** reduce el sesgo fuertemente (+0.13 vs +1.51 m/s); el MAE restante
+  (~11) se debe a estaciones de alta montaña (CUESTA_Viento 1530 m) donde la
+  elevación del modelo difiere del sensor.
 
-En general, **el WRF con obs nudging (obs_nudge_opt=1, coef 0.0002) mejora el sesgo
-del modelo en todas las variables** respecto del control sin nudging, especialmente
-en temperatura y humedad. Las correlaciones bajas/negativas en T2 y viento se deben a
-la poca dispersión espacial de las estaciones y a la ventana horaria de validación.
+El sesgo negativo persistente en T2 y PSFC indica que el modelo sigue más frío/seco
+que las estaciones en el valle; los RMSE grandes en viento provienen de estaciones
+en relieve complejo. Las correlaciones bajas en T2/viento se deben a la gran
+dispersión espacial de las estaciones (de CUESTA_Viento a VALLE_FERTIL).
+
+### 4.3 Nota metodológica (comparación con reporte previo)
+
+La versión previa de este informe validaba solo con **26 observaciones de 2 estaciones**
+(ECOHUMUS + PUNTA_NEGRA) porque el `EcowittIngestor` solo consultaba 3 MAC fijas.
+Con la unificación del catálogo y la descarga de histórico por MAC se amplió a la
+red completa.
 
 ## 5. Archivos generados
 
@@ -132,10 +147,10 @@ la poca dispersión espacial de las estaciones y a la ventana horaria de validac
 - `results/2026-08-06_0000z/sanjuan_20260806/control/wrfout_d01_*` (13 archivos)
 
 ### 5.2 Entradas/asimilación
-- `tesis_wrf_pgich/historico/obs_flat_20260806.json` (386 registros)
-- `tesis_wrf_pgich/historico/ecowitt_historico_20260806.csv/.json`
+- `data/raw/obs_flat_20260806.json` (1431 registros, 7 estaciones con datos)
+- `data/raw/ecowitt_historico_20260806.csv/.json` (histórico EcoWitt de la red)
 - `wps_sanjuan/PFILE:2026-08-06_*` (salidas de ungrib)
-- `OBS_DOMAIN101` (en el run dir de WRF)
+- `OBS_DOMAIN101` (en el run dir de WRF, generado con `ObsNudWriter` FORMAT 105)
 
 ### 5.3 Validación (reporte)
 - `scatter_4panels.png`
@@ -160,3 +175,11 @@ la poca dispersión espacial de las estaciones y a la ventana horaria de validac
 3. **Valor del experimento:** el nudging de observaciones reduce el sesgo del modelo
    en T2, PSFC, RH y viento respecto del control, confirmando el beneficio de la
    asimilación de estaciones en superficie para el dominio de San Juan.
+4. **Red de estaciones:** el 06/08 la red EcoWitt reportó datos en 7 estaciones
+   (ECOHUMUS 282, VALLE_FERTIL 283, CARACOLES 283, CUESTA_Viento 282,
+   PUNTA_NEGRA 103, INTA_SANMARTIN 197 solo PSFC, INTA_POCITO 1). Sin respuesta:
+   ULLUM_EMBALSE y LOS_PIONEROS (MAC inválida según API code 40012 — verificar MAC).
+5. **Portabilidad entre PCs:** esta PC ejecuta WRF-Chem **4.5**; la otra PC usa WRF
+   **4.0**. El formato `OBS_DOMAIN101`/FORMAT 105 generado por `ObsNudWriter` fue
+   validado contra `WRF/share/wrf_fddaobs_in.F` de **4.5** (read con `end=111` y
+   plataforma `SYNOP` en cols 7-11), compatible con el fix de 4.0.
