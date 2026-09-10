@@ -2,7 +2,7 @@
 
 import logging
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 import pandas as pd
@@ -25,61 +25,96 @@ class ObsNudWriter:
         v = -vel_ms * math.cos(rad)
         return u, v, 129.0, 129.0
 
+    @staticmethod
+    def _desfase_por_estacion(estaciones: List[str]) -> Dict[str, timedelta]:
+        """Retorna desfase cero para todas las estaciones.
+
+        Nota: una version anterior usaba offsets de 1 segundo por estacion
+        para evitar colisiones de timestamp, pero WRF 4.5 falla con
+        'Bad value during integer read' en module_date_time.f90 al releer
+        archivos con timestamps no estandar (000001, 000002).
+        El formato original con timestamps cada 5 minutos funciona correctamente.
+        """
+        return {est: timedelta(seconds=0) for est in set(estaciones)}
+
     def escribir_obsnud(self, observaciones: List[Dict[str, Any]], output_path: str = "data/processed/OBS_DOMAIN101") -> Path:
-        """Escribe la lista de observaciones en el archivo destino con formato estricto FORMAT 105 de WRF."""
+        """Escribe la lista de observaciones en el archivo destino con formato estricto FORMAT 105 de WRF.
+
+        Las observaciones se ordenan cronológicamente por timestamp antes de escribir:
+        el lector de WRF (wrf_fddaobs_in.F, formato 105) exige estricto orden temporal
+        (un registro con TIMEOB anterior al último leído provoca 'in4dob STOP 111').
+
+        Además, cada estación recibe un desfase único de segundos (ver
+        _desfase_por_estacion) para evitar observaciones simultáneas de
+        estaciones distintas, que disparan un SIGSEGV en el binario WRF 4.5.
+        """
         dst_path = Path(output_path)
         dst_path.parent.mkdir(parents=True, exist_ok=True)
 
-        escritas = 0
-        with open(dst_path, "w", encoding="utf-8") as f:
-            for obs in observaciones:
-                nombre = obs.get("estacion", "UNKNOWN")
+        def _timestamp(obs: Dict[str, Any]) -> str:
+            dt_str = obs.get("datetime_str")
+            if not dt_str:
+                fecha = str(obs.get("fecha", "2026-01-01")).replace("-", "")
+                hora = str(obs.get("hora", "00:00")).replace(":", "")
+                if len(hora) == 4:
+                    hora += "00"
+                dt_str = f"{fecha}{hora}"
+            else:
+                dt_str = dt_str.replace("-", "").replace(":", "").replace(" ", "")
+            return dt_str
+
+        # Pre-procesar y ordenar por timestamp (formato YYYYMMDDHHMMSS, orden lexicográfico = temporal)
+        prep = []
+        desfases = self._desfase_por_estacion([str(o.get("estacion", "UNKNOWN")) for o in observaciones])
+        for obs in observaciones:
+            try:
                 lat = float(obs.get("lat", 0.0))
                 lon = float(obs.get("lon", 0.0))
                 elev = float(obs.get("elev", 0.0))
+            except (TypeError, ValueError):
+                lat = lon = elev = 0.0
 
-                dt_str = obs.get("datetime_str")
-                if not dt_str:
-                    fecha = str(obs.get("fecha", "2026-01-01")).replace("-", "")
-                    hora = str(obs.get("hora", "00:00")).replace(":", "")
-                    if len(hora) == 4:
-                        hora += "00"
-                    dt_str = f"{fecha}{hora}"
-                else:
-                    dt_str = dt_str.replace("-", "").replace(":", "").replace(" ", "")
+            t_c = obs.get("temp")
+            if t_c is not None and pd.notna(t_c):
+                t_k = float(t_c) + 273.15
+                t_qc = 0.0
+            else:
+                t_k = -999999.0
+                t_qc = -888888.0
 
-                # Variables físicas
-                t_c = obs.get("temp")
-                if t_c is not None and pd.notna(t_c):
-                    t_k = float(t_c) + 273.15
-                    t_qc = 0.0
-                else:
-                    t_k = -999999.0
-                    t_qc = -888888.0
+            rh_val = obs.get("humedad")
+            if rh_val is not None and pd.notna(rh_val):
+                rh = float(rh_val)
+                rh_qc = 0.0
+            else:
+                rh = -999999.0
+                rh_qc = -888888.0
 
-                rh_val = obs.get("humedad")
-                if rh_val is not None and pd.notna(rh_val):
-                    rh = float(rh_val)
-                    rh_qc = 0.0
-                else:
-                    rh = -999999.0
-                    rh_qc = -888888.0
+            p_val = obs.get("presion_absoluta")
+            if p_val is None or pd.isna(p_val):
+                p_val = obs.get("presion_relativa")
 
-                p_val = obs.get("presion_absoluta")
-                if p_val is None or pd.isna(p_val):
-                    p_val = obs.get("presion_relativa")
+            if p_val is not None and pd.notna(p_val):
+                psfc_pa = float(p_val) * 100.0
+                psfc_qc = 0.0
+            else:
+                psfc_pa = -888888.0
+                psfc_qc = -888888.0
 
-                if p_val is not None and pd.notna(p_val):
-                    psfc_pa = float(p_val) * 100.0
-                    psfc_qc = 0.0
-                else:
-                    psfc_pa = -888888.0
-                    psfc_qc = -888888.0
+            u, v, u_qc, v_qc = self._u_v(obs.get("viento"), obs.get("direcc"))
+            nombre = str(obs.get("estacion", "UNKNOWN"))
+            dt_str = _timestamp(obs)
+            # Desfase per-estación para evitar obs simultáneas (SIGSEGV en WRF 4.5)
+            dt_str = (datetime.strptime(dt_str, "%Y%m%d%H%M%S") + desfases[nombre]).strftime("%Y%m%d%H%M%S")
+            prep.append((dt_str, nombre, lat, lon, elev, t_k, t_qc, rh, rh_qc,
+                         psfc_pa, psfc_qc, u, u_qc, v, v_qc))
 
-                wspd = obs.get("viento")
-                wdir = obs.get("direcc")
-                u, v, u_qc, v_qc = self._u_v(wspd, wdir)
+        prep.sort(key=lambda r: r[0])
 
+        escritas = 0
+        with open(dst_path, "w", encoding="utf-8") as f:
+            for (dt_str, nombre, lat, lon, elev, t_k, t_qc, rh, rh_qc,
+                 psfc_pa, psfc_qc, u, u_qc, v, v_qc) in prep:
                 # 1. Timestamp (YYYYMMDDHHMMSS)
                 f.write(f" {dt_str}\n")
                 # 2. Coordenadas: FORMAT(2x,2(f9.4,1x))
@@ -113,7 +148,7 @@ class ObsNudWriter:
             # observacion adicional invalida y provoca un error de formato
             # Fortran no controlado (wrf.exe termina con exit code 2).
 
-        logger.info(f"OBS_DOMAIN101 generado en {dst_path} con {escritas} observaciones.")
+        logger.info(f"OBS_DOMAIN101 generado en {dst_path} con {escritas} observaciones (orden cronológico).")
         return dst_path
 
     def generar_desde_dataframe(self, df: pd.DataFrame, config_estaciones: Optional[Dict[str, Any]] = None, output_path: str = "data/processed/OBS_DOMAIN101") -> Path:
