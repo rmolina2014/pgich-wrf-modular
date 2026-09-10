@@ -101,6 +101,7 @@ from src.asimilacion.littler_writer import LittleRWriter
 from src.asimilacion.obsnud_writer import ObsNudWriter
 from src.modelo.namelist_manager import NamelistManager
 from src.modelo.wrf_runner import WRFRunner
+from src.preflight.preflight import InformePreflight, correr_preflight_observaciones
 
 
 def check_run_dir(run_dir=None):
@@ -210,6 +211,25 @@ def copiar_namelist(namelist_path, run_dir):
     run_dir = Path(run_dir or LOCAL_WRF_DIR)
     logger.info(f"  Copiando namelist a {run_dir / 'namelist.input'}")
     return copiar_archivo(namelist_path, run_dir / "namelist.input")
+
+
+def ejecutar_preflight(obs_json, obsdomain, namelist, start_dt=None, caso="", config_path=None):
+    """Ejecuta los chequeos previos a WRF (Sección 2.2) y los registra en el log.
+
+    Devuelve (informe, ok): ok=False si existe algún chequeo BLOQUEANTE,
+    en cuyo caso el pipeline debe detenerse sin ejecutar wrf.exe."""
+    informe = correr_preflight_observaciones(
+        obs_json=Path(obs_json),
+        obsdomain=Path(obsdomain),
+        namelist=Path(namelist),
+        start_dt=start_dt,
+        caso=caso,
+        config_path=Path(config_path) if config_path else None,
+    )
+    logger.info("=== PREFLIGHT ===")
+    for line in informe.resumen_log().splitlines():
+        logger.info(f"  {line}")
+    return informe, informe.puede_ejecutar
 
 
 def ejecutar_real(run_dir=None, timeout=7200, mpirun=None, np=None):
@@ -346,6 +366,22 @@ def pipeline(args):
             coefs["obs_twindo"] = args.obs_twindo
 
         preparar_namelist(args.namelist, 1, namelist_nudged, start_dt=start_dt, **coefs)
+
+        # === PREFLIGHT: validar OBS_DOMAIN101 y namelist antes de ejecutar wrf.exe ===
+        if not args.skip_preflight:
+            informe_preflight, preflight_ok = ejecutar_preflight(
+                args.json, obsdomain_dir / "OBS_DOMAIN101", namelist_nudged,
+                start_dt=start_dt, caso=case,
+                config_path=args.preflight_config,
+            )
+            informe_preflight.guardar(case_dir / f"preflight_{case}.json")
+            if not preflight_ok:
+                logger.error("PREFLIGHT BLOQUEANTE: no se ejecuta wrf.exe. Corregir los chequeos indicados.")
+                return 1
+            logger.info("PREFLIGHT OK: se procede con la corrida nudgeada.")
+        else:
+            logger.warning("PREFLIGHT omitido (--skip-preflight)")
+
         copiar_namelist(namelist_nudged, run_dir)
 
         if args.run_real:
@@ -474,6 +510,10 @@ Ejemplos:
                         help="Solo ejecutar validacion sobre datos existentes")
     parser.add_argument("--skip-control", action="store_true",
                         help="Saltar corrida control (si ya existe)")
+    parser.add_argument("--skip-preflight", action="store_true",
+                        help="Omitir los chequeos previos a WRF (preflight)")
+    parser.add_argument("--preflight-config", default=None,
+                        help="Ruta al JSON de umbrales del preflight (default: config/preflight_config.json)")
 
     # Configuracion nativa
     parser.add_argument("--run-dir", default=str(LOCAL_WRF_DIR),
