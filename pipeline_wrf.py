@@ -296,7 +296,11 @@ def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, la
     logger.info(f"  Ejecutando: {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     if result.returncode != 0:
-        logger.error(f"  Error en validacion (codigo {result.returncode}): {result.stderr.strip()[-500:]}")
+        # valida_wrf_cli.py imprime sus errores controlados (ej. sin obs en
+        # la ventana) por stdout, no por stderr; mostrar ambos para no
+        # perder el mensaje.
+        detalle = result.stderr.strip() or result.stdout.strip()
+        logger.error(f"  Error en validacion (codigo {result.returncode}): {detalle[-500:]}")
         return False
     for line in result.stdout.splitlines()[-15:]:
         logger.info(f"  {line}")
