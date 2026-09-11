@@ -273,8 +273,12 @@ def copiar_wrfout(run_dir, dest_dir, valid_time):
     return True
 
 
-def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, label="", run_dir=None):
-    """Ejecuta valida_wrf.py localmente con el python del entorno de validacion."""
+def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, label="",
+                   run_dir=None, valid_times=None):
+    """Ejecuta valida_wrf.py localmente con el python del entorno de validacion.
+
+    Si valid_times tiene mas de un tiempo, genera el informe de evolucion del
+    nudging (gráfico 00Z-06Z-12Z) ademas de las tablas por horario."""
     logger.info("Paso: Ejecutando validacion (local)...")
 
     valida_script_local = str(Path(__file__).parent / "src" / "validacion" / "valida_wrf_cli.py")
@@ -285,9 +289,12 @@ def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, la
         "--nudged-dir", str(nudged_dir),
         "--control-dir", str(control_dir),
         "--output-dir", str(output_dir),
-        "--valid-time", valid_time,
         "--estaciones-json", estaciones_json_local,
     ]
+    if valid_times and len(valid_times) > 1:
+        cmd += ["--valid-times", ",".join(valid_times)]
+    else:
+        cmd += ["--valid-time", valid_time]
     if obs_json:
         cmd += ["--obs-json", str(obs_json)]
     if label:
@@ -456,9 +463,19 @@ def pipeline(args):
         logger.error("Ajusta VALIDATION_PYTHON (env var) o crea el entorno con xarray.")
         return 1
     else:
+        # Validacion multi-temporal (00Z, 06Z, 12Z) si se pidio; si no, solo valid_time
+        valid_times = None
+        if args.valid_times:
+            tiempos = [t.strip() for t in args.valid_times.split(",") if t.strip()]
+            # Completar con fecha si vienen como solo hora (HH:MM:SS)
+            if date_str := getattr(args, "date", None):
+                tiempos = [
+                    t if "_" in t else f"{date_str}_{t}" for t in tiempos
+                ]
+            valid_times = tiempos
         valid_ok = run_valida_wrf(
             nudged_dir, control_dir, case_dir,
-            valid_time, args.json, args.label, run_dir,
+            valid_time, args.json, args.label, run_dir, valid_times,
         )
     if valid_ok:
         logger.info(f"Pipeline completo. Resultados en {case_dir}")
@@ -542,6 +559,11 @@ Ejemplos:
     # Timeout
     parser.add_argument("--wrf-timeout", type=int, default=7200,
                         help="Timeout para wrf.exe en segundos (default: 7200 = 2h)")
+
+    # Validacion multi-temporal
+    parser.add_argument("--valid-times", default=None,
+                        help="Tiempos de validacion separados por coma (default: solo el tiempo final). "
+                             "Ej: 00:00:00,06:00:00,12:00:00 genera informe de evolucion del nudging.")
 
     args = parser.parse_args()
 
