@@ -393,6 +393,126 @@ def write_summary(rows, stations, output_dir, valid_time, label=""):
     print(f"  -> {output_dir / 'metricas_resumen.txt'}")
     print('\n'.join(lines))
 
+
+def _var_labels(rows):
+    return [r["var"] for r in rows]
+
+
+def plot_evolucion(evolution, output_dir, label=""):
+    """Gráfico de evolución del nudging: RMSE vs tiempo por variable.
+
+    evolution: lista de dicts {"tiempo": "06Z", "rows": [rows de build_tables]}."""
+    if not evolution:
+        print("  Sin datos para el gráfico de evolución.")
+        return
+    times = [e["tiempo"] for e in evolution]
+    vars_list = _var_labels(evolution[0]["rows"])
+    x = np.arange(len(times))
+    n_paneles = len(vars_list)
+
+    if n_paneles == 4:
+        fig, axes = plt.subplots(2, 2, figsize=(11, 8))
+    elif n_paneles == 2:
+        fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+    else:
+        fig, axes = plt.subplots(1, n_paneles, figsize=(5 * n_paneles, 4))
+
+    axes_flat = np.atleast_1d(np.array(axes).ravel())
+    suffix = f" {label}" if label else ""
+    fig.suptitle(f"Evolución del Nudging - RMSE por tiempo de validación{suffix}", fontsize=13, y=0.98)
+
+    for ax, vi in zip(axes_flat, range(n_paneles)):
+        nudge = [e["rows"][vi]["nudged_rmse"] for e in evolution]
+        ctl = [e["rows"][vi]["control_rmse"] for e in evolution]
+        var = vars_list[vi]
+
+        ax.plot(x, nudge, 'o-', color='#1f77b4', label='Nudged', lw=2, ms=6, zorder=3)
+        ax.plot(x, ctl, 's--', color='#d62728', label='Control', lw=2, ms=6, zorder=3)
+
+        for xi, v in enumerate(nudge):
+            if not np.isnan(v):
+                ax.annotate(f"{v:.2f}", (xi, v), textcoords="offset points",
+                            xytext=(0, 10), fontsize=8, color='#1f77b4', ha='center')
+        for xi, v in enumerate(ctl):
+            if not np.isnan(v):
+                ax.annotate(f"{v:.2f}", (xi, v), textcoords="offset points",
+                            xytext=(0, -14), fontsize=8, color='#d62728', ha='center')
+
+        titulo = var
+        try:
+            mejora = (ctl[-1] - nudge[-1]) / ctl[-1] * 100
+            if not np.isnan(mejora):
+                titulo += f"  ·  mejora@final {mejora:+.1f}%"
+        except (ZeroDivisionError, TypeError):
+            pass
+        ax.set_title(titulo, fontsize=10)
+        ax.set_ylabel("RMSE")
+        ax.set_xticks(x)
+        ax.set_xticklabels(times)
+        ax.grid(True, alpha=0.3)
+
+    handles, labels = axes_flat[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper right', fontsize=9)
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
+    out = Path(output_dir) / "informe_evolucion_nudging.png"
+    plt.savefig(str(out), dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"  -> {out}")
+
+
+def write_tabla_evolutiva(evolution, output_dir, label=""):
+    """Genera informe de evolución del nudging: texto plano + JSON."""
+    out = Path(output_dir)
+    suffix = f" {label}" if label else ""
+
+    lines = []
+    lines.append("=" * 100)
+    lines.append(f"EVOLUCION DEL NUDGING - WRF vs OBSERVACIONES {'(' + label + ')' if label else ''}")
+    lines.append("=" * 100)
+    vars_list = _var_labels(evolution[0]["rows"])
+    tiempos = [e["tiempo"] for e in evolution]
+
+    for var_i, var in enumerate(vars_list):
+        lines.append("")
+        lines.append(f"### {var}")
+        header = (f"{'':<8}" + "".join(
+            f"{t:<26}" for t in tiempos))
+        lines.append(header)
+        lines.append("-" * 100)
+        for metrica in ("bias", "mae", "rmse", "r"):
+            fila = f"{metrica:<8}"
+            for e in evolution:
+                r = e["rows"][var_i]
+                n_ = f"{r[f'nudged_{metrica}']:+.3f}" if not np.isnan(r[f"nudged_{metrica}"]) else "-"
+                c_ = f"{r[f'control_{metrica}']:+.3f}" if not np.isnan(r[f"control_{metrica}"]) else "-"
+                fila += f"  N:{n_:>9}  C:{c_:>9}"
+            lines.append(fila)
+        n_line = f"{'n':<8}" + "".join(
+            f"{e['rows'][var_i]['n']:<26}" for e in evolution)
+        lines.append(n_line)
+
+    lines.append("")
+    lines.append("N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0), r = correlación")
+    lines.append("")
+
+    with open(str(out / "informe_evolucion_nudging.txt"), 'w', encoding="utf-8") as f:
+        f.write('\n'.join(lines))
+    print(f"  -> {out / 'informe_evolucion_nudging.txt'}")
+
+    json_data = {
+        "caso": label,
+        "valid_times": [e["tiempo"] for e in evolution],
+        "variables": vars_list,
+        "por_tiempo": [
+            {"tiempo": e["tiempo"], "rows": e["rows"]}
+            for e in evolution
+        ],
+    }
+    with open(str(out / "tabla_evolutiva.json"), 'w', encoding="utf-8") as f:
+        json.dump(json_data, f, ensure_ascii=False, indent=2)
+    print(f"  -> {out / 'tabla_evolutiva.json'}")
+    return lines
+
 def main():
     parser = argparse.ArgumentParser(description="Valida WRF vs observaciones de estaciones")
     parser.add_argument("--nudged-dir", required=True,
@@ -401,8 +521,12 @@ def main():
                         help="Directorio con wrfout de la corrida control")
     parser.add_argument("--output-dir", required=True,
                         help="Directorio para gráficos y tabla de salida")
-    parser.add_argument("--valid-time", required=True,
+    parser.add_argument("--valid-time", required=False,
                         help="Tiempo valido en formato YYYY-MM-DD_HH:MM:SS (ej: 2026-05-25_21:00:00)")
+    parser.add_argument("--valid-times", default=None,
+                        help="Lista de tiempos separados por coma, formato YYYY-MM-DD_HH:MM:SS "
+                             "(ej: 2026-08-06_00:00:00,2026-08-06_06:00:00,2026-08-06_12:00:00). "
+                             "Genera un subdirectorio por horario y un informe de evolución del nudging.")
     parser.add_argument("--obs-json", default=None,
                         help="Opcional: JSON de observaciones EcoWitt para extraer datos de estaciones")
     parser.add_argument("--label", default="",
@@ -419,44 +543,66 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    valid_time = args.valid_time
-
-    if args.obs_json:
-        stations = cargar_estaciones_desde_json(
-            args.obs_json, args.estaciones_json,
-            valid_time=valid_time, ventana_min=args.ventana_min)
+    if args.valid_times:
+        valid_times = [t.strip() for t in args.valid_times.split(",") if t.strip()]
+    elif args.valid_time:
+        valid_times = [args.valid_time]
     else:
-        stations = cargar_metadatos_estaciones(args.estaciones_json)
-    if not valid_time.startswith("wrfout_d01_"):
-        valid_time = f"wrfout_d01_{valid_time}"
-
-    print(f"Validando: {valid_time}")
-    print(f"Nudged: {nudged_dir}")
-    print(f"Control: {control_dir}")
-    print(f"Salida: {output_dir}")
-    print(f"Estaciones: {len(stations)}")
-
-    if not stations:
-        print(f"ERROR: Ninguna estacion tiene observaciones dentro de la ventana "
-              f"(+/-{args.ventana_min} min) alrededor de {valid_time}. "
-              "Nada que validar (revisar --valid-time u --obs-json).")
+        print("ERROR: se requiere --valid-time o --valid-times")
         return 1
 
-    nudged_data = load_run(nudged_dir, valid_time, stations)
-    control_data = load_run(control_dir, valid_time, stations)
+    multi = len(valid_times) > 1
+    evolution = []
 
-    if nudged_data is None or control_data is None:
-        print("ERROR: No se pudieron cargar los datos WRF")
-        return 1
+    for vt in valid_times:
+        if not vt.startswith("wrfout_d01_"):
+            vt = f"wrfout_d01_{vt}"
+        vt_clean = vt.replace("wrfout_d01_", "")
+        hora = vt_clean.split("_")[-1][:2] if "_" in vt_clean else ""
+        sub_dir = output_dir / f"{hora}Z" if multi else output_dir
+        sub_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"  {len(nudged_data)} estaciones procesadas en cada corrida")
+        if args.obs_json:
+            stations = cargar_estaciones_desde_json(
+                args.obs_json, args.estaciones_json,
+                valid_time=vt, ventana_min=args.ventana_min)
+        else:
+            stations = cargar_metadatos_estaciones(args.estaciones_json)
 
-    rows = build_tables(nudged_data, control_data, stations)
+        print(f"Validando: {vt}")
+        print(f"Nudged: {nudged_dir}")
+        print(f"Control: {control_dir}")
+        print(f"Salida: {sub_dir}")
+        print(f"Estaciones: {len(stations)}")
 
-    plot_scatter(nudged_data, control_data, stations, output_dir, valid_time, args.label)
-    plot_map(nudged_data, control_data, stations, output_dir, valid_time, nudged_dir, args.label)
-    plot_metrics_table(rows, output_dir, valid_time, args.label)
-    write_summary(rows, stations, output_dir, valid_time, args.label)
+        if not stations:
+            print(f"ERROR: Ninguna estacion tiene observaciones dentro de la ventana "
+                  f"(+/-{args.ventana_min} min) alrededor de {vt}. "
+                  "Nada que validar (revisar --valid-time u --obs-json).")
+            return 1
+
+        nudged_data = load_run(nudged_dir, vt, stations)
+        control_data = load_run(control_dir, vt, stations)
+
+        if nudged_data is None or control_data is None:
+            print("ERROR: No se pudieron cargar los datos WRF")
+            return 1
+
+        print(f"  {len(nudged_data)} estaciones procesadas en cada corrida")
+
+        rows = build_tables(nudged_data, control_data, stations)
+
+        plot_scatter(nudged_data, control_data, stations, sub_dir, vt, args.label)
+        plot_map(nudged_data, control_data, stations, sub_dir, vt, nudged_dir, args.label)
+        plot_metrics_table(rows, sub_dir, vt, args.label)
+        write_summary(rows, stations, sub_dir, vt, args.label)
+
+        evolution.append({"tiempo": f"{hora}Z", "full": vt, "rows": rows})
+
+    if multi:
+        plot_evolucion(evolution, output_dir, args.label)
+        write_tabla_evolutiva(evolution, output_dir, args.label)
+        print(f"\nInforme de evolución del nudging en {output_dir}")
 
     print("Validacion completa.")
     return 0
