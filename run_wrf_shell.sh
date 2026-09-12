@@ -23,7 +23,8 @@ STATUS_FILE="${5:?status_file required}"
 MAX_RETRIES="${6:-5}"
 
 # PC pgich: /home/pgich/wrf-operativo/ejecutables/env.bash
-WRF_ENV="${WRF_ENV:-/home/roberto/opencode/wrf/WRF-4.0/run/env.bash}"  # PC roberto
+# PC roberto (WRF 4.0, en desuso): /home/roberto/opencode/wrf/WRF-4.0/run/env.bash
+WRF_ENV="${WRF_ENV:-/home/roberto/opencode/wrf/WRF-4.5/run/env.bash}"  # PC roberto
 
 log() { echo "[$(date '+%H:%M:%S')] $*" >> "$LOG_FILE"; }
 

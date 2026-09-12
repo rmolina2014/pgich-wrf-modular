@@ -61,16 +61,18 @@ ESTACIONES_JSON = Path(__file__).parent / "config" / "estaciones.json"
 # completo de la PC pgich, y un .env local ahi es la forma recomendada de
 # fijar estas rutas sin volver a tocar estas lineas).
 #
-# OJO version de WRF distinta entre PCs: PC pgich corre WRF-Chem 4.5
-# (/home/pgich/Build_WRF/WRF), esta PC corre WRF 4.0 (WRF-4.0/run). El fix de
-# formato de OBS_DOMAIN101 (linea terminadora, codigo de plataforma) valida
-# contra el lector de WRF 4.0; no esta confirmado que 4.5 tenga el mismo
-# comportamiento en wrf_fddaobs_in.F, conviene revalidar ahi antes de asumir.
+# OJO version de WRF: PC pgich corre WRF-Chem 4.5 (/home/pgich/Build_WRF/WRF).
+# Esta PC corria WRF 4.0 hasta 2026-09-12; se compilo WRF-4.5 propio (misma
+# version que pgich, ver documentacion_proyecto/ y memoria "wrf45-upgrade")
+# y se revalido el fix de OBS_DOMAIN101 contra wrf_fddaobs_in.F de 4.5 (corrida
+# nudged completa, NSTA>0, metricas nudged vs control consistentes con 4.0).
+# WRF-4.0 queda instalado sin usarse por si hace falta volver atras.
 # Directorio de corrida de WRF (debe contener wrf.exe, wrfinput, wrfbdy)
 LOCAL_WRF_DIR = Path(os.environ.get(
     "LOCAL_WRF_DIR",
     # "/home/pgich/wrf-operativo/ejecutables/WRF",  # PC pgich
-    "/home/roberto/opencode/wrf/WRF-4.0/run",  # PC roberto
+    # "/home/roberto/opencode/wrf/WRF-4.0/run",  # PC roberto (WRF 4.0, en desuso)
+    "/home/roberto/opencode/wrf/WRF-4.5/run",  # PC roberto
 ))
 # Script que carga el entorno operativo (LD_LIBRARY_PATH, MPICH, etc.).
 # En la PC roberto WRF enlaza las librerias del sistema, por lo que este
@@ -78,7 +80,7 @@ LOCAL_WRF_DIR = Path(os.environ.get(
 WRF_ENV_BASH = os.environ.get(
     "WRF_ENV_BASH",
     # "/home/pgich/wrf-operativo/ejecutables/env.bash",  # PC pgich
-    "/home/roberto/opencode/wrf/WRF-4.0/run/env.bash",  # PC roberto
+    "/home/roberto/opencode/wrf/WRF-4.5/run/env.bash",  # PC roberto
 )
 # mpirun de la instalacion MPI local
 MPIRUN = os.environ.get(

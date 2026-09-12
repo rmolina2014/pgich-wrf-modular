@@ -14,7 +14,8 @@ class WPSRunner:
 
     def __init__(self, wps_dir: Optional[str] = None):
         # PC pgich: "/home/pgich/Build_WRF/WPS"
-        self.wps_dir = Path(wps_dir or os.environ.get("WPS_DIR", "/home/roberto/opencode/wrf/WPS-4.0"))  # PC roberto
+        # PC roberto (WPS 4.0, en desuso): "/home/roberto/opencode/wrf/WPS-4.0"
+        self.wps_dir = Path(wps_dir or os.environ.get("WPS_DIR", "/home/roberto/opencode/wrf/WPS-4.5"))  # PC roberto
 
     def verificar_archivos_metgrid(self, search_dir: Optional[str] = None) -> List[Path]:
         """Verifica la existencia de archivos met_em.d01.*.nc generados."""
