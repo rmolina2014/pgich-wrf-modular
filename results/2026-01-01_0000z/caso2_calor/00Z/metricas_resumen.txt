@@ -1,0 +1,28 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-01-01_00:00:00 caso2_NvC
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+---------------------------------------------------------------------------------------------------------
+T2 (K)            14      +1.14       3.17       3.74    0.305      +1.14       3.17       3.74    0.305
+PSFC (hPa)        14     -32.71      32.71      41.63    0.874     -32.71      32.71      41.63    0.874
+RH (%)            14     -16.10      16.10      20.50    0.394     -16.10      16.10      20.50    0.394
+Wind (m/s)        14      +0.61       3.95       4.62    0.377      +0.61       3.95       4.62    0.377
+---------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
+  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m

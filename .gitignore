@@ -4,12 +4,7 @@ gfs_data/
 plots/
 experiments/
 
-# results/: solo se versionan wrfout/wrfinput/wrfbdy (análisis y re-simulación)
-results/**
-!results/**/
-!results/**/wrfout_*
-!results/**/wrfinput_*
-!results/**/wrfbdy_*
+# results/: se versiona completo (salidas de corrida WRF y validación)
 
 # Python
 __pycache__/

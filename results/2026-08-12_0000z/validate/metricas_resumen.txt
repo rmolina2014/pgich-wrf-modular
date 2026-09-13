@@ -1,0 +1,28 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-12_00:00:00
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+---------------------------------------------------------------------------------------------------------
+T2 (K)            14      +3.27       3.27       3.71   -0.981      +3.27       3.27       3.71   -0.981
+PSFC (hPa)        14      -9.24       9.24      12.16    0.999      -9.24       9.24      12.16    0.999
+RH (%)            14     -17.26      17.26      17.40    0.081     -17.26      17.26      17.40    0.081
+Wind (m/s)        14      +2.25       2.25       2.40   -0.435      +2.25       2.25       2.40   -0.435
+---------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m

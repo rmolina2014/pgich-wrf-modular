@@ -1,0 +1,79 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-06_06:00:00
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+---------------------------------------------------------------------------------------------------------
+T2 (K)            65      -3.27       5.40       5.79   -0.232      -4.00       7.57       7.93   -0.705
+PSFC (hPa)        65     -36.15      36.15      46.38    0.855     -35.23      35.23      45.11    0.855
+RH (%)            65     -13.95      19.23      32.23    0.196     -13.60      21.29      37.06   -0.407
+Wind (m/s)        65      -7.62       7.88       9.78    0.933      +1.51      10.61      12.93    0.116
+---------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m

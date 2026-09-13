@@ -1,0 +1,17 @@
+{
+  "caso1": {
+    "estado": "EJECUTADO",
+    "detalle": "fuente GFS aws",
+    "ts": "2026-09-12T23:11:58"
+  },
+  "caso2": {
+    "estado": "EJECUTADO",
+    "detalle": "fuente GFS aws",
+    "ts": "2026-09-13T00:11:15"
+  },
+  "caso3": {
+    "estado": "EJECUTADO",
+    "detalle": "fuente GFS aws",
+    "ts": "2026-09-13T00:57:35"
+  }
+}

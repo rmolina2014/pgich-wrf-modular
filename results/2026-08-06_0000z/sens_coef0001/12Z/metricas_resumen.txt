@@ -1,0 +1,79 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-08-06_12:00:00
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+---------------------------------------------------------------------------------------------------------
+T2 (K)            52      -2.95       3.49       4.39    0.156      -1.95       2.61       3.78    0.167
+PSFC (hPa)        65     -39.87      39.87      48.96    0.858     -41.75      41.75      50.75    0.861
+RH (%)            52      -6.69      13.78      16.43    0.414     -25.20      25.89      29.30    0.418
+Wind (m/s)        52      -9.70       9.85      11.60    0.271      -6.01       8.97      10.05   -0.141
+---------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
