@@ -1,0 +1,50 @@
+{
+  "descripcion": "Casos de estudio de la Fase 4 del anteproyecto: ciclo WRF 00Z->12Z con y sin obs nudging (configuracion sens_coef0001) para tres tipos de evento en la region de San Juan.",
+  "configuracion_comun": {
+    "hora_ciclo": "00",
+    "run_hours": 12,
+    "valid_times": ["00:00:00", "06:00:00", "12:00:00"],
+    "obs_coef_wind": 0.0001,
+    "obs_coef_temp": 0.0001,
+    "obs_coef_mois": 0.0001,
+    "obs_twindo": 1.0,
+    "namelist_base": "namelist.input",
+    "obs_min_registros": 60,
+    "obs_min_estaciones": 3
+  },
+  "casos": [
+    {
+      "id": "caso1",
+      "num": 1,
+      "fecha": "2026-07-31",
+      "evento": "viento_zonda",
+      "titulo": "Caso 1 - Viento Zonda",
+      "descripcion": "Jornada con alerta naranja por viento Zonda en el oeste de San Juan (Diario de Cuyo, 31/07/2026); rafagas > 70 km/h, min ~7 C y max ~28 C. Analisis restringido a la firma termica (salto de T2 y caida de RH) por la limitacion del dominio de 15 km (ver informe). El viento se reporta de forma cualitativa.",
+      "fuente": "Diario de Cuyo (31/07/2026), SMN (alerta naranja)",
+      "resultados_dir": "results/2026-07-31_0000z/caso1_zonda",
+      "informe": "informes_ejecucion/informe_caso1_zonda_20260731.md"
+    },
+    {
+      "id": "caso2",
+      "num": 2,
+      "fecha": "2026-01-01",
+      "evento": "calor_verano",
+      "titulo": "Caso 2 - Calor de verano (Año Nuevo)",
+      "descripcion": "Ola de calor de verano con temperaturas maximas elevadas en el inicio de ano en San Juan. Caso representativo de la circulacion calida de verano.",
+      "fuente": "SMN (temperaturas maximas de enero), prensa local",
+      "resultados_dir": "results/2026-01-01_0000z/caso2_calor",
+      "informe": "informes_ejecucion/informe_caso2_calor_20260101.md"
+    },
+    {
+      "id": "caso3",
+      "num": 3,
+      "fecha": "2026-05-16",
+      "evento": "frente_frio",
+      "titulo": "Caso 3 - Ingreso de frente frio",
+      "descripcion": "Ingreso de un frente frio con descenso de temperatura y rotacion del viento en el centro-este de Argentina. Caso representativo del pasaje frontal.",
+      "fuente": "SMN (pronostico sinoptico)",
+      "resultados_dir": "results/2026-05-16_0000z/caso3_frentefrio",
+      "informe": "informes_ejecucion/informe_caso3_frentefrio_20260516.md"
+    }
+  ]
+}

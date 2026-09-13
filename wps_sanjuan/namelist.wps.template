@@ -23,8 +23,8 @@
  truelat1  = -31.5,
  truelat2  = 0.0,
  stand_lon = -68.5,
- ! PC pgich: geog_data_path = '/home/pgich/wrf-operativo/datos/WPS_GEOG',
- geog_data_path = '/home/roberto/opencode/wrf/geog/WPS_GEOG_LOW_RES',  ! PC roberto
+ geog_data_path = 'GEOG_DATA_PATH',  ! reemplazado por run_wps_sanjuan.sh segun la PC
+ opt_geogrid_tbl_path = './',  ! geogrid busca GEOGRID.TBL en el dir de trabajo
 /
 
 &ungrib
@@ -35,4 +35,5 @@
 &metgrid
  fg_name = 'FILE',
  io_form_metgrid = 2,
+ opt_metgrid_tbl_path = './',  ! metgrid busca METGRID.TBL en el dir de trabajo
 /
