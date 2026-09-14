@@ -461,9 +461,10 @@ def redactar_informe_consolidado(casos: List[Dict[str, Any]], estado: Dict[str, 
             estado_txt = f"NO EJECUTADO — SIN DATOS ({det})"
         L.append(f"| {c['titulo']} | {c['fecha']} | {c['evento']} | {estado_txt} | `{c['informe']}` |")
     L.append("")
-    L.append("## Métricas por caso (RMSE del nudging vs control)")
+    L.append("## Métricas por caso (RMSE y r del nudging vs control)")
     L.append("")
-    L.append("Se reporta el RMSE de T2 (K) y RH (%) en la ventana de mayor divergencia (06Z y 12Z).")
+    L.append("Se reporta el RMSE y el coeficiente de correlación (r) de T2 (K) y RH (%) "
+             "en la ventana de mayor divergencia (06Z y 12Z).")
     L.append("")
     for c in casos:
         e = estado.get(c["id"], {})
@@ -478,16 +479,20 @@ def redactar_informe_consolidado(casos: List[Dict[str, Any]], estado: Dict[str, 
             L.append("_Sin tabla de métricas._")
             L.append("")
             continue
-        L.append("| Tiempo | RMSE T2 N | RMSE T2 C | RMSE RH N | RMSE RH C |")
-        L.append("|--------|-----------|-----------|-----------|-----------|")
+        L.append("| Tiempo | RMSE T2 N | RMSE T2 C | r T2 N | r T2 C | RMSE RH N | RMSE RH C | r RH N | r RH C |")
+        L.append("|--------|-----------|-----------|--------|--------|-----------|-----------|--------|--------|")
         def _fmt(r: Dict[str, Any], k: str) -> str:
             v = r.get(k)
-            return f"{v:.2f}" if v is not None and isinstance(v, (int, float)) else "n/d"
+            if v is None or not isinstance(v, (int, float)) or v != v:  # v != v detecta NaN
+                return "n/d"
+            return f"{v:+.3f}" if k.endswith("_r") else f"{v:.2f}"
         for t in tabla.get("por_tiempo", []):
             t2 = _resumen_metricas(tabla, "T2 (K)", t["tiempo"])
             rh = _resumen_metricas(tabla, "RH (%)", t["tiempo"])
             L.append(f"| {t['tiempo']} | {_fmt(t2, 'nudged_rmse')} | {_fmt(t2, 'control_rmse')}"
-                     f" | {_fmt(rh, 'nudged_rmse')} | {_fmt(rh, 'control_rmse')} |")
+                     f" | {_fmt(t2, 'nudged_r')} | {_fmt(t2, 'control_r')}"
+                     f" | {_fmt(rh, 'nudged_rmse')} | {_fmt(rh, 'control_rmse')}"
+                     f" | {_fmt(rh, 'nudged_r')} | {_fmt(rh, 'control_r')} |")
         L.append("")
     L.append("## Limitación del dominio y criterio de análisis")
     L.append("")
