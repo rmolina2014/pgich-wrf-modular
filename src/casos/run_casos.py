@@ -307,14 +307,18 @@ def _md_tabla_variable(rows: List[Dict[str, Any]], variable: str) -> str:
     subset = [r for r in rows if r["var"] == variable]
     if not subset:
         return "_Sin métricas para esta variable._\n"
-    lineas = ["| Tiempo | N | RMSE N | RMSE C | dRMSE | Bias N | Bias C |",
-              "|--------|----|--------|--------|-------|--------|--------|"]
+    lineas = ["| Tiempo | N | RMSE N | RMSE C | dRMSE | Bias N | Bias C | r N | r C |",
+              "|--------|----|--------|--------|-------|--------|--------|-----|-----|"]
     for r in sorted(subset, key=lambda x: int(x["tiempo"].replace("Z", ""))):
         n, nr, cr = r["n"], r["nudged_rmse"], r["control_rmse"]
         nb, cb = r["nudged_bias"], r["control_bias"]
+        nR, cR = r.get("nudged_r"), r.get("control_r")
         d = (cr - nr) if (nr == nr and cr == cr) else float("nan")
         d_txt = f"{d:+.2f}" if d == d else "n/d"
-        lineas.append(f"| {r['tiempo']} | {n} | {nr:.2f} | {cr:.2f} | {d_txt} | {nb:+.2f} | {cb:+.2f} |")
+        # nR/cR pueden venir como None (no calculado) o NaN (varianza nula); ambos -> "n/d"
+        nR_txt = f"{nR:+.3f}" if nR is not None and nR == nR else "n/d"
+        cR_txt = f"{cR:+.3f}" if cR is not None and cR == cR else "n/d"
+        lineas.append(f"| {r['tiempo']} | {n} | {nr:.2f} | {cr:.2f} | {d_txt} | {nb:+.2f} | {cb:+.2f} | {nR_txt} | {cR_txt} |")
     return "\n".join(lineas) + "\n"
 
 
@@ -457,9 +461,10 @@ def redactar_informe_consolidado(casos: List[Dict[str, Any]], estado: Dict[str, 
             estado_txt = f"NO EJECUTADO — SIN DATOS ({det})"
         L.append(f"| {c['titulo']} | {c['fecha']} | {c['evento']} | {estado_txt} | `{c['informe']}` |")
     L.append("")
-    L.append("## Métricas por caso (RMSE del nudging vs control)")
+    L.append("## Métricas por caso (RMSE y r del nudging vs control)")
     L.append("")
-    L.append("Se reporta el RMSE de T2 (K) y RH (%) en la ventana de mayor divergencia (06Z y 12Z).")
+    L.append("Se reporta el RMSE y el coeficiente de correlación (r) de T2 (K) y RH (%) "
+             "en la ventana de mayor divergencia (06Z y 12Z).")
     L.append("")
     for c in casos:
         e = estado.get(c["id"], {})
@@ -474,16 +479,20 @@ def redactar_informe_consolidado(casos: List[Dict[str, Any]], estado: Dict[str, 
             L.append("_Sin tabla de métricas._")
             L.append("")
             continue
-        L.append("| Tiempo | RMSE T2 N | RMSE T2 C | RMSE RH N | RMSE RH C |")
-        L.append("|--------|-----------|-----------|-----------|-----------|")
+        L.append("| Tiempo | RMSE T2 N | RMSE T2 C | r T2 N | r T2 C | RMSE RH N | RMSE RH C | r RH N | r RH C |")
+        L.append("|--------|-----------|-----------|--------|--------|-----------|-----------|--------|--------|")
         def _fmt(r: Dict[str, Any], k: str) -> str:
             v = r.get(k)
-            return f"{v:.2f}" if v is not None and isinstance(v, (int, float)) else "n/d"
+            if v is None or not isinstance(v, (int, float)) or v != v:  # v != v detecta NaN
+                return "n/d"
+            return f"{v:+.3f}" if k.endswith("_r") else f"{v:.2f}"
         for t in tabla.get("por_tiempo", []):
             t2 = _resumen_metricas(tabla, "T2 (K)", t["tiempo"])
             rh = _resumen_metricas(tabla, "RH (%)", t["tiempo"])
             L.append(f"| {t['tiempo']} | {_fmt(t2, 'nudged_rmse')} | {_fmt(t2, 'control_rmse')}"
-                     f" | {_fmt(rh, 'nudged_rmse')} | {_fmt(rh, 'control_rmse')} |")
+                     f" | {_fmt(t2, 'nudged_r')} | {_fmt(t2, 'control_r')}"
+                     f" | {_fmt(rh, 'nudged_rmse')} | {_fmt(rh, 'control_rmse')}"
+                     f" | {_fmt(rh, 'nudged_r')} | {_fmt(rh, 'control_r')} |")
         L.append("")
     L.append("## Limitación del dominio y criterio de análisis")
     L.append("")

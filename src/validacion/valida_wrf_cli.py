@@ -75,7 +75,7 @@ def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=Non
         temp_c = obs.get("temp")
         rh = obs.get("humedad")
         psfc_hpa = obs.get("presion_absoluta")
-        speed = obs.get("viento")
+        speed_kmh = obs.get("viento")
         direcc = obs.get("direcc")
 
         estaciones.append({
@@ -86,7 +86,10 @@ def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=Non
             "temp": float(temp_c) + 273.15 if temp_c is not None else None,
             "rh": float(rh) if rh is not None else None,
             "psfc": float(psfc_hpa) * 100 if psfc_hpa is not None else None,
-            "speed": float(speed) if speed is not None else None,
+            # obs_flat guarda el viento en km/h (EcoWitt wind_speed_unitid=7);
+            # WRF (U10/V10) entrega m/s, así que hay que convertir para comparar
+            # correctamente (misma conversión que littler_writer.py y obsnud_writer.py).
+            "speed": float(speed_kmh) / 3.6 if speed_kmh is not None else None,
             "dir": float(direcc) if direcc is not None else None,
         })
     return estaciones
