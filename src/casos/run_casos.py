@@ -307,14 +307,18 @@ def _md_tabla_variable(rows: List[Dict[str, Any]], variable: str) -> str:
     subset = [r for r in rows if r["var"] == variable]
     if not subset:
         return "_Sin métricas para esta variable._\n"
-    lineas = ["| Tiempo | N | RMSE N | RMSE C | dRMSE | Bias N | Bias C |",
-              "|--------|----|--------|--------|-------|--------|--------|"]
+    lineas = ["| Tiempo | N | RMSE N | RMSE C | dRMSE | Bias N | Bias C | r N | r C |",
+              "|--------|----|--------|--------|-------|--------|--------|-----|-----|"]
     for r in sorted(subset, key=lambda x: int(x["tiempo"].replace("Z", ""))):
         n, nr, cr = r["n"], r["nudged_rmse"], r["control_rmse"]
         nb, cb = r["nudged_bias"], r["control_bias"]
+        nR, cR = r.get("nudged_r"), r.get("control_r")
         d = (cr - nr) if (nr == nr and cr == cr) else float("nan")
         d_txt = f"{d:+.2f}" if d == d else "n/d"
-        lineas.append(f"| {r['tiempo']} | {n} | {nr:.2f} | {cr:.2f} | {d_txt} | {nb:+.2f} | {cb:+.2f} |")
+        # nR/cR pueden venir como None (no calculado) o NaN (varianza nula); ambos -> "n/d"
+        nR_txt = f"{nR:+.3f}" if nR is not None and nR == nR else "n/d"
+        cR_txt = f"{cR:+.3f}" if cR is not None and cR == cR else "n/d"
+        lineas.append(f"| {r['tiempo']} | {n} | {nr:.2f} | {cr:.2f} | {d_txt} | {nb:+.2f} | {cb:+.2f} | {nR_txt} | {cR_txt} |")
     return "\n".join(lineas) + "\n"
 
 
