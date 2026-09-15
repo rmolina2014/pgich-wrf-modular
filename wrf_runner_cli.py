@@ -34,7 +34,7 @@ def argumentos():
     p.add_argument("--fecha", required=True, help="Fecha YYYY-MM-DD (inicio de corrida)")
     p.add_argument("--hora", default="00:00", help="Hora UTC HH:MM")
     p.add_argument("--caso", default="base", help="Nombre del caso")
-    p.add_argument("--namelist", default=str(pw.PROJECT_DIR.parent / "namelist.input"),
+    p.add_argument("--namelist", default=str(Path(__file__).resolve().parent / "namelist.input"),
                    help="Ruta al namelist.input base")
     p.add_argument("--run-real", action="store_true",
                    help="Regenerar wrfinput/wrfbdy con real.exe antes de wrf.exe")

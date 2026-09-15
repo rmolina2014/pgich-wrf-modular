@@ -393,7 +393,8 @@ def redactar_informe_caso(caso: Dict[str, Any], estado_entry: Dict[str, Any],
             L.append("## Resultados: Nudged vs Control")
             L.append("")
             L.append("RMSE/Bias de la corrida nudgada (N) y de control (C) por tiempo de validación. "
-                     "dRMSE = RMSE(C) - RMSE(N) (negativo ⇒ el nudging no degrada). 00Z: N≡C por construcción.")
+                     "dRMSE = RMSE(C) - RMSE(N) (positivo ⇒ mejora con nudging; negativo ⇒ degrada). "
+                     "00Z: N≡C por construcción.")
             L.append("")
             for var in tabla.get("variables", []):
                 L.append(f"### {var}")

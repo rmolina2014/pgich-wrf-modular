@@ -484,7 +484,7 @@ def pipeline(args):
     else:
         logger.warning(f"Validacion con errores. Resultados parciales en {case_dir}")
 
-    return 0
+    return 0 if valid_ok else 1
 
 
 def main():
