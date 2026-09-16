@@ -24,6 +24,7 @@ Uso:
 """
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -275,6 +276,85 @@ def copiar_wrfout(run_dir, dest_dir, valid_time):
     return True
 
 
+def _sha256(path):
+    """SHA-256 de un archivo (para el manifest del control)."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _tiempos_wrfout(control_dir):
+    """Nombres de los wrfout de un directorio (lista, vacía si no hay)."""
+    d = Path(control_dir)
+    if not d.exists():
+        return []
+    return sorted(p.name for p in d.glob("wrfout_d01_*"))
+
+
+def _escribir_manifest_control(case_dir, namelist_control, start_dt, run_hours=12):
+    """Registra el manifest del control generado (nombre del caso en case_dir)."""
+    case_dir = Path(case_dir)
+    case_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "creado": datetime.now().isoformat(timespec="seconds"),
+        "start": start_dt.strftime("%Y-%m-%d_%H:%M:%S") if start_dt else None,
+        "run_hours": int(run_hours),
+        "namelist_sha256": _sha256(namelist_control),
+    }
+    ruta = case_dir / "control_manifest.json"
+    with open(ruta, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+    logger.info(f"  Manifest del control registrado: {ruta}")
+    return ruta
+
+
+def _control_reutilizable(case_dir, control_dir, namelist_control, start_dt=None, run_hours=12):
+    """¿Se puede reutilizar el control existente sin re-correrlo?
+
+    El control solo se reutiliza si:
+      - tiene wrfout compatibles con el periodo del experimento actual;
+      - existe su manifest y el SHA-256 del namelist_control actual
+        coincide con el que generó ese control (misma config/entradas).
+    De lo contrario devuelve False para forzar una nueva corrida de control."""
+    wrfouts = _tiempos_wrfout(control_dir)
+    if not wrfouts:
+        return False
+
+    # Verificar que los wrfout cubren el periodo del experimento actual
+    if start_dt is not None:
+        esperados = [
+            (start_dt + timedelta(hours=h)).strftime("%Y-%m-%d_%H:%M:%S")
+            for h in range(0, int(run_hours) + 1)
+        ]
+        # Basta que la fecha de inicio coincida para identificar el caso/día
+        prefijo = start_dt.strftime("%Y-%m-%d")
+        if not any(wr.startswith(f"wrfout_d01_{prefijo}") for wr in wrfouts):
+            logger.warning(f"  Control existente no corresponde al periodo {prefijo}; se re-corre")
+            return False
+
+    manifest = Path(case_dir) / "control_manifest.json"
+    if not manifest.exists():
+        logger.warning("  Control existente sin manifest; se re-corre para registrar el manifest")
+        return False
+
+    try:
+        with open(manifest, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        logger.warning("  Manifest del control ilegible; se re-corre")
+        return False
+
+    if not Path(namelist_control).exists():
+        logger.warning("  Falta namelist_control.input actual; se re-corre")
+        return False
+    if data.get("namelist_sha256") != _sha256(namelist_control):
+        logger.warning("  Manifest del control no coincide con namelist actual; se re-corre")
+        return False
+    return True
+
+
 def run_valida_wrf(nudged_dir, control_dir, output_dir, valid_time, obs_json, label="",
                    run_dir=None, valid_times=None):
     """Ejecuta valida_wrf.py localmente con el python del entorno de validacion.
@@ -420,11 +500,14 @@ def pipeline(args):
         logger.info("CORRIDA CONTROL (obs_nudge_opt=0)")
         logger.info("=" * 60)
 
-        # Si ya existe control de este caso, preguntar
-        if control_dir.exists() and list(control_dir.glob("wrfout_d01*")):
-            logger.info(f"  Control ya existe en {control_dir}, reutilizando")
+        # Reutilizar el control solo si coincide con la config actual
+        # (mismo namelist_control y periodo). Ver hallazgo H6 del analisis.
+        run_hours_control = 12
+        namelist_control = case_dir / "namelist_control.input"
+        if _control_reutilizable(case_dir, control_dir, namelist_control,
+                                 start_dt, run_hours=run_hours_control):
+            logger.info(f"  Control reutilizado de {control_dir} (manifest valido)")
         else:
-            namelist_control = case_dir / "namelist_control.input"
             preparar_namelist(args.namelist, 0, namelist_control, start_dt=start_dt)
             copiar_namelist(namelist_control, run_dir)
 
@@ -439,12 +522,12 @@ def pipeline(args):
                 logger.error("Corrida control fallida")
                 return 1
             copiar_wrfout(run_dir, control_dir, valid_time)
-            # Copiar wrfout al subdirectorio control/ del directorio de corrida
             subprocess.run(
                 ["bash", "-lc",
                  f"mkdir -p {run_dir}/control && cp {run_dir}/wrfout_d01* {run_dir}/control/"],
                 capture_output=True, text=True, timeout=60,
             )
+            _escribir_manifest_control(case_dir, namelist_control, start_dt, run_hours=run_hours_control)
 
     # === PASO 12: Validacion ===
     if args.validate_only:

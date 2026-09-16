@@ -146,5 +146,72 @@ class TestInformes(unittest.TestCase):
             self.assertIn("RH (%)", contenido)
 
 
+class TestControlManifest(unittest.TestCase):
+    """Tests del hallazgo H6: reuso del control verificado por manifest (pipeline_wrf)."""
+
+    def setUp(self):
+        from datetime import datetime
+        self.tmp = Path(tempfile.mkdtemp())
+        # Crear namelist_control de prueba
+        self.namelist = self.tmp / "namelist_control.input"
+        self.namelist.write_text("&time_control\n run_hours = 12\n/", encoding="utf-8")
+        # Crear wrfouts de prueba (archivos vacíos)
+        self.control_dir = self.tmp / "control"
+        self.control_dir.mkdir()
+        for h in range(13):
+            (self.control_dir / f"wrfout_d01_2026-07-31_{h:02d}:00:00").touch()
+        self.case_dir = self.tmp / "caso1"
+        self.start_dt = datetime(2026, 7, 31, 0, 0, 0)
+
+    def tearDown(self):
+        import shutil
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_manifest_escrito(self):
+        from pipeline_wrf import _escribir_manifest_control
+        ruta = _escribir_manifest_control(self.case_dir, self.namelist, self.start_dt, 12)
+        self.assertTrue(ruta.exists())
+        data = json.loads(ruta.read_text(encoding="utf-8"))
+        self.assertIn("namelist_sha256", data)
+        self.assertEqual(data["start"], "2026-07-31_00:00:00")
+
+    def test_reutiliza_con_manifest_valido(self):
+        from pipeline_wrf import _escribir_manifest_control, _control_reutilizable
+        _escribir_manifest_control(self.case_dir, self.namelist, self.start_dt, 12)
+        self.assertTrue(_control_reutilizable(self.case_dir, self.control_dir,
+                                              self.namelist, self.start_dt, 12))
+
+    def test_no_reutiliza_sin_manifest(self):
+        from pipeline_wrf import _control_reutilizable
+        self.assertFalse(_control_reutilizable(self.case_dir, self.control_dir,
+                                               self.namelist, self.start_dt, 12))
+
+    def test_no_reutiliza_hash_distinto(self):
+        from pipeline_wrf import _escribir_manifest_control, _control_reutilizable
+        _escribir_manifest_control(self.case_dir, self.namelist, self.start_dt, 12)
+        # Alterar el namelist actual
+        self.namelist.write_text("&time_control\n run_hours = 6\n/", encoding="utf-8")
+        self.assertFalse(_control_reutilizable(self.case_dir, self.control_dir,
+                                               self.namelist, self.start_dt, 12))
+
+    def test_no_reutiliza_sin_wrfout(self):
+        from pipeline_wrf import _escribir_manifest_control, _control_reutilizable
+        _escribir_manifest_control(self.case_dir, self.namelist, self.start_dt, 12)
+        empty = self.tmp / "empty_ctrl"
+        empty.mkdir()
+        self.assertFalse(_control_reutilizable(self.case_dir, empty,
+                                               self.namelist, self.start_dt, 12))
+
+    def test_no_reutiliza_fecha_erronea(self):
+        from pipeline_wrf import _escribir_manifest_control, _control_reutilizable
+        _escribir_manifest_control(self.case_dir, self.namelist, self.start_dt, 12)
+        # Wrffouts son del día incorrecto (2026-08-01 en vez de 2026-07-31)
+        bad = self.tmp / "ctrl_bad"
+        bad.mkdir()
+        (bad / "wrfout_d01_2026-08-01_00:00:00").touch()
+        self.assertFalse(_control_reutilizable(self.case_dir, bad,
+                                               self.namelist, self.start_dt, 12))
+
+
 if __name__ == "__main__":
     unittest.main()
