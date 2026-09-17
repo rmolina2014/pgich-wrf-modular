@@ -23,7 +23,8 @@ def cargar_metadatos_estaciones(estaciones_json=None):
         metadatos = json.load(f)
     return [
         {"name": nombre, "lat": meta.get("lat"), "lon": meta.get("lon"),
-         "elev": meta.get("elev"), "temp": None, "rh": None, "psfc": None,
+         "elev": meta.get("elev"), "rol": meta.get("rol", "asimilacion"),
+         "temp": None, "rh": None, "psfc": None,
          "speed": None, "dir": None}
         for nombre, meta in metadatos.items()
     ]
@@ -42,6 +43,17 @@ def _parse_obs_dt(obs):
     return None
 
 def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=None, ventana_min=30):
+    """Carga observaciones en la ventana +/-ventana_min y las promedia por estacion.
+
+    Una estacion EcoWitt reporta cada 5 min, asi que una ventana de +/-30 min puede
+    traer ~12-13 lecturas de la misma estacion. Devolver una fila por lectura
+    (comportamiento anterior) infla artificialmente N (pseudo-replicacion: son
+    lecturas correlacionadas de la misma estacion, no observaciones independientes)
+    y pondera de mas a las estaciones con mejor conectividad. Aca se promedia
+    temp/rh/psfc de forma aritmetica y el viento por promedio vectorial (u,v)
+    para no promediar direcciones angulares de forma incorrecta, devolviendo
+    una unica fila representativa por estacion.
+    """
     with open(ruta_json, encoding="utf-8") as f:
         raw = json.load(f)
 
@@ -62,7 +74,7 @@ def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=Non
     with open(ruta_meta) as f:
         metadatos = json.load(f)
 
-    estaciones = []
+    lecturas_por_estacion = {}
     for obs in raw:
         nombre = obs.get("estacion")
         if not nombre or "error" in obs:
@@ -71,26 +83,47 @@ def cargar_estaciones_desde_json(ruta_json, estaciones_json=None, valid_time=Non
             obs_dt = _parse_obs_dt(obs)
             if obs_dt is None or abs((obs_dt - valid_dt).total_seconds()) > ventana_min * 60:
                 continue
+        lecturas_por_estacion.setdefault(nombre, []).append(obs)
+
+    def _promedio(valores):
+        return sum(valores) / len(valores) if valores else None
+
+    estaciones = []
+    for nombre, lecturas in lecturas_por_estacion.items():
         meta = metadatos.get(nombre, {})
-        temp_c = obs.get("temp")
-        rh = obs.get("humedad")
-        psfc_hpa = obs.get("presion_absoluta")
-        speed_kmh = obs.get("viento")
-        direcc = obs.get("direcc")
+
+        temps = [float(o["temp"]) + 273.15 for o in lecturas if o.get("temp") is not None]
+        rhs = [float(o["humedad"]) for o in lecturas if o.get("humedad") is not None]
+        psfcs = [float(o["presion_absoluta"]) * 100 for o in lecturas if o.get("presion_absoluta") is not None]
+
+        # Viento: promedio vectorial (u,v), no de speed/dir por separado (una
+        # direccion angular no se promedia de forma aritmetica simple).
+        # obs_flat guarda el viento en km/h; se convierte a m/s antes del
+        # promedio (misma conversion que littler_writer.py/obsnud_writer.py).
+        us, vs = [], []
+        for o in lecturas:
+            speed_kmh, direcc = o.get("viento"), o.get("direcc")
+            if speed_kmh is None or direcc is None:
+                continue
+            u, v = obs_u_v(float(speed_kmh) / 3.6, float(direcc))
+            us.append(u)
+            vs.append(v)
+        speed, direccion = (None, None)
+        if us:
+            speed, direccion = model_u_v_to_speed_dir(_promedio(us), _promedio(vs))
 
         estaciones.append({
             "name": nombre,
             "lat": meta.get("lat", 0.0),
             "lon": meta.get("lon", 0.0),
             "elev": meta.get("elev", 0.0),
-            "temp": float(temp_c) + 273.15 if temp_c is not None else None,
-            "rh": float(rh) if rh is not None else None,
-            "psfc": float(psfc_hpa) * 100 if psfc_hpa is not None else None,
-            # obs_flat guarda el viento en km/h (EcoWitt wind_speed_unitid=7);
-            # WRF (U10/V10) entrega m/s, así que hay que convertir para comparar
-            # correctamente (misma conversión que littler_writer.py y obsnud_writer.py).
-            "speed": float(speed_kmh) / 3.6 if speed_kmh is not None else None,
-            "dir": float(direcc) if direcc is not None else None,
+            "rol": meta.get("rol", "asimilacion"),
+            "n_lecturas": len(lecturas),
+            "temp": _promedio(temps),
+            "rh": _promedio(rhs),
+            "psfc": _promedio(psfcs),
+            "speed": speed,
+            "dir": direccion,
         })
     return estaciones
 
@@ -362,7 +395,7 @@ def plot_metrics_table(rows, output_dir, valid_time, label=""):
     plt.close()
     print(f"  -> {output_dir / 'tabla_metricas.png'}")
 
-def write_summary(rows, stations, output_dir, valid_time, label=""):
+def write_summary(rows, stations, output_dir, valid_time, label="", nombre_archivo="metricas_resumen.txt"):
     lines = []
     lines.append("=" * 80)
     suffix = f" {label}" if label else ""
@@ -391,9 +424,9 @@ def write_summary(rows, stations, output_dir, valid_time, label=""):
         lines.append(f"  {s['name']:<20s}  lat={s['lat']:>8.4f}  lon={s['lon']:>8.4f}  elev={s['elev']:>5.0f}m")
     lines.append("")
 
-    with open(str(output_dir / "metricas_resumen.txt"), 'w') as f:
+    with open(str(output_dir / nombre_archivo), 'w') as f:
         f.write('\n'.join(lines))
-    print(f"  -> {output_dir / 'metricas_resumen.txt'}")
+    print(f"  -> {output_dir / nombre_archivo}")
     print('\n'.join(lines))
 
 
@@ -599,6 +632,33 @@ def main():
         plot_map(nudged_data, control_data, stations, sub_dir, vt, nudged_dir, args.label)
         plot_metrics_table(rows, sub_dir, vt, args.label)
         write_summary(rows, stations, sub_dir, vt, args.label)
+
+        # Hold-out espacial: si config/estaciones.json tiene estaciones con
+        # rol "evaluacion" (nunca asimiladas, ver obsnud_writer.py), separar
+        # las metricas en "ajuste" (estaciones asimiladas, miden que tan bien
+        # el modelo reproduce lo que ya se le dio) y "generalizacion" (hold-out,
+        # miden mejora real del pronostico en lugares no asimilados).
+        idx_eval = [i for i, s in enumerate(stations) if s.get("rol") == "evaluacion"]
+        idx_asim = [i for i in range(len(stations)) if i not in idx_eval]
+        if idx_eval and idx_asim:
+            st_asim = [stations[i] for i in idx_asim]
+            st_eval = [stations[i] for i in idx_eval]
+            rows_asim = build_tables([nudged_data[i] for i in idx_asim],
+                                      [control_data[i] for i in idx_asim], st_asim)
+            rows_eval = build_tables([nudged_data[i] for i in idx_eval],
+                                      [control_data[i] for i in idx_eval], st_eval)
+            print(f"\n  Hold-out espacial: {len(st_asim)} asimiladas / {len(st_eval)} evaluacion")
+            write_summary(rows_asim, st_asim, sub_dir, vt,
+                          f"{args.label} (ajuste, estaciones asimiladas)".strip(),
+                          nombre_archivo="metricas_resumen_asimiladas.txt")
+            write_summary(rows_eval, st_eval, sub_dir, vt,
+                          f"{args.label} (generalizacion, hold-out)".strip(),
+                          nombre_archivo="metricas_resumen_holdout.txt")
+        elif idx_eval:
+            print("\n  Hold-out espacial: todas las estaciones con datos son 'evaluacion' "
+                  "(ninguna se asimilo en esta ventana); no se separa ajuste/generalizacion.")
+        else:
+            print("\n  Hold-out espacial: sin estaciones 'evaluacion' con datos en esta ventana.")
 
         evolution.append({"tiempo": f"{hora}Z", "full": vt, "rows": rows})
 

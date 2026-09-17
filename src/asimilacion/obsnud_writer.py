@@ -160,9 +160,16 @@ class ObsNudWriter:
         config_estaciones = config_estaciones or {}
 
         obs_list = []
+        omitidas_holdout = 0
         for _, row in df.iterrows():
             nombre = str(row.get("estacion", "UNKNOWN"))
             meta = config_estaciones.get(nombre, {})
+            # Hold-out espacial: las estaciones con rol "evaluacion" en
+            # config/estaciones.json se reservan para validar generalizacion
+            # y nunca se asimilan (no entran a OBS_DOMAIN101).
+            if meta.get("rol") == "evaluacion":
+                omitidas_holdout += 1
+                continue
             obs_list.append({
                 "estacion": nombre,
                 "lat": meta.get("lat", row.get("lat", 0.0)),
@@ -177,5 +184,11 @@ class ObsNudWriter:
                 "viento": row.get("viento"),
                 "direcc": row.get("direcc"),
             })
+
+        if omitidas_holdout:
+            logger.info(
+                f"Hold-out espacial: {omitidas_holdout} observaciones de estaciones "
+                f"'evaluacion' omitidas de la asimilacion (no van a {output_path})."
+            )
 
         return self.escribir_obsnud(obs_list, output_path)
