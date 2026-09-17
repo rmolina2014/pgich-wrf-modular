@@ -508,7 +508,11 @@ def pipeline(args):
                                  start_dt, run_hours=run_hours_control):
             logger.info(f"  Control reutilizado de {control_dir} (manifest valido)")
         else:
-            preparar_namelist(args.namelist, 0, namelist_control, start_dt=start_dt)
+            # Mismos obs_coef_* que el nudged: no tienen efecto con obs_nudge_opt=0
+            # (WRF ignora la relajacion cuando el nudging esta apagado), pero asi
+            # el namelist de control difiere del nudged unicamente en obs_nudge_opt,
+            # como documentan los informes de casos de estudio.
+            preparar_namelist(args.namelist, 0, namelist_control, start_dt=start_dt, **coefs)
             copiar_namelist(namelist_control, run_dir)
 
             # Si venimos de nudged, reiniciar con wrfinput (sin nudging previo)
