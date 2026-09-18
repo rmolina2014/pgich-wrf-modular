@@ -1,8 +1,8 @@
 &share
  wrf_core = 'ARW',
  max_dom = 1,
- start_date = '2026-05-16_00:00:00',
- end_date   = '2026-05-16_12:00:00',
+ start_date = '2026-07-31_00:00:00',
+ end_date   = '2026-07-31_12:00:00',
  interval_seconds = 10800,
  io_form_geogrid = 2,
 /
@@ -14,7 +14,7 @@
  j_parent_start    =   1,
  e_we              =  80,
  e_sn              =  60,
- geog_data_res     = 'default',
+ geog_data_res     = 'lowres',
  dx = 15000,
  dy = 15000,
  map_proj  = 'mercator',
@@ -23,7 +23,7 @@
  truelat1  = -31.5,
  truelat2  = 0.0,
  stand_lon = -68.5,
- geog_data_path = '/home/pgich/wrf-operativo/datos/WPS_GEOG',  ! reemplazado por run_wps_sanjuan.sh segun la PC
+ geog_data_path = '/home/roberto/opencode/wrf/geog/WPS_GEOG_LOW_RES',  ! reemplazado por run_wps_sanjuan.sh segun la PC
  opt_geogrid_tbl_path = './',  ! geogrid busca GEOGRID.TBL en el dir de trabajo
 /
 

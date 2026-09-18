@@ -1,70 +1,22 @@
 ================================================================================
-VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-07-31_00:00:00 caso1_zonda
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-07-31_00:00:00
 ================================================================================
 
 Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
 ---------------------------------------------------------------------------------------------------------
-T2 (K)            49      +2.98       3.58       4.44   -0.605      +2.98       3.58       4.44   -0.605
-PSFC (hPa)        56     -30.40      30.40      39.34    0.871     -30.40      30.40      39.34    0.871
-RH (%)            49     -24.64      24.66      27.85    0.819     -24.64      24.66      27.85    0.819
-Wind (m/s)        49      +1.63       1.97       2.32   -0.187      +1.63       1.97       2.32   -0.187
+T2 (K)             7      +2.98       3.58       4.43   -0.610      +2.98       3.58       4.43   -0.610
+PSFC (hPa)         8     -32.39      32.39      41.92    0.861     -32.39      32.39      41.92    0.861
+RH (%)             7     -24.75      24.75      27.96    0.818     -24.75      24.75      27.96    0.818
+Wind (m/s)         7      +1.65       1.99       2.32   -0.192      +1.65       1.99       2.32   -0.192
 ---------------------------------------------------------------------------------------------------------
 
 N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
 
   INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  INTA_POCITO           lat=-31.6500  lon=-68.5833  elev=  615m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
-  ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
   ULLUM_EMBALSE         lat=-31.4667  lon=-68.6667  elev=  768m
   ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  ECOHUMUS              lat=-31.6500  lon=-68.3000  elev=  600m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
-  PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
   PUNTA_NEGRA           lat=-31.5192  lon=-68.8178  elev=  800m
   INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  INTA_SANMARTIN        lat=-31.5000  lon=-68.2500  elev=  600m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
-  VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
   VALLE_FERTIL          lat=-30.6335  lon=-67.4682  elev=  900m
   CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CUESTA_Viento         lat=-30.1833  lon=-69.0667  elev= 1530m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
-  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
   CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m
