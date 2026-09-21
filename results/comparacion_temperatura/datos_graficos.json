@@ -1,0 +1,2833 @@
+{
+  "unidad": "°C",
+  "ventana_observacion_min": 30,
+  "ponderacion": "igual por estacion; red comun entre las tres series por hora",
+  "casos": [
+    {
+      "caso": "Caso 1 - Viento Zonda",
+      "fecha": "2026-07-31",
+      "horas": [
+        {
+          "hora_utc": 0,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 12.771428571428572,
+              "control": 13.785956595587209,
+              "nudging": 13.785956595587209,
+              "lecturas": 7
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 16.514285714285712,
+              "control": 14.950874516398756,
+              "nudging": 14.950874516398756,
+              "lecturas": 7
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.585714285714285,
+              "control": 16.79976848185339,
+              "nudging": 16.79976848185339,
+              "lecturas": 7
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 9.514285714285714,
+              "control": 15.47199602205825,
+              "nudging": 15.47199602205825,
+              "lecturas": 7
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.642857142857142,
+              "control": 14.96350609712988,
+              "nudging": 14.96350609712988,
+              "lecturas": 7
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 11.542857142857143,
+              "control": 15.981153319320697,
+              "nudging": 15.981153319320697,
+              "lecturas": 7
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.700000000000001,
+              "control": 13.176214263478414,
+              "nudging": 13.176214263478414,
+              "lecturas": 7
+            }
+          ],
+          "control": 15.018495613689513,
+          "nudging": 15.018495613689513,
+          "observado": 12.038775510204081
+        },
+        {
+          "hora_utc": 1,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 12.192307692307692,
+              "control": 14.08652495976105,
+              "nudging": 13.572151897291235,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 16.276923076923076,
+              "control": 12.699063267977238,
+              "nudging": 11.969161957574329,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 7.3769230769230765,
+              "control": 16.403048156380464,
+              "nudging": 11.51833189573955,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 8.700000000000001,
+              "control": 15.35958695134866,
+              "nudging": 12.35693141557141,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.507692307692308,
+              "control": 15.74725784025793,
+              "nudging": 13.03165925015719,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 11.046153846153846,
+              "control": 15.429064332111807,
+              "nudging": 12.601154891213923,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.669230769230769,
+              "control": 12.571648760697371,
+              "nudging": 12.444389424596807,
+              "lecturas": 13
+            }
+          ],
+          "control": 14.613742038362075,
+          "nudging": 12.499111533163491,
+          "observado": 11.538461538461538
+        },
+        {
+          "hora_utc": 2,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.615384615384613,
+              "control": 13.088357724455136,
+              "nudging": 12.789682782983391,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 13.884615384615383,
+              "control": 12.8378417309479,
+              "nudging": 11.111390829976528,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 6.300000000000001,
+              "control": 15.601248353105348,
+              "nudging": 10.027183224508633,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 8.430769230769231,
+              "control": 14.978150631908647,
+              "nudging": 11.739747020163293,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.53846153846154,
+              "control": 15.022440940615354,
+              "nudging": 13.176366920739952,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 10.83076923076923,
+              "control": 14.810740476229114,
+              "nudging": 11.928257654629874,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.66153846153846,
+              "control": 12.406962140210851,
+              "nudging": 12.732111215522593,
+              "lecturas": 13
+            }
+          ],
+          "control": 14.10653457106748,
+          "nudging": 11.929248521217753,
+          "observado": 10.75164835164835
+        },
+        {
+          "hora_utc": 3,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.676923076923076,
+              "control": 12.235622264526683,
+              "nudging": 11.832245384740531,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 13.184615384615386,
+              "control": 13.540952876323558,
+              "nudging": 10.534292503295433,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 5.5,
+              "control": 14.607189123367334,
+              "nudging": 8.895242392697753,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 7.8307692307692305,
+              "control": 14.008992504094238,
+              "nudging": 11.064964964962769,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.915384615384616,
+              "control": 15.01443461330473,
+              "nudging": 12.238837553477197,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 10.176923076923078,
+              "control": 14.621572968669057,
+              "nudging": 10.9946421433674,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.723076923076926,
+              "control": 12.361930587548954,
+              "nudging": 12.682534814169628,
+              "lecturas": 13
+            }
+          ],
+          "control": 13.770099276833507,
+          "nudging": 11.17753710810153,
+          "observado": 10.429670329670332
+        },
+        {
+          "hora_utc": 4,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 9.838461538461537,
+              "control": 11.578025499497983,
+              "nudging": 11.074768645790812,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 13.038461538461538,
+              "control": 12.123086878950687,
+              "nudging": 9.537510966391096,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 4.723076923076923,
+              "control": 14.227829654120342,
+              "nudging": 7.793329014382493,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 7.161538461538461,
+              "control": 13.195956244361923,
+              "nudging": 10.276719740913563,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.00769230769231,
+              "control": 13.526193499510441,
+              "nudging": 11.409807162231118,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 8.853846153846154,
+              "control": 13.641708988869368,
+              "nudging": 9.858901521668145,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.938461538461537,
+              "control": 12.118668407115536,
+              "nudging": 12.331178595603205,
+              "lecturas": 13
+            }
+          ],
+          "control": 12.915924167489468,
+          "nudging": 10.32603080671149,
+          "observado": 9.651648351648351
+        },
+        {
+          "hora_utc": 5,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 9.576923076923077,
+              "control": 10.35028922332964,
+              "nudging": 10.125133898547858,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 11.83076923076923,
+              "control": 11.900066702857828,
+              "nudging": 9.48836954485563,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 4.646153846153846,
+              "control": 13.442506729967874,
+              "nudging": 7.164844971763557,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 7.253846153846154,
+              "control": 12.414150906232294,
+              "nudging": 9.270391529252834,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 9.6,
+              "control": 11.769849380742073,
+              "nudging": 9.82369517056577,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 8.907692307692308,
+              "control": 12.640968721963645,
+              "nudging": 8.996578480063818,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 13.123076923076923,
+              "control": 12.22970931856247,
+              "nudging": 11.68850478635926,
+              "lecturas": 13
+            }
+          ],
+          "control": 12.106791569093689,
+          "nudging": 9.508216911629818,
+          "observado": 9.276923076923078
+        },
+        {
+          "hora_utc": 6,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 12.938461538461537,
+              "control": 9.549091163871253,
+              "nudging": 9.305006451922566,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 12.553846153846155,
+              "control": 11.080248923370277,
+              "nudging": 9.117419274412214,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 6.561538461538462,
+              "control": 12.348448467351943,
+              "nudging": 7.113224317557297,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 7.299999999999999,
+              "control": 12.307438929325372,
+              "nudging": 9.442114222792952,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.284615384615385,
+              "control": 11.608096718878016,
+              "nudging": 9.42032492110053,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 8.669230769230769,
+              "control": 12.727165571155751,
+              "nudging": 8.645332030085513,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.684615384615388,
+              "control": 12.084079329916733,
+              "nudging": 11.223729845380092,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.672081300552763,
+          "nudging": 9.181021580464451,
+          "observado": 9.856043956043957
+        },
+        {
+          "hora_utc": 7,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 22.207692307692312,
+              "control": 9.989567237032304,
+              "nudging": 9.641124934678885,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 13.576923076923077,
+              "control": 10.575048765394172,
+              "nudging": 9.099133549162673,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 5.838461538461538,
+              "control": 12.096007241626978,
+              "nudging": 6.943108863863188,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 6.96923076923077,
+              "control": 13.106875678373854,
+              "nudging": 9.652965559206791,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 12.092307692307694,
+              "control": 11.672504202493315,
+              "nudging": 9.877876219053917,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 8.546153846153846,
+              "control": 12.668567421858313,
+              "nudging": 8.95484498239881,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 8.284615384615384,
+              "control": 11.92476164216066,
+              "nudging": 9.734977832503944,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.7190474555628,
+          "nudging": 9.12914742012403,
+          "observado": 11.073626373626373
+        },
+        {
+          "hora_utc": 8,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 21.292307692307695,
+              "control": 10.17734141298547,
+              "nudging": 9.248323860101493,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 14.676923076923078,
+              "control": 10.338439770472405,
+              "nudging": 9.243693136086733,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 4.799999999999999,
+              "control": 11.82348072488071,
+              "nudging": 6.174583285713709,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 6.707692307692308,
+              "control": 13.01580888100574,
+              "nudging": 9.165061500846548,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 20.415384615384614,
+              "control": 12.040881982498775,
+              "nudging": 11.118274963760655,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 10.8,
+              "control": 13.07994877908527,
+              "nudging": 9.265952311369404,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 8.746153846153845,
+              "control": 11.975527240457097,
+              "nudging": 9.363007848121867,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.778775541626496,
+          "nudging": 9.082699558000058,
+          "observado": 12.491208791208791
+        },
+        {
+          "hora_utc": 9,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 20.784615384615385,
+              "control": 9.759877762316876,
+              "nudging": 9.815918642739518,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 15.615384615384615,
+              "control": 9.965001763661405,
+              "nudging": 8.834610827836627,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 5.453846153846154,
+              "control": 12.053571066479833,
+              "nudging": 5.868962235820675,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 6.666666666666667,
+              "control": 12.51615990219608,
+              "nudging": 9.143633506492222,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 21.16923076923077,
+              "control": 12.192911468186594,
+              "nudging": 11.931121985408367,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 17.830769230769235,
+              "control": 12.89595642305278,
+              "nudging": 10.211229008993712,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 9.161538461538461,
+              "control": 12.026648251211498,
+              "nudging": 9.513493590939106,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.630018091015009,
+          "nudging": 9.331281399747175,
+          "observado": 13.81172161172161
+        },
+        {
+          "hora_utc": 10,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 21.200000000000003,
+              "control": 9.111114162049944,
+              "nudging": 9.418321670908881,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 14.623076923076926,
+              "control": 9.072720246424296,
+              "nudging": 8.498466117048054,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.7,
+              "control": 12.566009990637951,
+              "nudging": 6.907673556250643,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 14.8,
+              "control": 12.210399176269789,
+              "nudging": 10.029429578565669,
+              "lecturas": 2
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 22.26153846153846,
+              "control": 12.183283703327845,
+              "nudging": 11.466969776587234,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 20.77692307692308,
+              "control": 12.650498385358674,
+              "nudging": 10.604788179225068,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 15.138461538461538,
+              "control": 12.533922562663179,
+              "nudging": 11.260996510200073,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.475421175247382,
+          "nudging": 9.740949341255089,
+          "observado": 16.78571428571429
+        },
+        {
+          "hora_utc": 11,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 22.069230769230767,
+              "control": 8.591483405114502,
+              "nudging": 8.743221856199682,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 14.569230769230767,
+              "control": 8.51540607529472,
+              "nudging": 8.42402309076499,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 17.215384615384615,
+              "control": 11.940817462124812,
+              "nudging": 9.842576731003078,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 17.599999999999998,
+              "control": 12.358445961190341,
+              "nudging": 11.757560795408551,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.200000000000003,
+              "control": 12.19920434370107,
+              "nudging": 12.633410199824482,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 23.0,
+              "control": 12.340988515487709,
+              "nudging": 11.686894442429434,
+              "lecturas": 2
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 17.423076923076923,
+              "control": 12.58736468127762,
+              "nudging": 12.783212444625576,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.219101492027253,
+          "nudging": 10.838699937179399,
+          "observado": 19.296703296703296
+        },
+        {
+          "hora_utc": 12,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 22.584615384615386,
+              "control": 9.594967666413595,
+              "nudging": 9.781928990959443,
+              "lecturas": 13
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 15.253846153846153,
+              "control": 8.58496500040826,
+              "nudging": 8.896924152701558,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 24.576923076923077,
+              "control": 11.754969264200327,
+              "nudging": 14.615529342198442,
+              "lecturas": 13
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 23.746153846153845,
+              "control": 13.15294901434794,
+              "nudging": 14.531574334912989,
+              "lecturas": 13
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 24.05384615384616,
+              "control": 12.666688333216712,
+              "nudging": 13.34114906757651,
+              "lecturas": 13
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 24.592307692307696,
+              "control": 13.085161190718793,
+              "nudging": 14.101343162413912,
+              "lecturas": 13
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 22.915384615384617,
+              "control": 13.058921273915985,
+              "nudging": 15.128061375779737,
+              "lecturas": 13
+            }
+          ],
+          "control": 11.699803106174516,
+          "nudging": 12.913787203791799,
+          "observado": 22.53186813186813
+        }
+      ],
+      "fuente_observaciones": "data\\raw\\obs_flat_20260731.json",
+      "verificaciones": [
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 5.733098983995433e-06
+        },
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 6.567392595080435e-06
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 5.733098983995433e-06
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 6.567392595080435e-06
+        },
+        {
+          "hora": 1,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 3.990296788103365e-06
+        },
+        {
+          "hora": 1,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 6.777647496125638e-06
+        },
+        {
+          "hora": 1,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 1.7460711427830233e-05
+        },
+        {
+          "hora": 1,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 7.799083562964881e-06
+        },
+        {
+          "hora": 2,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 9.266056377299492e-06
+        },
+        {
+          "hora": 2,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.0519297102717928e-05
+        },
+        {
+          "hora": 2,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.771271451695867e-05
+        },
+        {
+          "hora": 2,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 7.179175401050841e-06
+        },
+        {
+          "hora": 3,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 3.8117830349904125e-06
+        },
+        {
+          "hora": 3,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 4.816435901222604e-06
+        },
+        {
+          "hora": 3,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.9200791277439464e-05
+        },
+        {
+          "hora": 3,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 9.668039004373519e-06
+        },
+        {
+          "hora": 4,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 3.719671878066322e-06
+        },
+        {
+          "hora": 4,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 4.360083167398443e-06
+        },
+        {
+          "hora": 4,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 3.13850089286305e-05
+        },
+        {
+          "hora": 4,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 1.4020137608650174e-05
+        },
+        {
+          "hora": 5,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.6182835791411776e-06
+        },
+        {
+          "hora": 5,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 9.85025527144856e-06
+        },
+        {
+          "hora": 5,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 3.1637040030618735e-05
+        },
+        {
+          "hora": 5,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 9.929916755635482e-06
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.6070217091268546e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 7.690386147896078e-06
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 3.49936929198158e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 8.467765149067219e-07
+        },
+        {
+          "hora": 7,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.4995553578422971e-05
+        },
+        {
+          "hora": 7,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 9.375319572457741e-06
+        },
+        {
+          "hora": 7,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.404006114709034e-05
+        },
+        {
+          "hora": 7,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 2.151659990179411e-07
+        },
+        {
+          "hora": 8,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.4568833814010418e-05
+        },
+        {
+          "hora": 8,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 8.932243566017739e-06
+        },
+        {
+          "hora": 8,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.4882320547980896e-05
+        },
+        {
+          "hora": 8,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 2.2252953018053745e-06
+        },
+        {
+          "hora": 9,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.5125660955739306e-05
+        },
+        {
+          "hora": 9,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 9.666584980028148e-06
+        },
+        {
+          "hora": 9,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.2975099591704407e-05
+        },
+        {
+          "hora": 9,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 8.793990083688641e-06
+        },
+        {
+          "hora": 10,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 6.017456173346147e-06
+        },
+        {
+          "hora": 10,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 6.379057881922279e-06
+        },
+        {
+          "hora": 10,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 3.6590862491081566e-06
+        },
+        {
+          "hora": 10,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 5.478824536275795e-06
+        },
+        {
+          "hora": 11,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 4.530133567826056e-06
+        },
+        {
+          "hora": 11,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 3.332825553314933e-06
+        },
+        {
+          "hora": 11,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 8.14947156868584e-06
+        },
+        {
+          "hora": 11,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 8.81191325419195e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.1525111336396776e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.0352110599853859e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 1.4836258765527077e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 1.7275432576013827e-05
+        }
+      ]
+    },
+    {
+      "caso": "Caso 2 - Calor de verano (Año Nuevo)",
+      "fecha": "2026-01-01",
+      "horas": [
+        {
+          "hora_utc": 0,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 23.35,
+              "control": 18.955597229271348,
+              "nudging": 18.955597229271348,
+              "lecturas": 2
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 25.4,
+              "control": 23.64311665090497,
+              "nudging": 23.64311665090497,
+              "lecturas": 2
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 26.35,
+              "control": 30.76180182219838,
+              "nudging": 30.76180182219838,
+              "lecturas": 2
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 23.75,
+              "control": 27.249754224815376,
+              "nudging": 27.249754224815376,
+              "lecturas": 2
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.1,
+              "control": 22.497763217334523,
+              "nudging": 22.497763217334523,
+              "lecturas": 2
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 25.45,
+              "control": 26.048330268330517,
+              "nudging": 26.048330268330517,
+              "lecturas": 2
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 22.45,
+              "control": 28.690431112397505,
+              "nudging": 28.690431112397505,
+              "lecturas": 2
+            }
+          ],
+          "control": 25.406684932178944,
+          "nudging": 25.406684932178944,
+          "observado": 24.26428571428571
+        },
+        {
+          "hora_utc": 1,
+          "n": 7,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 23.400000000000002,
+              "control": 21.330256087327086,
+              "nudging": 20.760131898054624,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 25.03333333333333,
+              "control": 24.73358676167527,
+              "nudging": 24.146013879320435,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 25.3,
+              "control": 30.47365090847967,
+              "nudging": 29.726303965494765,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 22.3,
+              "control": 28.84081046079757,
+              "nudging": 28.220532545206993,
+              "lecturas": 1
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.933333333333334,
+              "control": 26.010109585063503,
+              "nudging": 25.37119291445248,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 24.866666666666664,
+              "control": 28.231021408068614,
+              "nudging": 27.550401603018656,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 21.73333333333333,
+              "control": 28.124492224407277,
+              "nudging": 27.331936359155748,
+              "lecturas": 3
+            }
+          ],
+          "control": 26.820561062259856,
+          "nudging": 26.158073309243385,
+          "observado": 23.795238095238094
+        },
+        {
+          "hora_utc": 2,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 23.3,
+              "control": 21.744752075159738,
+              "nudging": 21.184185542636044,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 23.96666666666667,
+              "control": 23.684913180212902,
+              "nudging": 22.424477452089263,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 22.433333333333337,
+              "control": 26.700722056120412,
+              "nudging": 26.22295198123038,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.733333333333334,
+              "control": 26.249044764470057,
+              "nudging": 25.577256394682706,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 24.3,
+              "control": 28.62409796341143,
+              "nudging": 27.46096747498484,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 21.166666666666668,
+              "control": 27.503559690022712,
+              "nudging": 26.01743965918996,
+              "lecturas": 3
+            }
+          ],
+          "control": 25.751181621566207,
+          "nudging": 24.814546417468865,
+          "observado": 23.150000000000002
+        },
+        {
+          "hora_utc": 3,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 22.833333333333332,
+              "control": 18.79151980175351,
+              "nudging": 19.21055841226314,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 23.0,
+              "control": 21.53282143487081,
+              "nudging": 21.807971888283248,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 21.633333333333336,
+              "control": 24.925595539942947,
+              "nudging": 24.06970760662159,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.8,
+              "control": 23.60037687746251,
+              "nudging": 23.1902129965859,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 23.700000000000003,
+              "control": 25.357592017426725,
+              "nudging": 24.558084974584915,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 20.7,
+              "control": 27.415694692999978,
+              "nudging": 25.371625491177838,
+              "lecturas": 3
+            }
+          ],
+          "control": 23.60393339407608,
+          "nudging": 23.034693561586106,
+          "observado": 22.61111111111111
+        },
+        {
+          "hora_utc": 4,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 22.166666666666668,
+              "control": 17.993536984011257,
+              "nudging": 17.80375242010348,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 22.3,
+              "control": 20.689691880098508,
+              "nudging": 20.65443888225809,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 20.3,
+              "control": 24.41493372535541,
+              "nudging": 23.56259917994697,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 22.933333333333337,
+              "control": 22.574114865250465,
+              "nudging": 21.899279384655756,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 23.23333333333333,
+              "control": 24.106213390152163,
+              "nudging": 23.48533789625361,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 20.333333333333332,
+              "control": 24.471739586607498,
+              "nudging": 23.052003399959574,
+              "lecturas": 3
+            }
+          ],
+          "control": 22.375038405245885,
+          "nudging": 21.74290186052958,
+          "observado": 21.87777777777778
+        },
+        {
+          "hora_utc": 5,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 21.599999999999998,
+              "control": 17.747650717270858,
+              "nudging": 17.87255661494123,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 22.333333333333332,
+              "control": 19.98348281070264,
+              "nudging": 18.249021190526207,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 18.53333333333333,
+              "control": 24.45561309864263,
+              "nudging": 23.448461523689275,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 22.46666666666667,
+              "control": 22.366456845430776,
+              "nudging": 21.979746950276876,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 22.866666666666664,
+              "control": 24.03011204947768,
+              "nudging": 23.414280145516102,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 20.46666666666667,
+              "control": 24.020154818123615,
+              "nudging": 22.928868142065255,
+              "lecturas": 3
+            }
+          ],
+          "control": 22.100578389941365,
+          "nudging": 21.315489094502492,
+          "observado": 21.377777777777776
+        },
+        {
+          "hora_utc": 6,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 21.333333333333332,
+              "control": 18.091597829134912,
+              "nudging": 17.78032380803404,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 22.333333333333332,
+              "control": 19.617854389416152,
+              "nudging": 18.31597500354144,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 17.533333333333335,
+              "control": 24.739050310827793,
+              "nudging": 23.181112954198056,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.233333333333334,
+              "control": 22.426846611838414,
+              "nudging": 21.96800079095783,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 22.833333333333332,
+              "control": 23.96215842619955,
+              "nudging": 23.347239275890956,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 20.633333333333336,
+              "control": 24.048382982736086,
+              "nudging": 22.606054468280888,
+              "lecturas": 3
+            }
+          ],
+          "control": 22.147648425025483,
+          "nudging": 21.19978438348387,
+          "observado": 21.316666666666666
+        },
+        {
+          "hora_utc": 7,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 23.133333333333336,
+              "control": 18.284362409199957,
+              "nudging": 17.830362099858803,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 21.7,
+              "control": 18.561427504620156,
+              "nudging": 17.605167054142612,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 19.366666666666667,
+              "control": 24.774553295641,
+              "nudging": 23.20583862377765,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 23.666666666666668,
+              "control": 22.607900154167055,
+              "nudging": 22.02707469423376,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 22.166666666666668,
+              "control": 24.04170818965605,
+              "nudging": 23.323397321585844,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 23.23333333333333,
+              "control": 23.987095995005916,
+              "nudging": 22.12243018115879,
+              "lecturas": 3
+            }
+          ],
+          "control": 22.042841258048355,
+          "nudging": 21.01904499579291,
+          "observado": 22.211111111111112
+        },
+        {
+          "hora_utc": 8,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 25.166666666666668,
+              "control": 18.407505719549533,
+              "nudging": 18.11194275499645,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 21.833333333333332,
+              "control": 17.931288547439237,
+              "nudging": 17.558888164322354,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 23.566666666666663,
+              "control": 24.37034766949057,
+              "nudging": 23.158074430457134,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 25.766666666666666,
+              "control": 22.911665448268366,
+              "nudging": 22.828904284612236,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 23.400000000000002,
+              "control": 24.47644309378944,
+              "nudging": 23.813340603765425,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 26.13333333333333,
+              "control": 23.104417182505813,
+              "nudging": 21.359625758916536,
+              "lecturas": 3
+            }
+          ],
+          "control": 21.866944610173828,
+          "nudging": 21.138462666178356,
+          "observado": 24.311111111111114
+        },
+        {
+          "hora_utc": 9,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 26.96666666666667,
+              "control": 18.437421835156385,
+              "nudging": 18.209528411508813,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 24.73333333333333,
+              "control": 17.563264183966282,
+              "nudging": 16.875010159831334,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 26.666666666666668,
+              "control": 24.276269629538092,
+              "nudging": 21.133954228541256,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 27.366666666666664,
+              "control": 22.986577524860877,
+              "nudging": 21.589825222444176,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 26.166666666666668,
+              "control": 24.665744376908663,
+              "nudging": 21.661222995440767,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 27.866666666666664,
+              "control": 22.106551205131666,
+              "nudging": 22.47422287088841,
+              "lecturas": 3
+            }
+          ],
+          "control": 21.672638125926994,
+          "nudging": 20.323960648109125,
+          "observado": 26.62777777777778
+        },
+        {
+          "hora_utc": 10,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 28.13333333333333,
+              "control": 18.836175790120706,
+              "nudging": 17.92054760612905,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 26.666666666666668,
+              "control": 17.482011756365523,
+              "nudging": 17.479789601332868,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 29.366666666666664,
+              "control": 25.351075016845698,
+              "nudging": 24.19084539700583,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 28.866666666666664,
+              "control": 23.522829770621172,
+              "nudging": 22.851657869152746,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 28.666666666666668,
+              "control": 25.08779400331173,
+              "nudging": 24.038447871333915,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 29.066666666666666,
+              "control": 22.703626157315966,
+              "nudging": 23.481486795582043,
+              "lecturas": 3
+            }
+          ],
+          "control": 22.163918749096798,
+          "nudging": 21.66046252342274,
+          "observado": 28.46111111111111
+        },
+        {
+          "hora_utc": 11,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 29.600000000000005,
+              "control": 21.05699425393675,
+              "nudging": 20.468554152470574,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 27.900000000000002,
+              "control": 18.833327438155493,
+              "nudging": 19.099300886876108,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 32.06666666666667,
+              "control": 28.898096787021757,
+              "nudging": 27.780894869580493,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 30.3,
+              "control": 25.44494444509195,
+              "nudging": 25.927010007826084,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 30.3,
+              "control": 26.424812123481615,
+              "nudging": 27.404182275612072,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 30.0,
+              "control": 25.222152187256484,
+              "nudging": 24.889490543899285,
+              "lecturas": 3
+            }
+          ],
+          "control": 24.313387872490676,
+          "nudging": 24.26157212271077,
+          "observado": 30.027777777777782
+        },
+        {
+          "hora_utc": 12,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 30.8,
+              "control": 22.41185578661748,
+              "nudging": 22.541437171778,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 28.466666666666665,
+              "control": 20.848447325092764,
+              "nudging": 21.170326802586203,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 33.93333333333333,
+              "control": 31.169731449970527,
+              "nudging": 30.823056395347407,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 31.866666666666664,
+              "control": 26.723306877679875,
+              "nudging": 27.901530523978067,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ULLUM_EMBALSE",
+              "rol": "evaluacion",
+              "observado": 31.46666666666667,
+              "control": 27.979106729677483,
+              "nudging": 29.731449162145395,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 30.899999999999995,
+              "control": 27.16245464284293,
+              "nudging": 26.816631353222647,
+              "lecturas": 3
+            }
+          ],
+          "control": 26.049150468646843,
+          "nudging": 26.497405234842955,
+          "observado": 31.238888888888884
+        }
+      ],
+      "fuente_observaciones": "data\\raw\\obs_flat_20260101.json",
+      "verificaciones": [
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.1423776768104688e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 2.263173782779404e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 1.1423776768104688e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 2.263173782779404e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 2.07876386104644e-06
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.482628125815122e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 1.0954725801592957e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 9.997902333580555e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.2254181650739326e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.2081221747450854e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 2.414501609138142e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 2.0709109024963368e-05
+        }
+      ]
+    },
+    {
+      "caso": "Caso 3 - Ingreso de frente frio",
+      "fecha": "2026-05-16",
+      "horas": [
+        {
+          "hora_utc": 0,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.35,
+              "control": 9.368034505569028,
+              "nudging": 9.368034505569028,
+              "lecturas": 2
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 11.8,
+              "control": 11.508956048033212,
+              "nudging": 11.508956048033212,
+              "lecturas": 2
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 9.05,
+              "control": 15.706398685650413,
+              "nudging": 15.706398685650413,
+              "lecturas": 2
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 10.15,
+              "control": 14.812168632350279,
+              "nudging": 14.812168632350279,
+              "lecturas": 2
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.45,
+              "control": 12.164667653620597,
+              "nudging": 12.164667653620597,
+              "lecturas": 2
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.15,
+              "control": 11.018083420186315,
+              "nudging": 11.018083420186315,
+              "lecturas": 2
+            }
+          ],
+          "control": 12.429718157568308,
+          "nudging": 12.429718157568308,
+          "observado": 10.658333333333333
+        },
+        {
+          "hora_utc": 1,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.933333333333332,
+              "control": 10.263552411328874,
+              "nudging": 9.74629964552048,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 11.299999999999999,
+              "control": 11.045178117373098,
+              "nudging": 10.396830452126778,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.133333333333333,
+              "control": 14.472536553333782,
+              "nudging": 13.53961473902342,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 10.333333333333334,
+              "control": 14.479774594875835,
+              "nudging": 13.406318237474522,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.0,
+              "control": 12.557767956364671,
+              "nudging": 12.098994462946564,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.133333333333333,
+              "control": 11.118714210252165,
+              "nudging": 10.720495699732908,
+              "lecturas": 3
+            }
+          ],
+          "control": 12.322920640588071,
+          "nudging": 11.651425539470779,
+          "observado": 10.305555555555555
+        },
+        {
+          "hora_utc": 2,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.299999999999999,
+              "control": 9.217217034674718,
+              "nudging": 16.041814942106726,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 10.799999999999999,
+              "control": 10.158757789399658,
+              "nudging": 9.960602055998038,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.533333333333333,
+              "control": 14.024134151784608,
+              "nudging": 12.818919187783251,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 12.199999999999998,
+              "control": 14.699529889179757,
+              "nudging": 15.261864407036512,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.299999999999999,
+              "control": 12.024261963526612,
+              "nudging": 19.4947884487147,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.033333333333333,
+              "control": 11.529565337442818,
+              "nudging": 10.539910703489852,
+              "lecturas": 3
+            }
+          ],
+          "control": 11.942244361001363,
+          "nudging": 14.019649957521514,
+          "observado": 10.361111111111109
+        },
+        {
+          "hora_utc": 3,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.166666666666666,
+              "control": 8.849067379467442,
+              "nudging": 5.777564648971236,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 10.333333333333334,
+              "control": 9.50527421288325,
+              "nudging": 11.767744547977713,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 9.533333333333333,
+              "control": 13.310732480778256,
+              "nudging": 15.594675748052737,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 13.1,
+              "control": 13.867887002640202,
+              "nudging": 11.579899420970548,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.4,
+              "control": 11.589648110525502,
+              "nudging": 9.827112513970917,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 9.633333333333335,
+              "control": 11.48613728895026,
+              "nudging": 9.872519204272464,
+              "lecturas": 3
+            }
+          ],
+          "control": 11.434791079207486,
+          "nudging": 10.736586014035936,
+          "observado": 10.527777777777777
+        },
+        {
+          "hora_utc": 4,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.766666666666666,
+              "control": 8.619360631962593,
+              "nudging": 5.833380968742006,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 10.2,
+              "control": 8.494395034740535,
+              "nudging": 8.282721025718388,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 9.9,
+              "control": 13.115526814897805,
+              "nudging": 12.362728438473596,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 13.866666666666667,
+              "control": 13.0634332230062,
+              "nudging": 12.206426986914437,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.566666666666668,
+              "control": 11.548722554347535,
+              "nudging": 10.346265869315005,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 7.233333333333333,
+              "control": 10.846137677902846,
+              "nudging": 8.831476911145842,
+              "lecturas": 3
+            }
+          ],
+          "control": 10.947929322809586,
+          "nudging": 9.643833366718212,
+          "observado": 10.58888888888889
+        },
+        {
+          "hora_utc": 5,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.200000000000001,
+              "control": 8.621041526641818,
+              "nudging": 7.2780099727007155,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.966666666666667,
+              "control": 8.189302900765824,
+              "nudging": 8.48746625426378,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 10.066666666666668,
+              "control": 11.733025662783348,
+              "nudging": 11.553474011431263,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 13.733333333333334,
+              "control": 12.526533095273464,
+              "nudging": 13.322070114671646,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 12.066666666666668,
+              "control": 11.13871441675576,
+              "nudging": 11.392414587360804,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 5.8999999999999995,
+              "control": 9.920618558082936,
+              "nudging": 7.774980013021775,
+              "lecturas": 3
+            }
+          ],
+          "control": 10.354872693383859,
+          "nudging": 9.96806915890833,
+          "observado": 10.488888888888889
+        },
+        {
+          "hora_utc": 6,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.666666666666666,
+              "control": 8.06333157374064,
+              "nudging": 7.833144253773639,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.166666666666666,
+              "control": 8.002298254782943,
+              "nudging": 8.38198446950014,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 10.666666666666666,
+              "control": 11.057277506670687,
+              "nudging": 10.815739016640407,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 13.6,
+              "control": 12.14986455768809,
+              "nudging": 12.912614686068821,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.966666666666667,
+              "control": 10.555765915707468,
+              "nudging": 11.553158361058479,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 4.533333333333334,
+              "control": 9.542807680842657,
+              "nudging": 7.88304840136874,
+              "lecturas": 3
+            }
+          ],
+          "control": 9.895224248238748,
+          "nudging": 9.896614864735037,
+          "observado": 10.266666666666667
+        },
+        {
+          "hora_utc": 7,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 12.433333333333332,
+              "control": 7.52702819429976,
+              "nudging": 7.9380012356186285,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.0,
+              "control": 7.947995905862456,
+              "nudging": 7.4465172894684315,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 11.266666666666666,
+              "control": 10.088723743223454,
+              "nudging": 10.00475648316717,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 13.433333333333332,
+              "control": 11.704440863306615,
+              "nudging": 12.379713324900706,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.833333333333334,
+              "control": 10.46731417325151,
+              "nudging": 11.254031451667572,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 6.2,
+              "control": 9.089812191689418,
+              "nudging": 7.959147938860156,
+              "lecturas": 3
+            }
+          ],
+          "control": 9.470885845272202,
+          "nudging": 9.49702795394711,
+          "observado": 10.694444444444443
+        },
+        {
+          "hora_utc": 8,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 12.4,
+              "control": 6.838478067840413,
+              "nudging": 7.0016225940268555,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.2,
+              "control": 8.053745766209943,
+              "nudging": 6.546372776640453,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 11.233333333333334,
+              "control": 9.02170517638416,
+              "nudging": 10.009899937969067,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 12.133333333333333,
+              "control": 11.41658995590518,
+              "nudging": 11.430933597300793,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.766666666666666,
+              "control": 10.110173236914932,
+              "nudging": 10.362493732579196,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 8.166666666666666,
+              "control": 8.588631499056305,
+              "nudging": 7.809944616258235,
+              "lecturas": 3
+            }
+          ],
+          "control": 9.004887283718489,
+          "nudging": 8.8602112091291,
+          "observado": 10.816666666666668
+        },
+        {
+          "hora_utc": 9,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.966666666666667,
+              "control": 5.971673230396334,
+              "nudging": 5.652918661052013,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.4,
+              "control": 7.796388500261628,
+              "nudging": 5.956079588402133,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 9.299999999999999,
+              "control": 8.538847980818275,
+              "nudging": 8.948870467267454,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 10.233333333333334,
+              "control": 10.510658396802853,
+              "nudging": 10.488489454764249,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 11.299999999999999,
+              "control": 9.510828037574754,
+              "nudging": 9.67094924320196,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 9.133333333333333,
+              "control": 8.103332397573922,
+              "nudging": 7.483889656712222,
+              "lecturas": 3
+            }
+          ],
+          "control": 8.405288090571295,
+          "nudging": 8.033532845233339,
+          "observado": 10.222222222222221
+        },
+        {
+          "hora_utc": 10,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 11.033333333333333,
+              "control": 5.20003998471833,
+              "nudging": 4.5211462695054365,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.566666666666668,
+              "control": 7.5643328933047655,
+              "nudging": 14.504451600900325,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.566666666666668,
+              "control": 7.942522932356042,
+              "nudging": 9.103353603750293,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 10.4,
+              "control": 9.77182051873217,
+              "nudging": 8.8365201847555,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 10.299999999999999,
+              "control": 8.981519031638243,
+              "nudging": 7.962198104872698,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.0,
+              "control": 8.332642643172392,
+              "nudging": 6.603215819229604,
+              "lecturas": 3
+            }
+          ],
+          "control": 7.965479667320324,
+          "nudging": 8.588480930502309,
+          "observado": 9.977777777777778
+        },
+        {
+          "hora_utc": 11,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 10.166666666666666,
+              "control": 4.607787133735485,
+              "nudging": 3.4164137397945638,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 9.533333333333333,
+              "control": 7.21953649378878,
+              "nudging": 4.780425394965619,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 9.0,
+              "control": 7.602277051397095,
+              "nudging": 8.064165375917526,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 9.8,
+              "control": 9.323477569734052,
+              "nudging": 8.938076120876644,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 9.766666666666666,
+              "control": 8.425156204133714,
+              "nudging": 7.796025966919387,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.9,
+              "control": 8.50671780725122,
+              "nudging": 7.191286794597545,
+              "lecturas": 2
+            }
+          ],
+          "control": 7.614158710006724,
+          "nudging": 6.697732232178548,
+          "observado": 9.86111111111111
+        },
+        {
+          "hora_utc": 12,
+          "n": 6,
+          "estaciones": [
+            {
+              "estacion": "CARACOLES",
+              "rol": "evaluacion",
+              "observado": 9.033333333333333,
+              "control": 4.088803789372719,
+              "nudging": 4.02796953425235,
+              "lecturas": 3
+            },
+            {
+              "estacion": "CUESTA_Viento",
+              "rol": "asimilacion",
+              "observado": 8.5,
+              "control": 7.1193311730792175,
+              "nudging": 6.5652374215375175,
+              "lecturas": 3
+            },
+            {
+              "estacion": "ECOHUMUS",
+              "rol": "asimilacion",
+              "observado": 8.299999999999999,
+              "control": 9.001064990776058,
+              "nudging": 9.368137547849187,
+              "lecturas": 3
+            },
+            {
+              "estacion": "INTA_POCITO",
+              "rol": "asimilacion",
+              "observado": 8.500000000000002,
+              "control": 9.873977291442031,
+              "nudging": 10.102566330334241,
+              "lecturas": 3
+            },
+            {
+              "estacion": "PUNTA_NEGRA",
+              "rol": "asimilacion",
+              "observado": 9.299999999999999,
+              "control": 8.782360545304073,
+              "nudging": 8.33378748925827,
+              "lecturas": 3
+            },
+            {
+              "estacion": "VALLE_FERTIL",
+              "rol": "asimilacion",
+              "observado": 10.600000000000001,
+              "control": 9.464115459457958,
+              "nudging": 8.744479276281197,
+              "lecturas": 3
+            }
+          ],
+          "control": 8.054942208238677,
+          "nudging": 7.857029599918794,
+          "observado": 9.038888888888888
+        }
+      ],
+      "fuente_observaciones": "data\\raw\\obs_flat_20260516.json",
+      "verificaciones": [
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 1.7717421420648805e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.8251048034878536e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 1.7717421420648805e-05
+        },
+        {
+          "hora": 0,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 1.8251048034878536e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 8.348267602986681e-06
+        },
+        {
+          "hora": 6,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.5033394111907405e-05
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 6.150035054997005e-06
+        },
+        {
+          "hora": 6,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 1.0888544831555436e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "rmse",
+          "diferencia": 6.958868334017154e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "control",
+          "metrica": "bias",
+          "diferencia": 1.3612254394446133e-05
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "rmse",
+          "diferencia": 4.965514392107906e-06
+        },
+        {
+          "hora": 12,
+          "corrida": "nudging",
+          "metrica": "bias",
+          "diferencia": 1.7008167785492745e-05
+        }
+      ]
+    }
+  ]
+}
