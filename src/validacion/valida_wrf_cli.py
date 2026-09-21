@@ -232,7 +232,7 @@ def metrics(obs, mod, name):
     """Métricas usando la función compartida de metrics.py (mejora 3.8: r
     unificado; mejora 3.3: incluye IC bootstrap 95% de bias/mae/rmse)."""
     mask = ~np.isnan(obs) & ~np.isnan(mod)
-    if mask.sum() < 2:
+    if mask.sum() == 0:
         nan = float("nan")
         return {"n": 0, "bias": nan, "mae": nan, "rmse": nan, "r": nan,
                 "bias_ci": [nan, nan], "mae_ci": [nan, nan], "rmse_ci": [nan, nan]}
