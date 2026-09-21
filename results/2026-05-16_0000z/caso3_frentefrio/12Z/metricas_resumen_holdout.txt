@@ -1,0 +1,22 @@
+================================================================================
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-05-16_12:00:00 caso3 frentefrio 2026-05-16 (generalizacion, hold-out)
+================================================================================
+
+Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
+
+IC95 (95% bootstrap) del RMSE por corrida (caso3 frentefrio 2026-05-16 (generalizacion, hold-out)):
+Variable           N          IC95 RMSE N          IC95 RMSE C
+--------------------------------------------------------------------------------------------------------------------------------------------
+T2 (K)             0          -          -          -        -          -          -          -        -
+T2 (K)             0                    -                    -
+PSFC (hPa)         0          -          -          -        -          -          -          -        -
+PSFC (hPa)         0                    -                    -
+RH (%)             0          -          -          -        -          -          -          -        -
+RH (%)             0                    -                    -
+Wind (m/s)         0          -          -          -        -          -          -          -        -
+Wind (m/s)         0                    -                    -
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)
+
+  CARACOLES             lat=-31.5194  lon=-68.9851  elev=  942m

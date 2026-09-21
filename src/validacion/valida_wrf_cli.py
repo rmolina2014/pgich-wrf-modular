@@ -10,6 +10,11 @@ from datetime import datetime
 import json
 import argparse
 
+try:
+    from .metrics import metricas_par
+except ImportError:  # invocación como script (python src/validacion/valida_wrf_cli.py)
+    from metrics import metricas_par
+
 def ruta_estaciones_json(estaciones_json=None):
     """Devuelve la ruta al catálogo unificado de estaciones (config/estaciones.json)."""
     if estaciones_json:
@@ -224,19 +229,19 @@ def load_run(subdir, valid_time, stations):
     return results
 
 def metrics(obs, mod, name):
+    """Métricas usando la función compartida de metrics.py (mejora 3.8: r
+    unificado; mejora 3.3: incluye IC bootstrap 95% de bias/mae/rmse)."""
     mask = ~np.isnan(obs) & ~np.isnan(mod)
     if mask.sum() < 2:
-        return {"n": 0, "bias": np.nan, "mae": np.nan, "rmse": np.nan, "r": np.nan}
-    o = obs[mask]
-    m = mod[mask]
-    bias = np.mean(m - o)
-    mae = np.mean(np.abs(m - o))
-    rmse = np.sqrt(np.mean((m - o)**2))
-    if np.std(o) > 0 and np.std(m) > 0:
-        r = np.corrcoef(o, m)[0, 1]
-    else:
-        r = np.nan
-    return {"n": int(mask.sum()), "bias": bias, "mae": mae, "rmse": rmse, "r": r}
+        nan = float("nan")
+        return {"n": 0, "bias": nan, "mae": nan, "rmse": nan, "r": nan,
+                "bias_ci": [nan, nan], "mae_ci": [nan, nan], "rmse_ci": [nan, nan]}
+    m = metricas_par(mod, obs)
+    return {
+        "n": m["n"],
+        "bias": m["bias"], "mae": m["mae"], "rmse": m["rmse"], "r": m["r"],
+        "bias_ci": m["bias_ci"], "mae_ci": m["mae_ci"], "rmse_ci": m["rmse_ci"],
+    }
 
 def build_tables(nudged_data, control_data, stations):
     var_defs = [
@@ -262,6 +267,13 @@ def build_tables(nudged_data, control_data, stations):
             "nudged_rmse": m_n["rmse"], "nudged_r": m_n["r"],
             "control_bias": m_c["bias"], "control_mae": m_c["mae"],
             "control_rmse": m_c["rmse"], "control_r": m_c["r"],
+            # IC bootstrap 95% (mejora 3.3)
+            "nudged_bias_ci": m_n.get("bias_ci", [float("nan"), float("nan")]),
+            "nudged_mae_ci": m_n.get("mae_ci", [float("nan"), float("nan")]),
+            "nudged_rmse_ci": m_n.get("rmse_ci", [float("nan"), float("nan")]),
+            "control_bias_ci": m_c.get("bias_ci", [float("nan"), float("nan")]),
+            "control_mae_ci": m_c.get("mae_ci", [float("nan"), float("nan")]),
+            "control_rmse_ci": m_c.get("rmse_ci", [float("nan"), float("nan")]),
         })
     return rows
 
@@ -404,7 +416,10 @@ def write_summary(rows, stations, output_dir, valid_time, label="", nombre_archi
     lines.append("")
     lines.append(f"{'Variable':<15} {'N':>4} {'Bias N':>10} {'MAE N':>10} {'RMSE N':>10} {'r N':>8} "
                  f"{'Bias C':>10} {'MAE C':>10} {'RMSE C':>10} {'r C':>8}")
-    lines.append("-" * 105)
+    lines.append("")
+    lines.append("IC95 (95% bootstrap) del RMSE por corrida (" + label + "):")
+    lines.append(f"{'Variable':<15} {'N':>4} {'IC95 RMSE N':>20} {'IC95 RMSE C':>20}")
+    lines.append("-" * 140)
     for r in rows:
         def v(x):
             return f"{x:+.2f}" if not np.isnan(x) else "-"
@@ -412,10 +427,19 @@ def write_summary(rows, stations, output_dir, valid_time, label="", nombre_archi
             return f"{x:.2f}" if not np.isnan(x) else "-"
         def rv(x):
             return f"{x:.3f}" if not np.isnan(x) else "-"
+        def ic(ci):
+            if not ci or len(ci) != 2:
+                return "-"
+            lo, hi = ci
+            if np.isnan(lo) or np.isnan(hi):
+                return "-"
+            return f"[{lo:.2f}, {hi:.2f}]"
         lines.append(f"{r['var']:<15} {r['n']:>4} "
                      f"{v(r['nudged_bias']):>10} {f(r['nudged_mae']):>10} {f(r['nudged_rmse']):>10} {rv(r['nudged_r']):>8} "
                      f"{v(r['control_bias']):>10} {f(r['control_mae']):>10} {f(r['control_rmse']):>10} {rv(r['control_r']):>8}")
-    lines.append("-" * 105)
+        lines.append(f"{r['var']:<15} {r['n']:>4} "
+                     f"{ic(r.get('nudged_rmse_ci')):>20} {ic(r.get('control_rmse_ci')):>20}")
+    lines.append("-" * 140)
     lines.append("")
     lines.append("N = Nudged (obs_nudge_opt=1), C = Control (obs_nudge_opt=0)")
     lines.append("")
@@ -462,17 +486,18 @@ def plot_evolucion(evolution, output_dir, label=""):
         ctl = [e["rows"][vi]["control_rmse"] for e in evolution]
         var = vars_list[vi]
 
-        ax.plot(x, nudge, 'o-', color='#1f77b4', label='Nudged', lw=2, ms=6, zorder=3)
-        ax.plot(x, ctl, 's--', color='#d62728', label='Control', lw=2, ms=6, zorder=3)
+        ax.plot(x, nudge, 'o-', color='#1f77b4', label='Nudged', lw=2, ms=5, zorder=3)
+        ax.plot(x, ctl, 's--', color='#d62728', label='Control', lw=2, ms=5, zorder=3)
 
-        for xi, v in enumerate(nudge):
-            if not np.isnan(v):
-                ax.annotate(f"{v:.2f}", (xi, v), textcoords="offset points",
-                            xytext=(0, 10), fontsize=8, color='#1f77b4', ha='center')
-        for xi, v in enumerate(ctl):
-            if not np.isnan(v):
-                ax.annotate(f"{v:.2f}", (xi, v), textcoords="offset points",
-                            xytext=(0, -14), fontsize=8, color='#d62728', ha='center')
+        # Con validacion horaria hay muchos puntos; anotar todos satura el grafico
+        anotar = range(len(x)) if len(x) <= 12 else range(0, len(x), 2)
+        for xi in anotar:
+            if not np.isnan(nudge[xi]):
+                ax.annotate(f"{nudge[xi]:.2f}", (x[xi], nudge[xi]), textcoords="offset points",
+                            xytext=(0, 10), fontsize=7, color='#1f77b4', ha='center')
+            if not np.isnan(ctl[xi]):
+                ax.annotate(f"{ctl[xi]:.2f}", (x[xi], ctl[xi]), textcoords="offset points",
+                            xytext=(0, -14), fontsize=7, color='#d62728', ha='center')
 
         titulo = var
         try:
@@ -484,7 +509,7 @@ def plot_evolucion(evolution, output_dir, label=""):
         ax.set_title(titulo, fontsize=10)
         ax.set_ylabel("RMSE")
         ax.set_xticks(x)
-        ax.set_xticklabels(times)
+        ax.set_xticklabels(times, fontsize=7, rotation=45, ha='right')
         ax.grid(True, alpha=0.3)
 
     handles, labels = axes_flat[0].get_legend_handles_labels()
@@ -535,12 +560,57 @@ def write_tabla_evolutiva(evolution, output_dir, label=""):
         f.write('\n'.join(lines))
     print(f"  -> {out / 'informe_evolucion_nudging.txt'}")
 
+    # Sección Ajuste vs. Generalización (hold-out espacial) — mejora 3.1
+    tiene_holdout = any("rows_asimiladas" in e and "rows_evaluacion" in e for e in evolution)
+    if tiene_holdout:
+        h_lines = []
+        h_lines.append("")
+        h_lines.append("=" * 100)
+        h_lines.append("AJUSTE VS. GENERALIZACION (HOLD-OUT ESPACIAL)")
+        h_lines.append("=" * 100)
+        h_lines.append("Estaciones 'evaluacion' nunca asimiladas (ver config/estaciones.json). "
+                       "RMSE por tiempo de validacion.")
+        for var_i, var in enumerate(vars_list):
+            h_lines.append("")
+            h_lines.append(f"### {var}")
+            header = (f"{'':<8}" + "".join(
+                f"{t:<26}" for t in tiempos))
+            h_lines.append(header)
+            h_lines.append("-" * 100)
+            for grupo in ("rows_asimiladas", "rows_evaluacion"):
+                rotulo = "ASIM" if grupo == "rows_asimiladas" else "EVAL"
+                for metrica in ("rmse", "bias"):
+                    fila = f"{rotulo:>4} {metrica:<4}"
+                    for e in evolution:
+                        g = e.get(grupo)
+                        r = g[var_i] if g else None
+                        if r is None:
+                            fila += f"{'  n/a':>26}"
+                            continue
+                        n_ = f"{r[f'nudged_{metrica}']:+.3f}" if not np.isnan(r[f"nudged_{metrica}"]) else "-"
+                        c_ = f"{r[f'control_{metrica}']:+.3f}" if not np.isnan(r[f"control_{metrica}"]) else "-"
+                        fila += f"  N:{n_:>9}  C:{c_:>9}"
+                    h_lines.append(fila)
+        h_lines.append("")
+        h_lines.append("ASIM = estaciones asimiladas (ajuste); EVAL = estaciones de "
+                       "evaluacion/hold-out (generalizacion).")
+        h_lines.append("")
+        with open(str(out / "informe_evolucion_nudging.txt"), 'a', encoding="utf-8") as f:
+            f.write('\n'.join(h_lines))
+
     json_data = {
         "caso": label,
         "valid_times": [e["tiempo"] for e in evolution],
         "variables": vars_list,
         "por_tiempo": [
-            {"tiempo": e["tiempo"], "rows": e["rows"]}
+            {
+                "tiempo": e["tiempo"],
+                "rows": e["rows"],
+                **((
+                    {"rows_asimiladas": e["rows_asimiladas"],
+                     "rows_evaluacion": e["rows_evaluacion"]}
+                ) if "rows_asimiladas" in e and "rows_evaluacion" in e else {}),
+            }
             for e in evolution
         ],
     }
@@ -640,6 +710,7 @@ def main():
         # miden mejora real del pronostico en lugares no asimilados).
         idx_eval = [i for i, s in enumerate(stations) if s.get("rol") == "evaluacion"]
         idx_asim = [i for i in range(len(stations)) if i not in idx_eval]
+        rows_asim = rows_eval = None
         if idx_eval and idx_asim:
             st_asim = [stations[i] for i in idx_asim]
             st_eval = [stations[i] for i in idx_eval]
@@ -660,7 +731,11 @@ def main():
         else:
             print("\n  Hold-out espacial: sin estaciones 'evaluacion' con datos en esta ventana.")
 
-        evolution.append({"tiempo": f"{hora}Z", "full": vt, "rows": rows})
+        evolution_item = {"tiempo": f"{hora}Z", "full": vt, "rows": rows}
+        if rows_asim is not None and rows_eval is not None:
+            evolution_item["rows_asimiladas"] = rows_asim
+            evolution_item["rows_evaluacion"] = rows_eval
+        evolution.append(evolution_item)
 
     if multi:
         plot_evolucion(evolution, output_dir, args.label)

@@ -140,12 +140,14 @@ def preparar_namelist(namelist_src, obs_nudge_opt, output_path, start_dt=None, *
     Prepara un namelist final delegando en src/modelo/namelist_manager.py.
     - Parchea las fechas de inicio/fin si se pasa start_dt (run_hours se lee del namelist).
     - Fija obs_nudge_opt y parametros de sensibilidad (obs_coef_*, obs_twindo).
-    - Fuerza fdda_end=720 (12h) para que el obs nudging funcione.
+    - Ajusta fdda_end = run_hours*60 (minutos de integracion) para que el obs nudging
+      este activo durante todo el ciclo, cualquiera sea su duracion (mejora 3.4 del
+      informe_mejoras_f4). Con run_hours=12 queda 720, como antes.
     """
     mgr = NamelistManager(template_path=str(namelist_src))
+    m = re.search(r'run_hours\s*=\s*(\d+)', mgr.contenido)
+    run_hours = int(m.group(1)) if m else 12
     if start_dt is not None:
-        m = re.search(r'run_hours\s*=\s*(\d+)', mgr.contenido)
-        run_hours = int(m.group(1)) if m else 12
         end_dt = start_dt + timedelta(hours=run_hours)
         mgr.actualizar_fechas(
             start_year=start_dt.year, start_month=start_dt.month,
@@ -154,8 +156,8 @@ def preparar_namelist(namelist_src, obs_nudge_opt, output_path, start_dt=None, *
             end_day=end_dt.day, end_hour=end_dt.hour,
             run_hours=run_hours,
         )
-    # fdda_end siempre 720 (12h) para que funcione obs nudging
-    mgr.contenido = re.sub(r'fdda_end\s*=\s*\d+', 'fdda_end = 720', mgr.contenido)
+    # fdda_end = duracion del ciclo en minutos, no un valor fijo (ver mejora 3.4)
+    mgr.contenido = re.sub(r'fdda_end\s*=\s*\d+', f'fdda_end = {run_hours * 60}', mgr.contenido)
     mgr.configurar_fdda(obs_nudge_opt=obs_nudge_opt, **kwargs)
     mgr.guardar(output_path)
     logger.info(f"Namelist preparado: {output_path} (obs_nudge_opt={obs_nudge_opt})")

@@ -322,6 +322,43 @@ def _md_tabla_variable(rows: List[Dict[str, Any]], variable: str) -> str:
     return "\n".join(lineas) + "\n"
 
 
+def _fmt_metric(o):
+    """Formatea una metrica (float/None/NaN) o 'n/d'."""
+    if o is None or not isinstance(o, (int, float)):
+        return "n/d"
+    if o != o:  # NaN
+        return "n/d"
+    return f"{o:.2f}"
+
+
+def _md_tabla_holdout(por_tiempo: List[Dict[str, Any]], variable: str) -> str:
+    """Tabla markdown 'Ajuste vs. Generalización' (hold-out espacial) para una variable.
+
+    Mejora 3.1 del informe_mejoras_f4: los resultados de estaciones asimiladas
+    (ajuste) y de evaluacion (generalizacion) se leen de tabla_evolutiva.json y se
+    vuelcan al informe del caso."""
+    def _localiza(rows, var):
+        for r in rows or []:
+            if r.get("var") == variable:
+                return r
+        return None
+
+    if not any(t.get("rows_asimiladas") or t.get("rows_evaluacion") for t in por_tiempo):
+        return "_Sin separación ajuste/hold-out (no hay estaciones de evaluación con datos en este caso)._"
+
+    lineas = ["| Tiempo | N_asim | N_eval | RMSE N (asim) | RMSE C (asim) | RMSE N (eval) | RMSE C (eval) |",
+              "|--------|--------|--------|---------------|---------------|---------------|---------------|"]
+    for t in por_tiempo:
+        a = _localiza(t.get("rows_asimiladas"), variable)
+        e = _localiza(t.get("rows_evaluacion"), variable)
+        lineas.append(
+            f"| {t['tiempo']} | {(a or {}).get('n', 'n/d')} | {(e or {}).get('n', 'n/d')}"
+            f" | {_fmt_metric((a or {}).get('nudged_rmse'))} | {_fmt_metric((a or {}).get('control_rmse'))}"
+            f" | {_fmt_metric((e or {}).get('nudged_rmse'))} | {_fmt_metric((e or {}).get('control_rmse'))} |"
+        )
+    return "\n".join(lineas) + "\n"
+
+
 def redactar_informe_caso(caso: Dict[str, Any], estado_entry: Dict[str, Any],
                           cobertura: Optional[Dict[str, Any]] = None) -> Path:
     """Escribe el informe .md de un caso."""
@@ -330,6 +367,7 @@ def redactar_informe_caso(caso: Dict[str, Any], estado_entry: Dict[str, Any],
     estado = estado_entry.get("estado")
     detalle = estado_entry.get("detalle", "")
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+    tabla = _leer_tabla_evolutiva(caso)
 
     L = []
     L.append(f"# {caso['titulo']}")
@@ -361,14 +399,14 @@ def redactar_informe_caso(caso: Dict[str, Any], estado_entry: Dict[str, Any],
     L.append("| Forzante | GFS 0.25° (AWS) |")
     L.append("| Obs nudging | `obs_nudge_opt=1`, coef viento/temp/humedad=0.0001, `obs_twindo=1.0` |")
     L.append("| Nudged vs Control | misma inicialización; solo cambia `obs_nudge_opt` (1 vs 0) |")
-    L.append("| Validación | multi-temporal 00Z, 06Z, 12Z vs observaciones de estaciones |")
+    L.append(f"| Validación | multi-temporal {' '.join(tabla['valid_times'] if tabla else ['00Z, 06Z, 12Z'])} vs observaciones de estaciones |")
     L.append("")
     L.append("## Limitación conocida del dominio (relevant para el análisis)")
     L.append("")
     L.append("El dominio de 15 km no resuelve la topografía profunda de la precordillera "
              "(errores de altura del modelo de entre +201 m y +918 m en las estaciones, "
              "con máximos en CARACOLES +918 m, PUNTA_NEGRA +420 m y CUESTA_Viento +378 m). "
-             "Por eso el análisis del caso 1 (Zonda) se restringe a la **firma térmica** "
+             f"Por eso el análisis de **{caso['titulo']}** se restringe a la **firma térmica** "
              "(salto de T2 y caída de RH), y el viento se interpreta solo de forma cualitativa. "
              "Ver también `documentacion_proyecto/informe_avances_fases_proyecto.md`.")
     L.append("")
@@ -406,6 +444,21 @@ def redactar_informe_caso(caso: Dict[str, Any], estado_entry: Dict[str, Any],
                         rr["tiempo"] = t["tiempo"]
                         rows.append(rr)
                 L.append(_md_tabla_variable(rows, var))
+                L.append("")
+            L.append("### Ajuste vs. Generalización (hold-out espacial)")
+            L.append("")
+            L.append("Las estaciones con `rol='evaluacion'` en `config/estaciones.json` "
+                     "nunca se asimilan (quedan fuera de `OBS_DOMAIN101`); sus métricas miden "
+                     "si el nudging **generaliza** a lugares sin datos, no solo si reproduce "
+                     "lo que ya se le dio (estaciones 'asimiladas').")
+            L.append("")
+            for var in tabla.get("variables", []):
+                L.append(f"#### {var}")
+                L.append("")
+                rows_ht = []
+                for t in tabla.get("por_tiempo", []):
+                    rows_ht.append(t)
+                L.append(_md_tabla_holdout(rows_ht, var))
                 L.append("")
             L.append("### Conclusiones del caso")
             L.append("")
@@ -497,8 +550,9 @@ def redactar_informe_consolidado(casos: List[Dict[str, Any]], estado: Dict[str, 
         L.append("")
     L.append("## Limitación del dominio y criterio de análisis")
     L.append("")
-    L.append("15 km, errores de terreno +201..+918 m. El Zonda (caso 1) se analiza por firma térmica; "
-             "el viento es cualitativo. Detalles en los informes por caso.")
+    L.append("15 km, errores de terreno +201..+918 m. En todos los casos el análisis se apoya en la "
+             "firma térmica (T2/RH); el viento se interpreta de forma cualitativa. "
+             "Detalles en los informes por caso.")
     L.append("")
     L.append("---")
     L.append("*Informe consolidado generado automáticamente.*")

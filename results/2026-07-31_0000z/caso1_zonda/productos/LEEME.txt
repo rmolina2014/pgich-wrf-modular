@@ -1,0 +1,5 @@
+
+Productos de pronóstico generados por scripts/generar_producto.py (mejora 3.11).
+Por tiempo válido se genera una lámina con T2 (C), RH (%), PSFC (hPa) y viento a 10 m
+(c) con barbs/densidad. Cuando se pasa --obs-json se superponen las observaciones de
+las estaciones con su valor numerico.

@@ -44,9 +44,15 @@ class ObsNudWriter:
         el lector de WRF (wrf_fddaobs_in.F, formato 105) exige estricto orden temporal
         (un registro con TIMEOB anterior al último leído provoca 'in4dob STOP 111').
 
-        Además, cada estación recibe un desfase único de segundos (ver
-        _desfase_por_estacion) para evitar observaciones simultáneas de
-        estaciones distintas, que disparan un SIGSEGV en el binario WRF 4.5.
+        Nota de comportamiento real (mejora 3.6 del informe_mejoras_f4):
+        _desfase_por_estacion() devuelve desfase CERO para todas las estaciones (los
+        timestamps quedan tal cual, cada 5 min). Una version anterior usaba offsets de
+        1 s por estacion para evitar observaciones simultaneas de estaciones distintas,
+        pero WRF 4.5 aborta con 'Bad value during integer read' en module_date_time.f90
+        al releer timestamps no estandar (000001, 000002), por lo que el desfase fue
+        eliminado. El caso de dos estaciones con el MISMO timestamp exacto NO queda
+        protegido por ningun desfase; solo el orden cronologico estable; si ese escenario
+        llegara a provocar un problema en un binario futuro, no estaría previsto.
         """
         dst_path = Path(output_path)
         dst_path.parent.mkdir(parents=True, exist_ok=True)
@@ -104,7 +110,8 @@ class ObsNudWriter:
             u, v, u_qc, v_qc = self._u_v(obs.get("viento"), obs.get("direcc"))
             nombre = str(obs.get("estacion", "UNKNOWN"))
             dt_str = _timestamp(obs)
-            # Desfase per-estación para evitar obs simultáneas (SIGSEGV en WRF 4.5)
+            # Desfase per-estación = 0 s (ver _desfase_por_estacion); se conserva la suma
+            # para que quede explícito que no hay manipulación de timestamps (mejora 3.6).
             dt_str = (datetime.strptime(dt_str, "%Y%m%d%H%M%S") + desfases[nombre]).strftime("%Y%m%d%H%M%S")
             prep.append((dt_str, nombre, lat, lon, elev, t_k, t_qc, rh, rh_qc,
                          psfc_pa, psfc_qc, u, u_qc, v, v_qc))

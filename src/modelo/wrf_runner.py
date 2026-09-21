@@ -28,6 +28,7 @@ class WRFRunner:
         self.np = str(np or os.environ.get("WRF_NP", "1"))
         self.timeout = timeout
         self.reintentos = reintentos
+        self.ultimos_reintentos = 0
 
     def verificar_entorno(self) -> Dict[str, bool]:
         """Verifica la presencia de ejecutables y archivos base de WRF."""
@@ -167,9 +168,15 @@ class WRFRunner:
                       or self._verificar_success("SUCCESS COMPLETE WRF"))
             if ok:
                 logger.info(f"  wrf.exe ({tipo}) completado en {elapsed} (intento {intento_actual})")
+                self.ultimos_reintentos = intento_actual - 1
+                logger.info(
+                    f"  wrf.exe ({tipo}) reintentos consumidos: {self.ultimos_reintentos}"
+                )
                 return ok
             logger.error(f"  wrf.exe ({tipo}) FALLIDO en el intento {intento_actual} despues de {elapsed}")
             if intento_actual > reintentos:
+                self.ultimos_reintentos = intento_actual - 1
+                logger.error(f"  wrf.exe ({tipo}) finalizo con {self.ultimos_reintentos} reintentos")
                 return False
             logger.warning(f"  Reintentando wrf.exe ({tipo}) ({intento_actual + 1}/{reintentos + 1})...")
             intento_actual += 1

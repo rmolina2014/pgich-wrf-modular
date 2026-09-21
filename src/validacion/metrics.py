@@ -11,15 +11,98 @@ logger = logging.getLogger("validacion.metrics")
 METRICAS_VARIABLES = ["t2", "rh", "wspd", "psfc"]
 
 
+def correlacion_pearson(
+    modelado: np.ndarray, observado: np.ndarray, n_min: int = 3
+) -> Dict[str, float]:
+    """Correlación de Pearson compartida (mejora 3.8: evitar r duplicado entre
+    metrics.py y valida_wrf_cli.py).
+
+    Devuelve {'r': float, 'p_value': float}, con NaN cuando la muestra es demasiado
+    chica o la varianza es nula (en lugar de emitir warnings de scipy)."""
+    m = np.asarray(modelado, dtype=float)
+    o = np.asarray(observado, dtype=float)
+    r = float("nan")
+    p = float("nan")
+    if len(m) >= n_min and np.cov(m, o)[0, 0] > 1e-6 and np.cov(m, o)[1, 1] > 1e-6:
+        r_val, p_val = stats.pearsonr(m, o)
+        r = float(r_val)
+        p = float(p_val)
+    return {"r": r, "p_value": p}
+
+
+def _percentil(valores: np.ndarray, q: float) -> float:
+    if len(valores) == 0:
+        return float("nan")
+    return float(np.nanpercentile(valores, q))
+
+
+def metricas_par(
+    modelado: np.ndarray,
+    observado: np.ndarray,
+    n_bootstrap: int = 1000,
+    semilla: int = 42,
+    alpha: float = 0.95,
+) -> Dict[str, Any]:
+    """Bias, MAE, RMSE, Pearson r y N para un par de series coincidentes, con
+    intervalos de confianza por bootstrap (mejora 3.3 del informe_mejoras_f4).
+
+    Los IC (lo-hi) se calculan para bias/mae/rmse remuestreando los errores
+    (modelado-observado) con reemplazo. Devuelve NaN donde no es computable."""
+    mask = (~np.isnan(modelado)) & (~np.isnan(observado))
+    m = np.asarray(modelado, dtype=float)[mask]
+    o = np.asarray(observado, dtype=float)[mask]
+    n = len(m)
+    nan = float("nan")
+
+    if n < 2:
+        return {
+            "bias": nan, "mae": nan, "rmse": nan, "r": nan, "n": 0,
+            "bias_ci": [nan, nan], "mae_ci": [nan, nan], "rmse_ci": [nan, nan],
+        }
+
+    err = m - o
+    bias = float(np.mean(err))
+    mae = float(np.mean(np.abs(err)))
+    rmse = float(np.sqrt(np.mean(err ** 2)))
+
+    corr = correlacion_pearson(m, o)
+
+    ci_lo = (1.0 - alpha) / 2.0 * 100
+    ci_hi = (1.0 + alpha) / 2.0 * 100
+    rng = np.random.default_rng(semilla)
+    bias_b, mae_b, rmse_b = [], [], []
+    for _ in range(n_bootstrap):
+        muestra = err[rng.integers(0, n, size=n)]
+        bias_b.append(float(np.mean(muestra)))
+        mae_b.append(float(np.mean(np.abs(muestra))))
+        rmse_b.append(float(np.sqrt(np.mean(muestra ** 2))))
+    bias_ci = [_percentil(bias_b, ci_lo), _percentil(bias_b, ci_hi)]
+    mae_ci = [_percentil(mae_b, ci_lo), _percentil(mae_b, ci_hi)]
+    rmse_ci = [_percentil(rmse_b, ci_lo), _percentil(rmse_b, ci_hi)]
+
+    return {
+        "bias": bias,
+        "mae": mae,
+        "rmse": rmse,
+        "r": corr["r"],
+        "p_value": corr["p_value"],
+        "n": int(n),
+        "bias_ci": bias_ci,
+        "mae_ci": mae_ci,
+        "rmse_ci": rmse_ci,
+    }
+
+
 class MetricsCalculator:
     """Calculador de estadísticas de rendimiento de modelos meteorológicos."""
 
     @staticmethod
     def calcular_metricas_par(modelado: np.ndarray, observado: np.ndarray) -> Dict[str, Optional[float]]:
-        """Calcula Bias, MAE, RMSE, Pearson r y N para un par de series coincidentes."""
+        """Calcula Bias, MAE, RMSE, Pearson r y N para un par de series coincidentes
+        (r vía la función compartida `correlacion_pearson`, mejora 3.8)."""
         mask = (~np.isnan(modelado)) & (~np.isnan(observado))
-        m = modelado[mask]
-        o = observado[mask]
+        m = np.asarray(modelado, dtype=float)[mask]
+        o = np.asarray(observado, dtype=float)[mask]
         n = len(m)
 
         if n == 0:
@@ -29,13 +112,9 @@ class MetricsCalculator:
         mae = float(np.mean(np.abs(m - o)))
         rmse = float(np.sqrt(np.mean((m - o) ** 2)))
 
-        if n >= 3 and np.std(m) > 1e-6 and np.std(o) > 1e-6:
-            r_val, p_val = stats.pearsonr(m, o)
-            r = float(r_val)
-            p = float(p_val)
-        else:
-            r = None
-            p = None
+        corr = correlacion_pearson(m, o)
+        r = corr["r"] if corr["r"] == corr["r"] else None
+        p = corr["p_value"] if corr["p_value"] == corr["p_value"] else None
 
         return {
             "bias": round(bias, 3),

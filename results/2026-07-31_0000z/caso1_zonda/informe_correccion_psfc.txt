@@ -1,0 +1,26 @@
+==============================================================================
+CORRECCION ADITIVA DE PSFC POR ESTACION (mejora 3.5 informe_mejoras_f4)
+==============================================================================
+
+Bias medio estimado (modelo nudged - obs), en hPa:
+Estación              bias_hPa     n
+------------------------------------
+CARACOLES                -92.8    13
+PUNTA_NEGRA              -45.4    13
+CUESTA_Viento            -43.4    13
+INTA_SANMARTIN           -37.5    13
+INTA_POCITO              -16.0    13
+VALLE_FERTIL             -15.6    13
+ULLUM_EMBALSE            -11.6    13
+ECOHUMUS                  -1.2    13
+
+Metricas de PSFC (hPa), antes y despues de restar el bias por estacion:
+Grupo                   n    RMSE     MAE    Bias      r
+--------------------------------------------------------
+nudged_raw            104   42.75   32.97  -32.92  0.857
+nudged_corregido      104    1.70    1.39    0.00  0.998
+control_raw           104   42.96   33.34  -33.34  0.857
+control_corregido     104    1.73    1.39   -0.42  0.998
+
+La correccion es aditiva y por estacion; se aplica solo en post-proceso
+(no re-corta el modelo).
