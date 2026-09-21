@@ -1,6 +1,6 @@
 # Informe consolidado de casos de estudio — Fase 4
 
-Generado el 2026-09-20 21:42 por `src/casos/run_casos.py`.
+Generado el 2026-09-20 21:53 por `src/casos/run_casos.py`.
 
 ## Resumen de ejecución
 
