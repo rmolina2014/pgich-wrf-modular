@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Sistema WRF-PGICH · estructura del pronóstico con obs nudging",
+    "output": "documentacion_proyecto/arquitectura_sistema.html",
+    "quality_profile": "showcase",
+    "viewBox": [1280, 470],
+    "views": [
+      {
+        "id": "camino-principal",
+        "label": "Camino principal",
+        "focus": ["ecowitt", "ingesta", "calidad", "asimilacion", "preflight", "wrf", "validacion", "datos"],
+        "note": "Observaciones EcoWitt -> QC -> OBS_DOMAIN101 -> WRF -> validacion -> informes."
+      },
+      {
+        "id": "inicializacion",
+        "label": "Forzante e inicializacion",
+        "focus": ["gfs", "wps", "wrf"],
+        "note": "GFS 0.25deg -> WPS (geogrid/ungrib/metgrid) -> met_em -> WRF."
+      },
+      {
+        "id": "operacion",
+        "label": "Operacion",
+        "focus": ["ui", "preflight", "wrf"],
+        "note": "Disparo desde la UI Streamlit y cheques previos (Seccion 2.2)."
+      }
+    ]
+  },
+  "components": [
+    { "id": "ui", "type": "frontend", "label": "Streamlit UI", "sublabel": "app_streamlit.py", "pos": [80, 40], "size": [160, 64] },
+    { "id": "ecowitt", "type": "external", "label": "Estaciones EcoWitt", "sublabel": "Red San Juan · API v3", "pos": [80, 130], "size": [160, 64], "tag": "8 estaciones" },
+    { "id": "ingesta", "type": "backend", "label": "Ingesta", "sublabel": "src/ingesta", "pos": [400, 130], "size": [160, 64] },
+    { "id": "calidad", "type": "backend", "label": "Calidad", "sublabel": "src/calidad · QC", "pos": [720, 130], "size": [160, 64] },
+    { "id": "asimilacion", "type": "backend", "label": "Asimilacion", "sublabel": "Little_R · OBS_DOMAIN101", "pos": [1040, 130], "size": [160, 64] },
+    { "id": "preflight", "type": "security", "label": "Preflight", "sublabel": "chequeos Seccion 2.2", "pos": [1040, 270], "size": [160, 64] },
+    { "id": "wrf", "type": "backend", "label": "WRF 4.5", "sublabel": "real.exe -> wrf.exe", "pos": [720, 270], "size": [160, 64], "tag": "nudged + control" },
+    { "id": "validacion", "type": "backend", "label": "Validacion", "sublabel": "metricas · hold-out · IC", "pos": [400, 270], "size": [160, 64] },
+    { "id": "datos", "type": "database", "label": "Datos & resultados", "sublabel": "data/ · results/", "pos": [80, 270], "size": [160, 64] },
+    { "id": "wps", "type": "backend", "label": "WPS 4.5", "sublabel": "geogrid · ungrib · metgrid", "pos": [720, 380], "size": [160, 64] },
+    { "id": "gfs", "type": "external", "label": "GFS NOMADS/AWS", "sublabel": "forzante 0.25deg", "pos": [80, 380], "size": [160, 64], "tag": "ciclo 00Z" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Sistema pgich-wrf-modular (Fase 4)", "wraps": ["ingesta", "calidad", "asimilacion", "preflight", "wrf", "validacion", "datos", "wps"] }
+  ],
+  "connections": [
+    { "id": "ecowitt-to-ingesta", "from": "ecowitt", "to": "ingesta", "label": "API v3 · historico", "labelDy": 56 },
+    { "id": "ingesta-to-calidad", "from": "ingesta", "to": "calidad", "label": "obs crudas JSON/CSV", "labelDy": 56 },
+    { "id": "calidad-to-asimilacion", "from": "calidad", "to": "asimilacion", "label": "df validado", "labelDy": 56 },
+    { "id": "asimilacion-to-preflight", "from": "asimilacion", "to": "preflight", "label": "OBS_DOMAIN101", "labelAt": [1050, 237] },
+    { "id": "preflight-to-wrf", "from": "preflight", "to": "wrf", "label": "chequeos OK", "variant": "security", "labelDy": -56 },
+    { "id": "wrf-to-validacion", "from": "wrf", "to": "validacion", "label": "wrfout nudged/control", "labelDy": -56 },
+    { "id": "validacion-to-datos", "from": "validacion", "to": "datos", "label": "tabla_evolutiva · informes", "labelDy": -56 },
+    { "id": "ui-to-ingesta", "from": "ui", "to": "ingesta", "label": "lanza pipeline (setsid)", "variant": "dashed" },
+    { "id": "gfs-to-wps", "from": "gfs", "to": "wps", "label": "GRIB2 0.25deg", "labelAt": [480, 406] },
+    { "id": "wps-to-wrf", "from": "wps", "to": "wrf", "label": "met_em.d01*", "labelAt": [880, 358] }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Inicio y datos", "items": ["8 estaciones EcoWitt (INTA, ECOHUMUS, ULLUM_EMBALSE, ...)", "GFS 0.25deg via AWS/NOMADS (ciclo 00Z, horizonte 0-12 h cada 3 h)", "UI Streamlit dispara run_full_pipeline.sh via setsid (evita SIGSEGV de wrf.exe)", "Configuracion en config/estaciones.json · casos.json (fuente unica)"] },
+    { "dot": "cyan", "title": "Asimilacion y QC", "items": ["QC fisico por rangos del Valle de Tulum / precordillera", "Little_R + OBS_DOMAIN101 (FORMAT 105, FM-12 SYNOP)", "Hold-out espacial: estaciones rol='evaluacion' nunca se asimilan", "Preflight valida formato, plataforma, cadencia y max_obs"] },
+    { "dot": "amber", "title": "Modelo y validacion", "items": ["WRF 4.5 con obs_nudge_opt 1 vs 0 (nudged vs control)", "Metricas bias/MAE/RMSE/r + IC bootstrap 95%", "Correccion aditiva de PSFC por estacion (post-proceso)", "Productos de pronostico: T2, RH, PSFC y viento a 10 m"] }
+  ]
+}
