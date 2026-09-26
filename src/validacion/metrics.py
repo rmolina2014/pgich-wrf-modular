@@ -54,9 +54,24 @@ def metricas_par(
     n = len(m)
     nan = float("nan")
 
-    if n < 2:
+    if n < 1:
         return {
             "bias": nan, "mae": nan, "rmse": nan, "r": nan, "n": 0,
+            "bias_ci": [nan, nan], "mae_ci": [nan, nan], "rmse_ci": [nan, nan],
+        }
+
+    if n == 1:
+        err_single = float(m[0] - o[0])
+        return {
+            "bias": err_single,
+            "mae": abs(err_single),
+            "rmse": abs(err_single),
+            "r": nan,
+            "p_value": nan,
+            "n": 1,
+            # Bootstrap con n=1 remuestrea siempre el mismo valor -> IC de ancho
+            # cero, engañoso. Se deja explícitamente no disponible (ver Cap. IV,
+            # Sección 4.5 de la tesis).
             "bias_ci": [nan, nan], "mae_ci": [nan, nan], "rmse_ci": [nan, nan],
         }
 
