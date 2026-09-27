@@ -1,10 +1,10 @@
 ================================================================================
-VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-07-31_00:00:00 caso1 zonda 2026-07-31
+VALIDACION WRF vs OBSERVACIONES - wrfout_d01_2026-07-31_00:00:00 caso1_NvC
 ================================================================================
 
 Variable           N     Bias N      MAE N     RMSE N      r N     Bias C      MAE C     RMSE C      r C
 
-IC95 (95% bootstrap) del RMSE por corrida (caso1 zonda 2026-07-31):
+IC95 (95% bootstrap) del RMSE por corrida (caso1_NvC):
 Variable           N          IC95 RMSE N          IC95 RMSE C
 --------------------------------------------------------------------------------------------------------------------------------------------
 T2 (K)             7      +2.98       3.58       4.43   -0.610      +2.98       3.58       4.43   -0.610
